@@ -5,6 +5,8 @@
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/geist-mono";
 @import "@fontsource-variable/geist";
+/* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
+@import "@fontsource-variable/noto-sans-sc";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -30,7 +32,7 @@
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-background overflow-y-scroll scroll-smooth font-mono antialiased text-foreground;
+        @apply bg-background overflow-y-scroll scroll-smooth font-sans antialiased text-foreground;
     }
     main {
         @apply selection:bg-secondary-foreground selection:text-secondary relative z-10 min-h-screen bg-background;
@@ -50,8 +52,10 @@
     /* font */
     --font-heading: var(--font-sans);
     /* --font-mono: "JetBrains Mono Variable", monospace; */
-    --font-mono: "Geist Mono Variable", monospace;
-    --font-sans: "Geist Variable", sans-serif;
+    /* 代码块/技术元素保持等宽；中文回落思源黑体 */
+    --font-mono: "Geist Mono Variable", "Noto Sans SC Variable", monospace;
+    /* 整站正文/标题：思源黑体优先（自托管，全平台统一）；若加载失败，Windows 回落雅黑、Mac 回落苹方 */
+    --font-sans: "Noto Sans SC Variable", "Microsoft YaHei", "PingFang SC", "Geist Variable", sans-serif;
 
     /* color */
     --color-sidebar-ring: var(--sidebar-ring);
@@ -194,7 +198,7 @@
     --pf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
     --pf-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.2);
     --pf-outline-focus: var(--ring);
-    --pf-font: "Geist Variable", sans-serif;
+    --pf-font: "Noto Sans SC Variable", "Microsoft YaHei", "PingFang SC", "Geist Variable", sans-serif;
     --pf-input-height: 40px;
     --pf-input-font-size: 16px;
     --pf-border-radius: 0.375rem;

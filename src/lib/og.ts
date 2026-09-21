@@ -4,6 +4,9 @@ import fs from "node:fs";
 
 const regularFont = fs.readFileSync("src/assets/fonts/Geist-Regular.ttf");
 const boldFont = fs.readFileSync("src/assets/fonts/Geist-Bold.ttf");
+// 中文字形：思源黑体（Geist 不含 CJK，缺字形时由这两个回落，避免中文显示为空白方块）
+const cjkRegularFont = fs.readFileSync("src/assets/fonts/NotoSansSC-Regular.otf");
+const cjkBoldFont = fs.readFileSync("src/assets/fonts/NotoSansSC-Bold.otf");
 
 export interface OGOptions {
   title: string;
@@ -29,7 +32,7 @@ export async function generateOGImage({
           display: "flex",
           flexDirection: "column",
           padding: "60px 80px",
-          fontFamily: "Geist",
+          fontFamily: "Geist, Noto Sans SC",
         },
         children: [
           {
@@ -147,6 +150,18 @@ export async function generateOGImage({
         {
           name: "Geist",
           data: boldFont,
+          weight: 700,
+          style: "normal",
+        },
+        {
+          name: "Noto Sans SC",
+          data: cjkRegularFont,
+          weight: 400,
+          style: "normal",
+        },
+        {
+          name: "Noto Sans SC",
+          data: cjkBoldFont,
           weight: 700,
           style: "normal",
         },
