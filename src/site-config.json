@@ -28,7 +28,7 @@
       { "type": "github", "url": "https://github.com" },
       { "type": "twitter", "url": "https://twitter.com" }
     ],
-    "description": "我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。",
+    "description": "Ryze is a modern personal portfolio and mini blog starter built with Astro 6, React 19, and Tailwind CSS 4. It ships with a blog engine, portfolio system, RSS feed, site search, og images and much more.",
     "ctaItems": [{ "label": "more..", "url": "/resume", "variant": "default" }],
     "support": { "label": "Star on Github", "url": "https://github.com/A58361/Ryze", "variant": "outline" }
   },
