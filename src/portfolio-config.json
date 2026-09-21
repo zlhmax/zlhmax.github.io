@@ -1,5 +1,17 @@
 [
   {
+    "id": "angkor-wat",
+    "data": {
+      "date": "26-06-2026",
+      "category": "photography",
+      "title": "Angkor Wat",
+      "description": "柬埔寨暹粒 · 吴哥窟的一日：护城河倒影、廊柱光影与五塔剪影",
+      "tags": ["Travel", "Cambodia", "Siem Reap", "Photography"],
+      "status": "photo set"
+    },
+    "introduction": "2026 年 6 月的雨季午后，我在吴哥窟西侧的护城河边待了整个下午。四张照片是同一条时间线：先是午后的云在护城河上摊开，把五座塔和两侧长廊一起倒进水里；光线转暖后走到长廊外侧，草地被压得很绿，柱影一格一格铺开；18 点之后回到水边，糖棕的剪影把塔围起来，风停了一会儿，倒影才终于完整。"
+  },
+  {
     "id": "nova",
     "data": {
       "date": "17-02-2025",
