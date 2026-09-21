@@ -16,7 +16,7 @@ export async function GET(context: { site: any }) {
 
   return rss({
     trailingSlash: false,
-    title: "Ryze Blog",
+    title: "lhZhang Blog",
     description: "A reader-friendly blog with accessibility, SEO and responsiveness out of the box",
     site: context.site,
     items: items.map((item) => ({

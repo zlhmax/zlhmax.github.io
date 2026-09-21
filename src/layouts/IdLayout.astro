@@ -14,7 +14,7 @@ const { type, prev, next, ...headProps } = Astro.props as HeadProps & {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
     <Head {...headProps} type={type === "blog" ? "article" : "website"} />
     <body class="mx-auto">
         <Header />

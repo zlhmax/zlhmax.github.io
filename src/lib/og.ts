@@ -55,7 +55,7 @@ export async function generateOGImage({
                   type: "span",
                   props: {
                     style: { fontSize: 20, color: "#a1a1aa", fontWeight: 400 },
-                    children: "Ryze",
+                    children: "lhZhang",
                   },
                 },
               ],
