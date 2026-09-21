@@ -28,7 +28,7 @@
       { "type": "github", "url": "https://github.com" },
       { "type": "twitter", "url": "https://twitter.com" }
     ],
-    "description": "Ryze is a modern personal portfolio and mini blog starter built with Astro 6, React 19, and Tailwind CSS 4. It ships with a blog engine, portfolio system, RSS feed, site search, og images and much more.",
+    "description": "lhZhang 的个人作品集与随笔 —— 记录做过的项目、想明白的道理，和遇见的有趣的事。现居深圳。",
     "ctaItems": [{ "label": "more..", "url": "/resume", "variant": "default" }],
     "support": { "label": "Star on Github", "url": "https://github.com/lhzhang06/lhzhang06.github.io", "variant": "outline" }
   },
