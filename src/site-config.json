@@ -27,7 +27,7 @@
       { "type": "github", "url": "https://github.com" },
       { "type": "twitter", "url": "https://twitter.com" }
     ],
-    "description": "lhZhang 的个人作品集与随笔 —— 记录做过的项目、想明白的道理，和遇见的有趣的事。现居深圳。",
+    "description": "我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。",
     "ctaItems": [{ "label": "more..", "url": "/resume", "variant": "default" }],
     "support": { "label": "Star on Github", "url": "https://github.com/lhzhang06/lhzhang06.github.io", "variant": "outline" }
   },
