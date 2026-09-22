@@ -6,9 +6,11 @@ const { type, prev, next } = Astro.props;
 ---
 
 <footer class="mx-auto font-mono antialiased bg-background max-w-4xl text-foreground select-none sticky bottom-0 z-0">
-    <div class="border border-border p-6 mt-10">
-        <IdNav type={type} prev={prev} next={next} />
-    </div>
+    {(prev || next) && (
+        <div class="border border-border p-6 mt-10">
+            <IdNav type={type} prev={prev} next={next} />
+        </div>
+    )}
     <div class="flex items-center justify-between px-3 py-2">
         <div class="flex items-center gap-4">
             <p class="text-sm text-muted-foreground">
