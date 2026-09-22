@@ -12,6 +12,9 @@ const blogs = (await getCollection("blog"))
         const bDate = parse(b.data.date, "dd-MM-yyyy", new Date());
         return bDate.getTime() - aDate.getTime();
     });
+
+// 首页 Blog 区块显示条数：site-config.json → featured.blog.count（默认 3）
+const blogLimit = site_config.featured.blog.count ?? 3;
 ---
 
 {
@@ -22,7 +25,7 @@ const blogs = (await getCollection("blog"))
                 <RiArrowRightUpLine className="size-0 group-hover:size-4 scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 animation" />
             </a>
             <div class="mt-6 flex flex-col">
-                {blogs.slice(0, 3).map((item) => (
+                {blogs.slice(0, blogLimit).map((item) => (
                     <FeaturedBlogCard item={item} />
                 ))}
             </div>

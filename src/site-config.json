@@ -29,7 +29,7 @@
   },
   "featured": {
     "portfolio": { "visible": true },
-    "blog": { "visible": true },
+    "blog": { "visible": true, "count": 5 },
     "important": "blog"
   }
 }
