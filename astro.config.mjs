@@ -45,5 +45,5 @@ export default defineConfig({
     defaultStrategy: "hover",
   },
 
-  site: "https://lhzhang06.github.io",
+  site: "https://zlhmax.github.io",
 });
