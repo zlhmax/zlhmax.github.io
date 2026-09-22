@@ -28,7 +28,7 @@
       { "type": "twitter", "url": "https://twitter.com" }
     ],
     "description": "我活在世上，无非想要明白些道理，遇见些有趣的事，倘能如我愿，我的一生就算成功。",
-    "ctaItems": [{ "label": "more..", "url": "/resume", "variant": "default" }],
+    "ctaItems": [{ "label": "more..", "url": "/..", "variant": "default" }],
     "support": { "label": "Star on Github", "url": "https://github.com/zlhmax/zlhmax.github.io", "variant": "outline" }
   },
   "featured": {
