@@ -13,11 +13,6 @@
     "heading": "lhZhang",
     "subHeadingItems": [
       {
-        "type": "mail",
-        "label": "lhzhang05@gmail.com",
-        "url": "mailto:lhzhang05@gmail.com"
-      },
-      {
         "type": "address",
         "label": "Shenzhen, China",
         "url": "https://www.google.com/maps/place/shenzhen"
