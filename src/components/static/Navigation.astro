@@ -11,6 +11,10 @@ import site_config from "@/site-config.json";
 
 const { pathname } = Astro.props;
 const isCurrent = (href: string) => pathname === href;
+
+// 导航显示名可用 navigationLabels 覆盖（键 = 路由名，值 = 显示文案），路由地址本身不变
+const labels = (site_config.navigationLabels ?? {}) as Record<string, string>;
+const labelOf = (item: string) => labels[item] ?? item;
 ---
 
 {
@@ -33,9 +37,9 @@ const isCurrent = (href: string) => pathname === href;
                 <BreadcrumbSeparator>•</BreadcrumbSeparator>
                 <BreadcrumbItem>
                   {pathname.startsWith(`/${item}`) ? (
-                    <BreadcrumbPage>{item}</BreadcrumbPage>
+                    <BreadcrumbPage>{labelOf(item)}</BreadcrumbPage>
                   ) : (
-                    <BreadcrumbLink href={`/${item}`}>{item}</BreadcrumbLink>
+                    <BreadcrumbLink href={`/${item}`}>{labelOf(item)}</BreadcrumbLink>
                   )}
                 </BreadcrumbItem>
               </>
