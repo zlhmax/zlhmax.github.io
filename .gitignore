@@ -35,3 +35,6 @@ _local-verification/
 
 # aureus-setup-anchor
 node_modules/
+
+# local launcher scripts (只在本机使用, 不随仓库发布)
+*.cmd
