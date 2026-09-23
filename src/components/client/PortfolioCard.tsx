@@ -20,7 +20,7 @@ export function PortfolioCard({ item }: PortfolioCardProps) {
       <div className="p-3 bg-muted group-hover:bg-card animation z-10 group-hover:-translate-y-14 h-20 translate-y-0">
         <span className="text-xs uppercase tracking-widest text-muted-foreground opacity-100 group-hover:opacity-0 animation">{item.data.category}</span>
 
-        <h3 className="mt-2 text-xl group-hover:font-medium leading-snug text-foreground/80 group-hover:text-foreground/90 animation mb-0.5 line-clamp-1 -translate-y-1 group-hover:-translate-y-8.5">{item.data.title}</h3>
+        <h3 className="mt-2 text-xl group-hover:font-medium leading-snug text-foreground/80 group-hover:text-link animation mb-0.5 line-clamp-1 -translate-y-1 group-hover:-translate-y-8.5">{item.data.title}</h3>
 
         {item.data.tags && item.data.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2">

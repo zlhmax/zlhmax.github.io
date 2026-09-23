@@ -21,7 +21,7 @@ export function FeaturedPortfolioCard({ items }: { items: (portfolioConfig & { h
             <div className="p-4 bg-muted group-hover:bg-card animation z-10">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">{item.data.category}</span>
 
-              <span className="mt-2 text-xl font-medium leading-snug text-foreground/90 group-hover:text-foreground/90 animation line-clamp-1">{item.data.title}</span>
+              <span className="mt-2 text-xl font-medium leading-snug text-foreground/90 group-hover:text-link animation line-clamp-1">{item.data.title}</span>
 
               <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{item.data.description}</p>
 

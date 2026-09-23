@@ -50,7 +50,7 @@ const links = item?.links ?? [];
                     <div class="w-full flex flex-wrap p-3 border border-border border-b-0">
                         <RiExternalLinkLine className="size-4 ml-3 my-auto text-secondary-foreground/90" />
                         {links.map((link) => (
-                            <a href={link.url} target="_blank" rel="noopener noreferrer" class="ml-3 text-sm text-muted-foreground/80 hover:text-secondary-foreground/90 hover:underline underline-offset-3 hover:underline-offset-6 animation active:text-background active:bg-secondary-foreground px-1">
+                            <a href={link.url} target="_blank" rel="noopener noreferrer" class="ml-3 text-sm text-muted-foreground/80 hover:text-link hover:underline underline-offset-3 hover:underline-offset-6 animation active:text-background active:bg-secondary-foreground px-1">
                                 {link.label}
                             </a>
                         ))}

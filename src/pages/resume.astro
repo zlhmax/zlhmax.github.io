@@ -24,7 +24,7 @@ const locationStr = `${resume.location.city}, ${resume.location.state}`;
             </div>
 
             <div class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
-                <a href={`mailto:${resume.email}`} class="inline-flex items-center gap-1.5 hover:text-foreground animation">
+                <a href={`mailto:${resume.email}`} class="inline-flex items-center gap-1.5 hover:text-link animation">
                     <RiMailLine className="size-4" />
                     {resume.email}
                 </a>
@@ -32,7 +32,7 @@ const locationStr = `${resume.location.city}, ${resume.location.state}`;
                     <RiMapPin2Line className="size-4" />
                     {locationStr}
                 </span>
-                <a href={resume.website} target="_blank" class="inline-flex items-center gap-1.5 hover:text-foreground animation">
+                <a href={resume.website} target="_blank" class="inline-flex items-center gap-1.5 hover:text-link animation">
                     <RiGlobalLine className="size-4" />
                     {resume.website.replace("https://", "")}
                 </a>
@@ -44,17 +44,17 @@ const locationStr = `${resume.location.city}, ${resume.location.state}`;
                         (s) =>
                             ({
                                 linkedin: (
-                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-foreground animation" aria-label="linkedin">
+                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-link animation" aria-label="linkedin">
                                         <RiLinkedinBoxLine className="size-5" />
                                     </a>
                                 ),
                                 github: (
-                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-foreground animation" aria-label="github">
+                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-link animation" aria-label="github">
                                         <RiGithubLine className="size-5" />
                                     </a>
                                 ),
                                 twitter: (
-                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-foreground animation" aria-label="twitter">
+                                    <a href={s.url} target="_blank" class="text-muted-foreground hover:text-link animation" aria-label="twitter">
                                         <RiTwitterLine className="size-5" />
                                     </a>
                                 ),
@@ -185,7 +185,7 @@ const locationStr = `${resume.location.city}, ${resume.location.state}`;
                         <div class="border-l-2 border-border pl-5 space-y-2">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-lg font-medium">{proj.name}</h3>
-                                <a href={proj.url} target="_blank" class="text-muted-foreground hover:text-foreground animation" aria-label="project link">
+                                <a href={proj.url} target="_blank" class="text-muted-foreground hover:text-link animation" aria-label="project link">
                                     <RiExternalLinkLine className="size-4" />
                                 </a>
                             </div>
@@ -320,7 +320,7 @@ const locationStr = `${resume.location.city}, ${resume.location.state}`;
                             <div class="border-l-2 border-border pl-5 space-y-1">
                                 <div class="flex items-center gap-2">
                                     <h3 class="text-base font-medium">{pub.title}</h3>
-                                    <a href={pub.url} target="_blank" class="text-muted-foreground hover:text-foreground animation" aria-label="publication link">
+                                    <a href={pub.url} target="_blank" class="text-muted-foreground hover:text-link animation" aria-label="publication link">
                                         <RiExternalLinkLine className="size-3.5" />
                                     </a>
                                 </div>

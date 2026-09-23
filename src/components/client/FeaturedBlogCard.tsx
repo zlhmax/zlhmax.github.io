@@ -13,12 +13,12 @@ export function FeaturedBlogCard({ item }: { item: blogConfig }) {
           <span className="text-xs uppercase tracking-wider text-muted-foreground/80 font-medium">{item.data.category}</span>
         </div>
 
-        <span className="mt-2 text-lg font-medium text-foreground/90 group-hover:text-foreground/90 animation leading-snug line-clamp-1">{item.data.title}</span>
+        <span className="mt-2 text-lg font-medium text-foreground/90 group-hover:text-link animation leading-snug line-clamp-1">{item.data.title}</span>
 
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">{item.data.description}</p>
       </div>
 
-      <RiArrowRightUpLine className="mt-1 size-3.5 shrink-0 text-muted-foreground/60 group-hover:text-foreground group-hover:-translate-y-0.5 group-hover:translate-x-0.5 animation" />
+      <RiArrowRightUpLine className="mt-1 size-3.5 shrink-0 text-muted-foreground/60 group-hover:text-link group-hover:-translate-y-0.5 group-hover:translate-x-0.5 animation" />
     </a>
   );
 }
