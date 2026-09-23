@@ -52,8 +52,8 @@ export function SubHeadingIcon({ type }: { type: subHeadingIconType }) {
   const IconFill = data.componentFill;
   return (
     <div>
-      <IconLine className="size-4 group-hover:size-0" />
-      <IconFill className="size-0 group-hover:size-4" />
+      <IconLine className="size-3.5 group-hover:size-0" />
+      <IconFill className="size-0 group-hover:size-3.5" />
     </div>
   );
 }
