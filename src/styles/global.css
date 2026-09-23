@@ -108,8 +108,8 @@
 }
 
 :root {
-    /* 超链接 hover：取自用户参考图 404 的蓝 #1A4FA0 */
-    --link-hover: #1A4FA0;
+    /* 超链接 hover：Google 蓝 #1a0dab（用户指定） */
+    --link-hover: #1a0dab;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --foregrounds: #00000;
@@ -148,8 +148,8 @@
 
 .dark {
     /*--background: oklch(0.141 0.005 285.823);*/
-    /* 深色底上 #1A4FA0 对比度仅 2.1:1，改用同色相提亮档（≥4.5:1） */
-    --link-hover: #6387BE;
+    /* 深色底上 #1a0dab 对比度仅 1.5:1，改用同色相提亮档（≥4.5:1） */
+    --link-hover: #7A73CE;
     --background: oklch(0.182 0 0);
     --foreground: oklch(0.985 0 0);
     --foregrounds: #fffff;
