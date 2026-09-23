@@ -192,12 +192,6 @@
     background-color: var(--shiki-dark-bg) !important;
 }
 
-/* 首页：介绍卡片下沿与第一个内容区块的间距减半（Featured 根节点的 mt-5 = 20px → 10px）
-   注意：只作用于首页第一个 section，两个 Featured 区块之间的间距不受影响。 */
-main > div.pt-5 > section:nth-of-type(2) {
-    margin-top: 0.625rem;
-}
-
 /* * PAGEFIND SEARCH */
 :root {
     --pf-text: var(--foreground);
