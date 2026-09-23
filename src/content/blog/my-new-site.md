@@ -7,6 +7,7 @@ category: "devlog"
 tags: ["建站", "astro", "随笔"]
 author: "lhZhang"
 ---
+这是个基于 Astro 和 GitHub Pages 搭起来的网站。
 
 这里是我的个人站点：放做过的项目、路上拍的照片，以及一些想明白的道理。
 
