@@ -45,6 +45,11 @@
     .animation {
         @apply transition-all duration-150 ease-in-out;
     }
+
+    /* 首页简介标题手写体（Eddy 指定栈；未安装 Lucida Handwriting 的环境回落 Times New Roman 衬线体） */
+    .intro-handwriting {
+        font-family: "Lucida Handwriting", "Times New Roman", Georgia, Times, sans-serif;
+    }
 }
 
 /* ! SHADCN */
