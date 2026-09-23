@@ -12,8 +12,8 @@ author: "lhZhang"
 
 > 本经验适用于Win10系统AutoCAD[1]出现闪退现象，特别在激活操作故障后，甚至重装CAD也无济于事，闪退依旧，无法操作激活。
 > 特别提醒，千万不要看其它经验或文章的删除注册表信息操作，会让本来简单的事情复杂化。请按照本经验操作，简单易用能成功！
->
-> ![闪退现象](/images/blog/autocad-flashquite/01.jpg)
+
+![闪退现象](/images/blog/autocad-flashquite/01.jpg)
 
 ### 方法/步骤:
 
