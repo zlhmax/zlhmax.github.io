@@ -7,6 +7,8 @@
 @import "@fontsource-variable/geist";
 /* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
 @import "@fontsource-variable/noto-sans-sc";
+/* 手写体：Dancing Script（自托管 woff2，免费商用，全平台统一手写风） */
+@import "@fontsource-variable/dancing-script";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,9 +48,9 @@
         @apply transition-all duration-150 ease-in-out;
     }
 
-    /* 首页简介标题手写体（Eddy 指定栈；未安装 Lucida Handwriting 的环境回落 Times New Roman 衬线体） */
+    /* 首页简介标题手写体：自托管 Dancing Script 优先（全平台统一），再回落系统手写体/衬线体（Eddy 指定栈） */
     .intro-handwriting {
-        font-family: "Lucida Handwriting", "Times New Roman", Georgia, Times, sans-serif;
+        font-family: "Dancing Script Variable", "Lucida Handwriting", "Times New Roman", Georgia, Times, sans-serif;
     }
 }
 
