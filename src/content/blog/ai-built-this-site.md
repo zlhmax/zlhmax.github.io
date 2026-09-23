@@ -14,4 +14,6 @@ author: "lhZhang"
 
 事实上果然没让我失望，从下载Astro代码到调整模板和转移原网站的内容，只需要发命令即可，最终不到半天的时候就全部完成了，DS也十分给力。
 
+## Hermes Agent ##
+
 ![Hermes Desktop 版本页 —— 显示 You're on the latest version，Version 0.21.4](/images/blog/ai-built-this-site/01.png)
