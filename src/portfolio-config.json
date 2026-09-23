@@ -68,5 +68,23 @@
       "status": "photo set"
     },
     "introduction": "早晨的晋江，2018 年 7 月。六点四十的滨江绿道，跑者三三两两，江对岸的城市还没完全亮起来。"
+  },
+  {
+    "id": "takeoff-air-landing",
+    "data": {
+      "date": "08-10-2018",
+      "category": "photography",
+      "title": "起飞 空中 着落",
+      "description": "起飞 空中 着落 · 舷窗外的机场、云海与落日",
+      "tags": [
+        "Travel",
+        "Sky",
+        "Clouds",
+        "Flight",
+        "Photography"
+      ],
+      "status": "photo set"
+    },
+    "introduction": "起飞，空中，着落。舷窗外的三种天气：机场的黄色引导线、铺到天边的云海，和被落日烧过一遍的天际线。"
   }
 ]
