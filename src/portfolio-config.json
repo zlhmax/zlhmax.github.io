@@ -32,5 +32,23 @@
       "status": "photo set"
     },
     "introduction": "松奇，山险，云海，景美，黄山归来不看岳，不虚此行。"
+  },
+  {
+    "id": "dongshan-island",
+    "data": {
+      "date": "19-06-2022",
+      "category": "photography",
+      "title": "福建东山岛",
+      "description": "福建东山岛 · 海浪、云层，与被云压住的山脊",
+      "tags": [
+        "Travel",
+        "China",
+        "Fujian",
+        "Island",
+        "Photography"
+      ],
+      "status": "photo set"
+    },
+    "introduction": "福建东山岛，2022 年 6 月。浪一层层推上沙滩，云压着山脊，海是分层的蓝。"
   }
 ]
