@@ -50,5 +50,23 @@
       "status": "photo set"
     },
     "introduction": "福建东山岛，2022 年 6 月。浪一层层推上沙滩，云压着山脊，海是分层的蓝。"
+  },
+  {
+    "id": "jinjiang-morning",
+    "data": {
+      "date": "19-07-2018",
+      "category": "photography",
+      "title": "早晨的晋江",
+      "description": "早晨的晋江 · 滨江绿道、晨跑的人，与江对岸的城市",
+      "tags": [
+        "Travel",
+        "China",
+        "Fujian",
+        "Morning",
+        "Photography"
+      ],
+      "status": "photo set"
+    },
+    "introduction": "早晨的晋江，2018 年 7 月。六点四十的滨江绿道，跑者三三两两，江对岸的城市还没完全亮起来。"
   }
 ]
