@@ -2,12 +2,11 @@
 draft: false
 date: "21-09-2026"
 title: "我的新网站"
-description: "为什么会有这个站点，以及它是怎么搭起来的"
-category: "devlog"
+description: "这是个基于 Astro 和 GitHub Pages 搭起来的网站。"
+category: "hello world"
 tags: ["建站", "astro", "随笔"]
 author: "lhZhang"
 ---
-这是个基于 Astro 和 GitHub Pages 搭起来的网站。
 
 这里是我的个人站点：放做过的项目、路上拍的照片，以及一些想明白的道理。
 
@@ -30,7 +29,7 @@ author: "lhZhang"
 - 分享图在构建时用 satori 现场生成，中文走思源黑体字形
 - 部署用 **GitHub Actions**：推送到仓库即自动构建并发布到 GitHub Pages
 
-架构不复杂，够用就好。
+架构不复杂，够用就好，访问可能会速度一般，但好处是会活得长久一些。
 
 ## 接下来
 
