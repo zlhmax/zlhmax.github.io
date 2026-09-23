@@ -6,7 +6,7 @@ import type { siteConfig } from "@/lib/types";
 import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
 ---
 
-<section class="flex flex-col md:flex-row items-center justify-center gap-6 bg-background border border-border p-6">
+<section class="flex flex-col md:flex-row items-center justify-center gap-6 bg-background border border-border px-6 pt-6 pb-3">
     <div class="w-full">
         <div class="flex cursor-default gap-3 select-none">
             {
@@ -45,7 +45,7 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
                     ))
             }
         </div>
-        <p class="text-base leading-relaxed text-secondary-foreground/80 py-6">{site_config.introduction.description}</p>
+        <p class="text-base leading-relaxed text-secondary-foreground/80 pt-6 pb-3">{site_config.introduction.description}</p>
         <div class="flex gap-3">
             {
                 site_config.introduction.ctaItems &&
