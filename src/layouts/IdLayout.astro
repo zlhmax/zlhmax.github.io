@@ -5,6 +5,7 @@ import "@/styles/typography.css";
 import "katex/dist/katex.min.css";
 import Head, { type Props as HeadProps } from "@/components/static/Head.astro";
 import FooterId from "@/components/static/FooterId.astro";
+import SearchModal from "@/components/static/SearchModal.astro";
 
 const { type, prev, next, ...headProps } = Astro.props as HeadProps & {
     type: "blog" | "portfolio";
@@ -23,6 +24,6 @@ const { type, prev, next, ...headProps } = Astro.props as HeadProps & {
             <slot />
         </main>
         <FooterId type={type} prev={prev} next={next} />
-        <pagefind-modal reset-on-close></pagefind-modal>
+        <SearchModal />
     </body>
 </html>

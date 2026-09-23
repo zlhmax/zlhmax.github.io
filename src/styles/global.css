@@ -217,6 +217,92 @@
     --pf-modal-max-width: 560px;
 }
 
+/* 搜索对话框：头部放大镜图标 / 底部快捷键提示条 / 右下状态提示（自定义结构见 SearchModal.astro）
+   注意：pagefind 自带样式用 :is(*, #\#) 三层 ID 提权，普通类选择器压不过，故此处加 !important 兜底。 */
+pagefind-modal .pf-modal-header-content {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+pagefind-modal pagefind-input {
+    display: block !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+pagefind-modal .pf-input-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 1 auto !important;
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+pagefind-modal .pf-input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    border: none !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+pagefind-modal .pf-modal-close {
+    display: inline-flex !important;
+}
+pagefind-modal .pf-search-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+    color: var(--pf-text-muted) !important;
+}
+pagefind-modal .pf-modal-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+}
+pagefind-modal .pf-hint-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+    color: var(--pf-text-muted) !important;
+    font-size: 13px !important;
+}
+pagefind-modal .pf-hint-bar .pf-keyboard-hint {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+    white-space: nowrap !important;
+}
+pagefind-modal .pf-hint-bar .pf-keyboard-key {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 1.5rem !important;
+    height: 1.5rem !important;
+    padding: 0 0.3rem !important;
+    border: 1px solid var(--pf-border) !important;
+    border-radius: 0.3rem !important;
+    background-color: var(--pf-hover) !important;
+    font-family: inherit !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    color: var(--pf-text-secondary) !important;
+}
+pagefind-modal .pf-modal-footer pagefind-summary {
+    margin-left: auto !important;
+}
+pagefind-modal .pf-summary {
+    color: var(--pf-text-muted) !important;
+    font-size: 13px !important;
+}
+@media (max-width: 640px) {
+    pagefind-modal .pf-hint-bar {
+        display: none !important;
+    }
+}
+
 .dark {
     --pf-text: var(--foreground);
     --pf-text-secondary: var(--muted-foreground);

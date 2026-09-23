@@ -1,0 +1,31 @@
+---
+// 搜索对话框（自定义内部结构）
+// 结构对应参考截图：
+//   头部  放大镜图标 + 输入框（placeholder「搜索标题、摘要或正文...」）+ 关闭按钮（组件自动生成）
+//   主体  搜索结果
+//   底部  左侧快捷键提示条「↑↓ 选择 · ↵ 打开 · Ctrl K 开关」+ 右下状态提示「输入关键词开始搜索」
+// 说明：<pagefind-modal> 一旦有子元素即改用自定义结构；头部组件会把子元素搬进 .pf-modal-header-content
+// 键盘行为（↑↓ 选择 / ↵ 打开 / esc 清除 / Ctrl+K 开关）由各组件内置处理，底部提示条为纯视觉说明（aria-hidden）。
+---
+<pagefind-modal reset-on-close>
+    <pagefind-modal-header>
+        <span class="pf-search-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <circle cx="8.5" cy="8.5" r="5.75"></circle>
+                <path d="M12.9 12.9 17.2 17.2"></path>
+            </svg>
+        </span>
+        <pagefind-input placeholder="搜索标题、摘要或正文..."></pagefind-input>
+    </pagefind-modal-header>
+    <pagefind-modal-body>
+        <pagefind-results></pagefind-results>
+    </pagefind-modal-body>
+    <pagefind-modal-footer>
+        <div class="pf-hint-bar" aria-hidden="true">
+            <span class="pf-keyboard-hint"><kbd class="pf-keyboard-key">↑</kbd><kbd class="pf-keyboard-key">↓</kbd> 选择</span>
+            <span class="pf-keyboard-hint"><kbd class="pf-keyboard-key">↵</kbd> 打开</span>
+            <span class="pf-keyboard-hint"><kbd class="pf-keyboard-key">Ctrl</kbd><kbd class="pf-keyboard-key">K</kbd> 开关</span>
+        </div>
+        <pagefind-summary default-message="输入关键词开始搜索"></pagefind-summary>
+    </pagefind-modal-footer>
+</pagefind-modal>
