@@ -10,7 +10,7 @@ export const collections = {
       date: z.string(),
       title: z.string(),
       description: z.string(),
-      category: z.enum(["engineering", "workflow", "strategy", "devlog", "daily blog"]),
+      category: z.enum(["engineering", "workflow", "strategy", "devlog", "daily blog", "hello world"]),
       tags: z.array(z.string()).optional().default([]),
       author: z.string().optional().default("lhZhang"),
     }),
