@@ -3,7 +3,7 @@ draft: false
 date: "21-09-2026"
 title: "我的新网站"
 description: "这是个基于 Astro 和 GitHub Pages 搭起来的网站。"
-category: "hello world"
+category: "daily blog"
 tags: ["建站", "astro", "随笔"]
 author: "lhZhang"
 ---
