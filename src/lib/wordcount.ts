@@ -26,6 +26,12 @@ export async function getTotalWords(): Promise<number> {
   return posts.reduce((sum, p) => sum + countWords(p.body ?? ""), 0);
 }
 
+/** 已发布文章篇数 */
+export async function getPostCount(): Promise<number> {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.length;
+}
+
 /** 千分位，避免依赖运行环境的 ICU 数据 */
 export function formatWords(n: number): string {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

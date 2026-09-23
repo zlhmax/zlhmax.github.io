@@ -1,8 +1,9 @@
 ---
 import site_config from "@/site-config.json";
-import { getTotalWords, formatWords } from "@/lib/wordcount";
+import { getTotalWords, getPostCount, formatWords } from "@/lib/wordcount";
 
 const totalWords = await getTotalWords();
+const postCount = await getPostCount();
 ---
 
 <footer class="mx-auto font-mono antialiased bg-background max-w-4xl text-foreground select-none sticky bottom-0 z-0">
@@ -14,8 +15,8 @@ const totalWords = await getTotalWords();
             </p>
         </div>
         <div>
-            <p class="text-sm text-muted-foreground">
-                共写下 {formatWords(totalWords)} 字
+            <p class="text-xs text-muted-foreground">
+                {postCount} 篇文章 {formatWords(totalWords)} 字
             </p>
         </div>
     </div>
