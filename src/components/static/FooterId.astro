@@ -1,8 +1,10 @@
 ---
 import site_config from "@/site-config.json";
 import IdNav from "./IdNav.astro";
+import { getTotalWords, formatWords } from "@/lib/wordcount";
 
 const { type, prev, next } = Astro.props;
+const totalWords = await getTotalWords();
 ---
 
 <footer class="mx-auto font-mono antialiased bg-background max-w-4xl text-foreground select-none sticky bottom-0 z-0">
@@ -20,7 +22,7 @@ const { type, prev, next } = Astro.props;
         </div>
         <div>
             <p class="text-sm text-muted-foreground">
-                powered by <a href="https://astro.build/" target="_blank" rel="noopener noreferrer" class="hover:text-link transition-colors">Astro</a>
+                共写下 {formatWords(totalWords)} 字
             </p>
         </div>
     </div>
