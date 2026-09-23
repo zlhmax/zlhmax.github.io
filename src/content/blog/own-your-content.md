@@ -3,7 +3,7 @@ draft: false
 date: "19-09-2026"
 title: "把内容放回自己的地盘"
 description: "平台会变，域名和文件不会"
-category: "strategy"
+category: "daily blog"
 tags: ["写作", "长期主义"]
 author: "lhZhang"
 ---
