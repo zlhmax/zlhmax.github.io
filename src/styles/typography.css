@@ -77,10 +77,10 @@
         figure {
             @apply my-10;
             img {
-                @apply my-0 mx-auto;
-            }
+                        @apply my-0;
+                    }
             figcaption {
-                @apply mt-2 text-sm text-center text-muted-foreground;
+                @apply mt-2 text-sm text-left text-muted-foreground;
             }
         }
 
