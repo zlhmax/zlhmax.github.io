@@ -20,11 +20,11 @@
     ],
     "description": "",
     "socialItems": [
+      { "type": "email", "url": "mailto:lhzhang06@gmail.com" },
       { "type": "instagram", "url": "https://www.instagram.com/" },
       { "type": "tiktok", "url": "https://www.tiktok.com/" },
       { "type": "x", "url": "https://x.com/lhzhang06" },
-      { "type": "github", "url": "https://github.com/lhzhang06" },
-      { "type": "email", "url": "mailto:lhzhang06@gmail.com" }
+      { "type": "github", "url": "https://github.com/lhzhang06" }
     ]
   },
   "featured": {
