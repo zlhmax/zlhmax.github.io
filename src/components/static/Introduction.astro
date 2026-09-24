@@ -51,7 +51,11 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
                     ))
             }
         </div>
-        <p class="text-base leading-relaxed text-secondary-foreground/80 pt-6 pb-3">{site_config.introduction.description}</p>
+        {
+                site_config.introduction.description && (
+                    <p class="text-base leading-relaxed text-secondary-foreground/80 pt-6 pb-3">{site_config.introduction.description}</p>
+                )
+            }
         <div class="flex gap-3">
             {
                 site_config.introduction.ctaItems &&
