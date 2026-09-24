@@ -28,6 +28,7 @@ const socialIconMap: Record<string, IconComponent> = {
   dribbble: RiDribbbleFill,
   tiktok: RiTiktokFill,
   rss: RiRssFill,
+  email: RiMailFill,
 };
 
 export function SocialIcon({ type, className = "" }: { type: socialIconType; className?: string }) {
