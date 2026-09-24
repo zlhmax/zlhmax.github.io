@@ -22,7 +22,7 @@
     "socialItems": [
       { "type": "instagram", "url": "https://www.instagram.com/" },
       { "type": "tiktok", "url": "https://www.tiktok.com/" },
-      { "type": "youtube", "url": "https://www.youtube.com/" },
+      { "type": "x", "url": "https://x.com/" },
       { "type": "github", "url": "https://github.com/zlhmax" }
     ]
   },
