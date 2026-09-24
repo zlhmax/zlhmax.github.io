@@ -22,7 +22,7 @@ author: "lhZhang"
 
 ## Hermes Agent ##
 
-![Hermes Desktop 版本页 —— 显示 You're on the latest version，Version 0.21.4](/images/blog/ai-built-this-site/01.png)
+![Hermes Agent 运行界面 —— 显示 v0.21.1（2026.9.7）、20 个工具集与 100 项技能](/images/blog/ai-built-this-site/02.png)
 
 ## 代码高亮
 
