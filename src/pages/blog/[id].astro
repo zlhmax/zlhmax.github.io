@@ -52,10 +52,11 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
 </IdLayout>
 
 {/* ── 文章右侧阅读导轨（toc-rail）：只覆盖 CSS 变量，不改库内部结构 ── */}
-{/* 颜色全部来自站点令牌 → 深浅色自动适配，无需单独的 .dark 覆盖 */}
+{/* 颜色基本沿用站点令牌（深浅色自动适配）；主色单独指定以保证 12px 小字的对比度 */}
 <style is:global>
     .toc-rail {
-        --toc-rail-accent: var(--link-hover);
+        /* ① 主色：浅色深薄荷 #258062（白底 4.84:1 达 AA）；深色在下方 .dark 覆盖为亮薄荷 */
+        --toc-rail-accent: #258062;
         --toc-rail-line: var(--border);
         --toc-rail-muted: var(--muted-foreground);
         --toc-rail-faint: var(--muted-foreground);
@@ -70,6 +71,14 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         --toc-rail-link-line-height: 1.45;
         --toc-rail-font-family: inherit;
         --toc-rail-z-index: 10;
+    }
+    .dark .toc-rail {
+        --toc-rail-accent: #58b798;
+    }
+    /* ③ 库用原生锚点跳转 → 给正文标题留出固定页头高度，点击后标题落在 y≈80px */
+    .prose h2[id],
+    .prose h3[id] {
+        scroll-margin-top: 5rem;
     }
 </style>
 
@@ -98,7 +107,8 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
             progressMode: "content",
             activeBoundary: "viewport-end",
             activeOffset: Math.round(window.innerHeight * 0.5),
-            edge: { afterBoundary: "viewport-end", afterOffset: 120 },
+            // ② hideBefore: false → 一进文章页就显示导轨（默认 true 会等正文进入视口才出现）
+            edge: { hideBefore: false, afterBoundary: "viewport-end", afterOffset: 120 },
             minWidth: MIN_WIDTH,
             topOffset: 42,
         });
@@ -106,4 +116,16 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
 
     tryMount();
     window.addEventListener("resize", tryMount, { passive: true });
+
+    // ④ 站内跳转（模板用了 ClientRouter/视图过渡）时，本模块不会重新求值，
+    //    而旧 DOM 已被替换 → 必须先卸载旧的再重挂，否则导轨在跳转后消失。
+    document.addEventListener("astro:page-load", () => {
+        try {
+            rail?.unmount();
+        } catch {
+            /* 旧实例可能已随 DOM 一起销毁，忽略 */
+        }
+        rail = null;
+        tryMount();
+    });
 </script>
