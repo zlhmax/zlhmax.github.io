@@ -25,3 +25,13 @@ author: "lhZhang"
 ### 推荐一个在线版的Markdown编辑器：
 
 [Cmd Markdown](https://www.zybuluo.com/mdeditor)
+
+> 📝 续写一个主题  
+> ✨ 改写内容，润色文本  
+> 📊 制作图表（脑图、饼图等十多种）  
+> 📋 编写待办、公式、代码  
+> ✉️ 起草大纲、议程、邮件  
+> 👩充当翻译、老师、代码解释器  
+> 🤖 问 AI 任何问题
+
+![ai-dropdown](https://www.zybuluo.com/static/img/ai-dropdown.png)
