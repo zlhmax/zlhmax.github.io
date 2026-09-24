@@ -3,6 +3,7 @@ import IdHeader from "@/components/static/IdHeader.astro";
 import IdLayout from "@/layouts/IdLayout.astro";
 import { getCollection, render } from "astro:content";
 import { parse } from "date-fns";
+import "toc-rail/style.css";
 
 export async function getStaticPaths() {
     const items = (await getCollection("blog")).filter((item) => !item.data.draft);
@@ -49,3 +50,60 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         </div>
     </article>
 </IdLayout>
+
+{/* ── 文章右侧阅读导轨（toc-rail）：只覆盖 CSS 变量，不改库内部结构 ── */}
+{/* 颜色全部来自站点令牌 → 深浅色自动适配，无需单独的 .dark 覆盖 */}
+<style is:global>
+    .toc-rail {
+        --toc-rail-accent: var(--link-hover);
+        --toc-rail-line: var(--border);
+        --toc-rail-muted: var(--muted-foreground);
+        --toc-rail-faint: var(--muted-foreground);
+        --toc-rail-text: var(--foreground);
+        --toc-rail-title: var(--muted-foreground);
+        --toc-rail-width: 152px;
+        /* 正文容器 max-w-4xl(896px) 居中 → 导轨贴其右缘留 20px */
+        --toc-rail-left: calc(50vw + 448px + 1.25rem);
+        --toc-rail-top: max(6.5rem, 22vh);
+        --toc-rail-link-size: 0.75rem;
+        --toc-rail-link-weight: 500;
+        --toc-rail-link-line-height: 1.45;
+        --toc-rail-font-family: inherit;
+        --toc-rail-z-index: 10;
+    }
+</style>
+
+<script>
+    import { mountTocRail, type TocRailInstance } from "toc-rail";
+
+    const HEADINGS = ".prose h2[id], .prose h3[id]";
+    // 标题太少（1–2 个）不显示，避免只剩一条目的“目录”
+    const MIN_ITEMS = 3;
+    // 必须与上面 --toc-rail-left 的算式匹配：正文 896 + 两侧留白 + 导轨 152
+    const MIN_WIDTH = 1280;
+
+    let rail: TocRailInstance | null = null;
+
+    function tryMount() {
+        if (rail) return;
+        if (window.innerWidth < MIN_WIDTH) return;
+        const content = document.querySelector(".prose");
+        if (!content) return;
+        if (content.querySelectorAll(HEADINGS).length < MIN_ITEMS) return;
+        rail = mountTocRail({
+            content: ".prose",
+            headings: HEADINGS,
+            title: false,
+            ariaLabel: "文章目录",
+            progressMode: "content",
+            activeBoundary: "viewport-end",
+            activeOffset: Math.round(window.innerHeight * 0.5),
+            edge: { afterBoundary: "viewport-end", afterOffset: 120 },
+            minWidth: MIN_WIDTH,
+            topOffset: 42,
+        });
+    }
+
+    tryMount();
+    window.addEventListener("resize", tryMount, { passive: true });
+</script>
