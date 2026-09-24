@@ -23,3 +23,14 @@ author: "lhZhang"
 ## Hermes Agent ##
 
 ![Hermes Desktop 版本页 —— 显示 You're on the latest version，Version 0.21.4](/images/blog/ai-built-this-site/01.png)
+
+
+```python
+@requires_authorization
+class SomeClass:
+    pass
+
+if __name__ == '__main__':
+    # A comment
+    print 'hello world'
+```
