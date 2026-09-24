@@ -42,7 +42,7 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
     next={next}
 >
     <article transition:animate="fade">
-        <IdHeader backUrl="/blog" items={item.data} />
+        <IdHeader backUrl="/blog" items={item.data} compact />
 
         <div class="mt-5 prose border border-border p-6">
             <Content />
