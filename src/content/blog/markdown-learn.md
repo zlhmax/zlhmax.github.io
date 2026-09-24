@@ -34,4 +34,3 @@ author: "lhZhang"
 > 👩充当翻译、老师、代码解释器  
 > 🤖 问 AI 任何问题
 
-![ai-dropdown](https://www.zybuluo.com/static/img/ai-dropdown.png)
