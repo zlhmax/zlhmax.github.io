@@ -1,6 +1,6 @@
 ---
 draft: false
-date: "22-09-2026"
+date: "12-12-2017"
 title: "方向比速度重要"
 description: "走得慢不是问题，走错方向才是"
 category: "daily blog"
