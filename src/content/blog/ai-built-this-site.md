@@ -24,6 +24,7 @@ author: "lhZhang"
 
 ![Hermes Desktop 版本页 —— 显示 You're on the latest version，Version 0.21.4](/images/blog/ai-built-this-site/01.png)
 
+## 代码高亮
 
 ```python
 @requires_authorization
