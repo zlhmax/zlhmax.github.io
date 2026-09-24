@@ -15,7 +15,7 @@ const formattedDate = format(parsedDate, "MMM dd, yyyy");
 
     <header class="mt-3 select-none">
         <h1 class={`${compact ? "text-3xl" : "text-4xl"} font-semibold opacity-90`}>{items.title}</h1>
-        <p class={`${compact ? "text-sm" : "text-base"} text-muted-foreground mt-3`}>{items.description}</p>
+        <p class={`${compact ? "text-sm leading-10 border-l-2 border-muted-foreground/30 pl-4" : "text-base"} text-muted-foreground mt-3`}>{items.description}</p>
 
         <div class="flex items-center gap-3 mt-3 text-sm text-muted-foreground">
             <div class="flex items-center gap-3 mr-3">
