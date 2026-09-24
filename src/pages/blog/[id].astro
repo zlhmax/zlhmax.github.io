@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { item } = Astro.props;
-const { Content, headings } = await render(item);
+const { Content } = await render(item);
 
 const allItems = (await getCollection("blog"))
     .filter((item) => !item.data.draft)
@@ -29,12 +29,6 @@ const prev = currentIndex > 0 ? allItems[currentIndex - 1] : null;
 const next = currentIndex < allItems.length - 1 ? allItems[currentIndex + 1] : null;
 
 const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
-
-// ── 窄屏静态目录 ──
-// 宽屏由右侧阅读导轨接管（见文件末尾 @media 里的 display:none）
-// 阈值与导轨脚本一致（h2/h3 ≥ 3 条），避免出现只有一条的“目录”
-const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
-const showStaticToc = tocItems.length >= 3;
 ---
 
 <IdLayout
@@ -51,18 +45,6 @@ const showStaticToc = tocItems.length >= 3;
     <article transition:animate="fade">
         <IdHeader backUrl="/blog" items={item.data} compact />
 
-        {showStaticToc && (
-            <nav class="static-toc mt-5" aria-label="文章目录">
-                <div class="static-toc__title">本页目录</div>
-                <ol>
-                    {tocItems.map((h) => (
-                        <li class={`static-toc__item static-toc__item--h${h.depth}`}>
-                            <a href={`#${h.slug}`}>{h.text}</a>
-                        </li>
-                    ))}
-                </ol>
-            </nav>
-        )}
         <div class="mt-5 prose border border-border p-6">
             <Content />
         </div>
@@ -97,61 +79,6 @@ const showStaticToc = tocItems.length >= 3;
     .prose h2[id],
     .prose h3[id] {
         scroll-margin-top: 5rem;
-    }
-    /* ⑤ 窄屏（及不支持现代 JS 的浏览器）显示文章顶部静态目录；宽屏让位给右侧导轨 */
-    /*    每条先写字面值再写 var()：旧内核取前者，现代浏览器取后者 */
-    .static-toc {
-        padding: 0.9rem 1.1rem;
-        border-left: 3px solid #d4d4d8;
-        border-left-color: var(--border);
-        background: #fafafa;
-        background: var(--card, #fafafa);
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        line-height: 1.9;
-    }
-    .static-toc__title {
-        margin-bottom: 0.4rem;
-        font-weight: 600;
-        color: #3f3f46;
-        color: var(--foreground);
-    }
-    .static-toc ol {
-        margin: 0;
-        padding-left: 1.25rem;
-        list-style: decimal;
-    }
-    .static-toc__item--h3 {
-        margin-left: 0.9rem;
-    }
-    .static-toc a {
-        color: #52525b;
-        color: var(--muted-foreground);
-        text-decoration: none;
-    }
-    .static-toc a:hover {
-        color: #258062;
-        text-decoration: underline;
-    }
-    .dark .static-toc {
-        border-left-color: #3f3f46;
-        border-left-color: var(--border);
-        background: #27272a;
-        background: var(--card, #27272a);
-    }
-    .dark .static-toc__title {
-        color: #e4e4e7;
-        color: var(--foreground);
-    }
-    .dark .static-toc a {
-        color: #a1a1aa;
-        color: var(--muted-foreground);
-    }
-    /* 宽屏：右侧导轨已接管（阈值与脚本里的 MIN_WIDTH 一致） */
-    @media (min-width: 1280px) {
-        .static-toc {
-            display: none;
-        }
     }
 </style>
 
