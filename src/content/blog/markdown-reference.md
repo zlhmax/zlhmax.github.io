@@ -145,7 +145,7 @@ const title = 'Quiet defaults';
 Reference images from `src/assets/` with a relative path. Astro processes them at build time (resize, AVIF/WebP, dimensions emitted in the markup).
 
 ```markdown
-![Description for screen readers](../../assets/tone-sample-blue-architecture.jpg)
+![Description for screen readers](images/blog/ai-built-this-site/01.png)
 _Optional caption goes here._
 ```
 
@@ -204,26 +204,4 @@ Use a divider only when a section break needs more force than a heading.
 ---
 ```
 
----
 
-## Footnotes
-
-```markdown
-The first half of the work is easy.[^1]
-
-[^1]: The second half is what actually ships.
-```
-
-The first half of the work is easy.[^1]
-
-[^1]: The second half is what actually ships.
-
-Keep footnotes short. If a note grows past a sentence, put it in the body.
-
-## What the theme does not style
-
-If you use `<details>`, `<summary>`, or `<aside>` outside a callout, default browser styling applies. Either add your own CSS in `src/styles/prose.css` or wrap the element in an MDX component.
-
----
-
-*Source: adapted from the Tone template's Markdown reference — [Markdown You Will Actually Use](https://hanityx.github.io/astro-tone/posts/markdown-reference-v2/) by Alex Morgan, © 2026 Tone contributors, licensed under the [MIT License](https://github.com/hanityx/astro-tone/blob/main/LICENSE). Sample images from the original are not reproduced (their upstream licenses require replacement for production sites).*
