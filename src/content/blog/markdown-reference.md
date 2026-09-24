@@ -1,6 +1,6 @@
 ---
 draft: false
-date: "01-02-2026"
+date: "30-09-2020"
 title: "Markdown You Will Actually Use"
 description: "A short reference for the prose elements the theme styles. Headings, links, lists, tables, code, callouts."
 category: "engineering"
