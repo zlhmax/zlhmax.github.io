@@ -331,3 +331,26 @@ pagefind-modal .pf-summary {
         background-color: transparent;
     }
 }
+
+/* * SOCIAL BUTTONS（圆钮 + 悬停三件套：边框染色 / 图标变色 / 上浮 2px） */
+.social-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    color: var(--muted-foreground);
+    opacity: 1;
+    transition:
+        border-color 0.28s var(--ease-out),
+        color 0.28s var(--ease-out),
+        transform 0.28s var(--ease-out),
+        opacity 0.28s var(--ease-out);
+}
+.social-btn:hover,
+.social-btn:focus-visible {
+    border-color: color-mix(in srgb, var(--link-hover) 45%, var(--border));
+    color: var(--link-hover);
+    transform: translateY(-2px);
+}

@@ -39,8 +39,14 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
             {
                 site_config.introduction.socialItems &&
                     site_config.introduction.socialItems.map((item) => (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" aria-label={item.type}>
-                            <SocialIcon type={item.type as siteConfig["introduction"]["socialItems"][number]["type"]} className="size-7 text-secondary-foreground/80 hover:text-link" />
+                        <a
+                            href={item.url}
+                            class="social-btn"
+                            aria-label={item.type}
+                            target={item.url.startsWith("http") ? "_blank" : undefined}
+                            rel={item.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                        >
+                            <SocialIcon type={item.type as siteConfig["introduction"]["socialItems"][number]["type"]} className="size-[0.95rem]" />
                         </a>
                     ))
             }
