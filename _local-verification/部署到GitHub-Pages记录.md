@@ -3067,3 +3067,59 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 | 离字距 | **6px** (`underline-offset-6`) | ~~auto~~ → 4 → 8 → **6** |
 | 淡入 | 300ms | — |
 | hover 色 | `rgb(88,183,152)`（= `#58B798`，站点 `--link-hover`）| — |
+
+
+---
+
+## 九十、首页三处文字改用参考站「文章标题」字体（Cormorant Garamond）· 2026-09-25
+
+**需求**：Eddy「将首页页面上的 Shenzhen, China / Thoughts I've had for a while / Places I've been to and seen 的字体修改为这个网站 https://detour.xocoweb.workers.dev/ 的文章标题相同的字体」
+
+**① 读参考站真实计算值**（不靠看图猜，看图只能判断「是衬线体」）
+
+| 测量对象 | font-family | size / weight / style |
+|---|---|---|
+| **文章页 H1**「Hut to Hut in the Dolomites」 | **`Cormorant Garamond`** | 56px / **400** / normal |
+| 首页卡片标题 H3 | `Cormorant Garamond` | 24px / 400 |
+| 该站正文字体（**不是**我们要的）| `Mulish` | 16px / 400 |
+
+- 自托管字体文件：`CormorantGaramond-Variable-latin.woff2` + `Mulish-Variable-latin.woff2`；`@font-face` 家族名 `"Cormorant Garamond"`，字重范围 **300–700**。
+- 字体族统计：Mulish × 57 / Cormorant Garamond × 39 → 该站是「**Mulish 无衬线正文 + Cormorant Garamond 衬线标题**」的经典搭配。
+
+**② 我站三处定位（原都是用 Noto Sans SC 无衬线）**
+
+| 位置 | 文件 | 原 class |
+|---|---|---|
+| Shenzhen, China | `src/components/static/Introduction.astro` | `text-sm leading-relaxed …`（14px）|
+| Thoughts I've had for a while | `src/components/static/FeaturedBlog.astro:24` | `text-muted-foreground group-hover:text-link animation`（16px）|
+| Places I've been to and seen | `src/components/static/FeaturedPortfolio.astro:42` | 同上（16px）|
+
+**③ 改动（5 个文件）**
+
+```diff
++ package.json / pnpm-lock.yaml: + @fontsource-variable/cormorant-garamond 5.3.0
++ src/styles/global.css: @import "@fontsource-variable/cormorant-garamond";
++ src/styles/global.css: .cormorant-serif { font-family: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif; }
++ 三个组件: class 追加 "cormorant-serif"
+```
+
+- **家族名以包内 `index.css` 为准**：fontsource 的 variable 包注册名带 `Variable` 后缀 → 这里是 **`'Cormorant Garamond Variable'`**（后接 `"Cormorant Garamond"` 兜底，将来换非变量版也不会断）。
+- `font-family` 在这三个元素上**没有任何 Tailwind 工具类竞争** → 用自定义 CSS 类即可（不像导航那次被 `text-sm` 压住，无需 twMerge 路线）。
+- lock 无绝对 registry URL ✓ CI（`--frozen-lockfile`）安全 ✓
+
+**④ 验收（本地 + 线上）**
+
+| 项 | 结果 |
+|---|---|
+| 三处 `font-family` | 均 = `Cormorant Garamond Variable` ✓（本地 ✓ / 线上 ✓）|
+| 字号/字重 | 14px / 16px / 16px，均 w400 ✓（沿用原有字号，未动）|
+| 字体真加载 | `document.fonts.check('400 16px "Cormorant Garamond Variable"')` = true ✓；线上实际加载 `cormorant-garamond-latin-wght-normal.CUoBjw-S.woff2` ✓ |
+| 首页套用数 | `cormorant-serif` 在 index.html 出现 **3 次**（与目标数一致）✓ |
+| 线上 CSS | sha256 与本地 `dist/_astro/Head.CwO8J32u.css` 一致 ✓（部署约 110 秒）|
+
+**⑤ ⚠️ 诚实记录：小字号下的观感（供 Eddy 决定是否续调）**
+- Cormorant Garamond 是**display 型高对比衬线体**，参考站用在 24–56px；本站三处是 14px / 16px。
+- 目视结论：**16px 那两处清雅可辨 ✓；14px 的「Shenzhen, China」笔画偏纤细、观感偏淡**（不糊，但比原无衬线体弱）。
+- 备选（任一句可切）：字号 14→16px（与另两处一致）／字重 400→500 或 600（variable 支持 300–700）／加斜体 italic。
+
+**⑥ 提交**：`310e03e feat(home): apply Cormorant Garamond to three serif labels`（6 文件 22 增 3 删）
