@@ -2782,3 +2782,55 @@ pnpm 发现项目路径变了、想重建 `node_modules` 但删不掉 → **直�
 **⑥ 遗留**：原 `ryze` 只剩**一个空文件夹**，仍被那个目录句柄占着（`rmdir` 连试 6 次 WinError 32 ✗）。
 **无害** ✓ —— 资源管理器刷新该窗口或重启后即可删除；功能上改名已完成（内容全在新路径 ✓）。
 
+
+
+---
+
+## 八十三、页头导航字体对齐参考站（Manrope）· 2026-09-25
+
+**需求**：Eddy「我想修改一下首页页头上的 Home Travel Blog 的字体，请访问 https://astro-template-blog-folio.vercel.app/ 并读取 Journal Tags About 的字体，将我网站页头上的 Home Travel Blog 的字体修改为参考网站的一致.」
+
+**① 读参考站真实计算值**（不靠看图猜）—— Playwright 无头 Edge 打开参考站，取导航链接的 `getComputedStyle`：
+
+| 属性 | 参考站（Journal / Tags / About） |
+|---|---|
+| font-family | **Manrope**（自托管） |
+| font-size | **11.52px**（`text-[0.72rem]`） |
+| font-weight | **700** |
+| letter-spacing | **1.8432px**（0.16em） |
+| text-transform | **uppercase** |
+| 导航容器 | `<nav class="hidden items-center gap-6 text-[0.72rem]">` |
+
+**② 我站导航定位**：`src/components/static/Navigation.astro` → shadcn `Breadcrumb`（`nav[aria-label="breadcrumb"]` → `ol[data-slot="breadcrumb-list"]`，组件里硬编码 `text-sm`）。
+
+**③ 字体引入**：`pnpm add @fontsource-variable/manrope`（v5.3.0，与站内已有 geist / noto-sans-sc 同款自托管方式）→ `global.css` 顶部 `@import "@fontsource-variable/manrope";` → 产物含 5 个 `manrope-*-wght-normal.woff2`；CSS 家族名 = **`Manrope Variable`**。
+**lock 检查**：`pnpm-lock.yaml` 无绝对 registry URL ✓ → **CI（`--frozen-lockfile`）安全** ✓
+
+**④ ⚠️ 关键坑（第一次改完只中 3/5）**
+- 写在 `@layer` 里的 `.nav-breadcrumb { font-size: 0.72rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase }` **输给** Tailwind 工具类 ✗ —— **跨层时层级顺序永远压过 specificity**；`font-weight` / `text-transform` 之所以生效，只因 shadcn 组件没在这些属性上写工具类，而 `text-sm` 明确写了 `font-size`。
+- **正解**：走 `cn` / twMerge 合并的 **Tailwind 工具类**（`text-[0.72rem]` 直接把 `text-sm` 替换掉 ✓）。
+- 第二个坑：首页上「Home」渲染为 `BreadcrumbPage`，组件里硬编码 **`font-normal`** ✗ → 用任意变体 `[&_[data-slot=breadcrumb-page]]:font-bold` 压掉 ✓
+
+**⑤ 最终改动（4 文件 22 增 2 删，提交 `5dac865`）**
+
+| 文件 | 改动 |
+|---|---|
+| `package.json` / `pnpm-lock.yaml` | `+ @fontsource-variable/manrope 5.3.0` |
+| `src/styles/global.css` | `@import "@fontsource-variable/manrope";` + `.nav-breadcrumb{font-family:"Manrope Variable",…}`（**只负责字体族**，可继承） |
+| `src/components/static/Navigation.astro` | `<Breadcrumb className="select-none nav-breadcrumb">` + `<BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold">` |
+
+**⑥ 验收（本地 + 线上都量计算值）**
+
+| 属性 | 参考站 | 我站（本地 & 线上） | 结果 |
+|---|---|---|---|
+| font-family | Manrope | Manrope Variable | ✓ 一致 |
+| font-size | 11.52px | 11.52px | ✓ 一致 |
+| font-weight | 700 | 700 | ✓ 一致 |
+| letter-spacing | 1.8432px | 1.8432px | ✓ 一致 |
+| text-transform | uppercase | uppercase | ✓ 一致 |
+
+- 三项（Home / Travel / Blog）**全部 5/5 一致** ✓
+- 线上 `www.lhzhang.cn`：`manrope-latin-wght-normal.DHIcAJRg.woff2` 已加载 ✓、`document.fonts.check('700 11.52px "Manrope Variable"')` = true ✓
+- **线上 CSS sha256 与本地 `dist/_astro/Head.BpDFRmM7.css` 完全一致** → 确认线上跑的就是本地构建产物 ✓（部署耗时约 100 秒）
+
+**⑦ 保留未改（如需一句话切换）**：`•` 分隔符（参考站导航无分隔符，仅靠 `gap-6` 间距）、文字颜色 `text-muted-foreground/80`（参考站为 `rgb(38,49,38)`）—— 本次**只改字体**。
