@@ -2959,3 +2959,37 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **④ 提交**：`024db01 feat(nav): wavy thicker underline with fade-in on hover`（1 文件 4 增 2 删）
 
 **⑤ 可继续调的档位**：`underline-offset-6/8`（更远）、`decoration-[3px]`（更粗）、`duration-500`（更慢的淡入）、`decoration-dotted`（改点线）。
+
+
+---
+
+## 八十七、悬停下划线线型：波浪 → 直线 · 2026-09-25
+
+**需求**：Eddy「Wavy波浪线 修改为 直线效果」
+
+**① 改动（只删一个类，其余参数全部保留）**
+
+```diff
+- [&_a]:decoration-wavy
+```
+
+- `text-decoration-style` 的**默认值就是 `solid`** → **去掉 `decoration-wavy` 即回直线**，无需显式写 `decoration-solid`（少一个类，符合「删除优于新增」）。
+- **保留**：`underline-offset-4`（离字 4px）、`decoration-2`（线宽 2px）、`decoration-transparent` + `hover:decoration-current` + `transition-[color,text-decoration-color] duration-300`（淡入）。
+
+**② 验收（本地 + 线上）**
+
+| 状态 | 本地 | 线上 |
+|---|---|---|
+| 常态 | `line=underline / style=solid / thick=2px / offset=4px / color=rgba(0,0,0,0)` ✓ | 同 ✓ |
+| 悬停 100ms（过渡中）| `rgba(103,158,142,0.54)` ✓ | `rgba(103,158,142,0.54)` ✓ |
+| 悬停结束 | `rgb(88,183,152)` ✓ | `rgb(88,183,152)` ✓ |
+| 移开 | 回 `rgba(0,0,0,0)` ✓ | 同 ✓ |
+| 当前页 `<span>` | `line=none` ✓ | `line=none` ✓ |
+| transition | `color, text-decoration-color / 0.3s` ✓ | 同 ✓ |
+
+- 线上 `www.lhzhang.cn`：**CSS sha256 与本地 `dist/_astro/Head.Di6sFenR.css` 一致** ✓（部署约 66 秒）
+- 视觉复核：直线位于字母下方、间隙清晰、不压字、不与 `•` 分隔符重叠；2px 粗细与字母笔画观感协调 ✓
+
+**③ 提交**：`6e97590 feat(nav): use straight underline instead of wavy on hover`（1 文件 3 增 3 删）
+
+**④ 备注**：线型可选 `decoration-solid`(默认) / `decoration-dotted` / `decoration-dashed` / `decoration-wavy`，与本轮保留的离字距离、线宽、淡入参数相互独立，一句话即可切换任一维度。
