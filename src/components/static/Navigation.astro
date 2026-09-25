@@ -21,8 +21,9 @@ const labelOf = (item: string) => labels[item] ?? item;
   site_config.bNavigation && (
     <>
       <Breadcrumb className="select-none nav-breadcrumb">
-        {/* 字号/字重/字距/大写对齐参考站；末尾变体用于压掉 BreadcrumbPage 里硬编码的 font-normal */}
-        <BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold">
+        {/* 字号/字重/字距/大写对齐参考站；两个变体压掉 BreadcrumbPage 自带的 font-normal 与 text-foreground/90，
+            让「当前页（无链接）」与「有链接项」颜色一致（text-inherit 跟随列表的 text-muted-foreground/80） */}
+        <BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold [&_[data-slot=breadcrumb-page]]:text-inherit">
           {/* Home */}
           <BreadcrumbItem>
             {isCurrent("/") ? (
