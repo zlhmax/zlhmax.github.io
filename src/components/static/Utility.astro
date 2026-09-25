@@ -9,10 +9,10 @@ import { RiRssLine, RiSearchLine } from "@remixicon/react";
     {
         site_config.bPageFind && (
             <>
-                <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-muted-foreground" aria-label="Search">
+                <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-link" aria-label="Search">
                     <RiSearchLine />
                 </Button>
-                <Button variant="outline" size="icon-xs" className="search-trigger hidden md:flex text-muted-foreground/80 hover:text-muted-foreground" aria-label="Search (Ctrl+K)">
+                <Button variant="outline" size="icon-xs" className="search-trigger hidden md:flex text-muted-foreground/80 hover:text-link" aria-label="Search (Ctrl+K)">
                     <RiSearchLine />
                 </Button>
             </>
@@ -21,7 +21,7 @@ import { RiRssLine, RiSearchLine } from "@remixicon/react";
     {site_config.bThemeToggle && <ThemeToggle client:load />}
     {
         site_config.bRssFeed && (
-            <Button variant="outline" size="icon-xs" className="text-muted-foreground/80 hover:text-muted-foreground" aria-label="rss">
+            <Button variant="outline" size="icon-xs" className="text-muted-foreground/80 hover:text-link" aria-label="rss">
                 <a href="/rss.xml" class="p-1" aria-label="rss">
                     <RiRssLine />
                 </a>
