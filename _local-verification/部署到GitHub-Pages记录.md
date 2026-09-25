@@ -2834,3 +2834,41 @@ pnpm 发现项目路径变了、想重建 `node_modules` 但删不掉 → **直�
 - **线上 CSS sha256 与本地 `dist/_astro/Head.BpDFRmM7.css` 完全一致** → 确认线上跑的就是本地构建产物 ✓（部署耗时约 100 秒）
 
 **⑦ 保留未改（如需一句话切换）**：`•` 分隔符（参考站导航无分隔符，仅靠 `gap-6` 间距）、文字颜色 `text-muted-foreground/80`（参考站为 `rgb(38,49,38)`）—— 本次**只改字体**。
+
+
+---
+
+## 八十四、页头导航「当前页（无链接）」文字颜色与链接项统一 · 2026-09-25
+
+**需求**：Eddy「HOME TRAVEL BLOG 新的样式在无超链的时候字体的颜色偏深，能否修改为与有超链时的字体颜色一致?」
+
+**① 先量色值（不猜）** —— 线上取 `getComputedStyle`：
+
+| 项 | 原生 class | 实测 color |
+|---|---|---|
+| 有链接 `<a>` | `transition-colors hover:text-link` | `oklab(0.552 0.00439355 -0.015385 / 0.8)` = `text-muted-foreground/80` |
+| 无链接当前页 `<span>` | **`font-normal text-foreground/90`** | `oklab(0.141 0.00136333 -0.00481054 / 0.9)` ← **明显更深** |
+
+**② 修法**：在 `BreadcrumbList` 的 className 上再加一个任意变体（与上一轮 `font-bold` 同一套机制）：
+
+```
+[&_[data-slot=breadcrumb-page]]:text-inherit
+```
+
+选 `text-inherit` 而非写死 `text-muted-foreground/80` 的理由：**跟随列表色**，将来改列表颜色时当前页自动同步，不会漏改一处。
+
+**③ 验收（本地 3 页 + 线上 3 页，逐页比对颜色集合）**
+
+| 页面 | 当前页项 | 三者同色 |
+|---|---|---|
+| `/` 首页 | Home（span） | ✓ `oklab(0.552…/0.8)` |
+| `/blog/` | Blog（span） | ✓ |
+| `/portfolio/` | Travel（span） | ✓ |
+
+- 线上 `www.lhzhang.cn` 三页均 **✓ 三者同色**，字号/字重仍为 `11.52px / w700` ✓（上一轮字体改动未受影响）
+- **线上 CSS sha256 与本地 `dist/_astro/Head.DVL5juaQ.css` 一致** ✓（部署约 88 秒）
+
+**④ 提交**：`156e772 fix(nav): unify current-page color with linked nav items`（1 文件 3 增 2 删）
+
+**⑤ 备注 —— shadcn `BreadcrumbPage` 会硬编码这两个类，覆盖时必须一起处理**：
+`font-normal`（→ 用 `:font-bold` 压）、`text-foreground/90`（→ 用 `:text-inherit` 压）。
