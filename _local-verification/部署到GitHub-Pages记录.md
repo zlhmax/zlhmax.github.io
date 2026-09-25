@@ -2872,3 +2872,43 @@ pnpm 发现项目路径变了、想重建 `node_modules` 但删不掉 → **直�
 
 **⑤ 备注 —— shadcn `BreadcrumbPage` 会硬编码这两个类，覆盖时必须一起处理**：
 `font-normal`（→ 用 `:font-bold` 压）、`text-foreground/90`（→ 用 `:text-inherit` 压）。
+
+
+---
+
+## 八十五、页头导航超链悬停加下划线（移开消失）· 2026-09-25
+
+**需求**：Eddy「能否把刚才修改的 HOME TRAVEL BLOG 的超链在鼠标悬停时加上一个下划线的效果，鼠标移开就不会显示下划线」
+
+**① 改法（只加一个任意变体，不动共享的 shadcn 组件）**
+
+```diff
+- <BreadcrumbList className="… [&_[data-slot=breadcrumb-page]]:text-inherit">
++ <BreadcrumbList className="… [&_[data-slot=breadcrumb-page]]:text-inherit [&_a:hover]:underline">
+```
+
+- 用 `[&_a:hover]` **限定在本导航内**（选择器要求祖先带该类）→ 不去改 `src/components/ui/breadcrumb.tsx` 这个共享组件 ✓
+- 只命中 `<a>`（真链接）→ **当前页那个 `<span data-slot="breadcrumb-page">` 不是超链，不会加下划线** ✓（符合需求）
+
+**② ⚠️ 必查：编译出的选择器是不是「裸 `a:hover`」**
+grep 编译产物时容易只看后半截而误判成全站规则。正确做法是看**含转义前缀的完整选择器**：
+
+```
+.\[\&_a\:hover\]\:underline a:hover{text-decoration-line:underline}   ✓ 有作用域前缀
+```
+
+**③ 实机验证（4 个状态，缺一不可；`page.hover()` 超时就用 `getBoundingClientRect` + `page.mouse.move()` 兜底）**
+
+| 状态 | 期望 | 本地 | 线上 |
+|---|---|---|---|
+| ① 未悬停 TRAVEL | `none` | ✓ | ✓ |
+| ② 悬停 TRAVEL | `underline`（实测 `deco=underline`、`color=rgb(88,183,152)`＝原有 hover 绿） | ✓ | ✓ |
+| ③ 鼠标移开 | `none` | ✓ | ✓ |
+| ④ 悬停 HOME（当前页 `<span>`，非超链） | `none` | ✓ | ✓ |
+
+- 线上 `www.lhzhang.cn`：**线上 CSS sha256 与本地 `dist/_astro/Head.Dz-miQ0x.css` 一致** ✓（部署约 66 秒）
+- 视觉复核：悬停时 `TRAVEL` 变绿 + 下划线，位置干净不压字母 ✓；常态三项皆无 ✓
+
+**④ 提交**：`c581aaf feat(nav): add hover underline to nav links`（1 文件 3 增 3 删）
+
+**⑤ 可选档位（如需一句话切换）**：下划线离字距离 `underline-offset-4`、线型 `decoration-dotted/wavy`、粗细 `decoration-2`、悬停淡入（常态透明线 + `hover:decoration-current` + `transition-colors`）。
