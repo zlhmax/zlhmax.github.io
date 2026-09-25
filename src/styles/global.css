@@ -9,6 +9,8 @@
 @import "@fontsource-variable/noto-sans-sc";
 /* 页头导航字体：Manrope（与参考站 astro-template-blog-folio 导航同款，自托管） */
 @import "@fontsource-variable/manrope";
+/* 首页三处衬线字：Cormorant Garamond（与参考站 detour 的文章标题同款，自托管） */
+@import "@fontsource-variable/cormorant-garamond";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -59,6 +61,14 @@
        走 twMerge 合并（text-[0.72rem] 替换 text-sm）才是层级安全的正解。 */
     .nav-breadcrumb {
         font-family: "Manrope Variable", "Noto Sans SC Variable", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+    }
+
+    /* 首页三处衬线字（Shenzhen, China / Thoughts I've had for a while / Places I've been to and seen）
+       —— 对齐参考站 detour.xocoweb.workers.dev 的**文章标题**字体：Cormorant Garamond。
+       fontsource 变量版注册的家族名是 "Cormorant Garamond Variable"（包内 index.css 为准），
+       后面接 "Cormorant Garamond" 兜底（若哪天改用非变量版）。 */
+    .cormorant-serif {
+        font-family: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif;
     }
 }
 
