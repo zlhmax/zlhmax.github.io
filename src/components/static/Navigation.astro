@@ -25,7 +25,7 @@ const labelOf = (item: string) => labels[item] ?? item;
             让「当前页（无链接）」与「有链接项」颜色一致；变体3 起 = 超链悬停下划线：
               常态画一条透明直线（decoration-transparent，不占布局）→ 悬停显色 hover:decoration-current，
               配 transition-[color,text-decoration-color] 得到淡入；离字 6px(underline-offset-6)、线宽 2px(decoration-2)、实线(默认 solid) */}
-        <BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold [&_[data-slot=breadcrumb-page]]:text-inherit [&_a]:underline [&_a]:decoration-2 [&_a]:underline-offset-6 [&_a]:decoration-transparent [&_a]:transition-[color,text-decoration-color] [&_a]:duration-300 [&_a:hover]:decoration-current">
+        <BreadcrumbList className="text-[0.6rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold [&_[data-slot=breadcrumb-page]]:text-inherit [&_a]:underline [&_a]:decoration-2 [&_a]:underline-offset-6 [&_a]:decoration-transparent [&_a]:transition-[color,text-decoration-color] [&_a]:duration-300 [&_a:hover]:decoration-current">
           {/* Home */}
           <BreadcrumbItem>
             {isCurrent("/") ? (
