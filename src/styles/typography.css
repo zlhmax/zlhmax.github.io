@@ -6,14 +6,14 @@
         @apply text-base leading-relaxed text-secondary-foreground/80;
 
         /* Headings（上间距 mt 已按用户要求减半：h2 84→42px / h3 40→20px / h4 32→16px；下方 mb 未动）
-           字号小一号（2px/号）：h2 30→28px / h3 24→22px / h4 20→18px；
+           字号已两次「小一号」（每次 -2px）：30/24/20 → 28/22/18 → 现 26/20/18（h4 停在 18 不再降，避免掉进正文字号 16px）
            ⚠️ 任意字号不带行高 → 必须用 text-[Npx]/[ratio] 保住原行高比例（1.2 / 1.3333 / 1.4），
               否则会继承 .prose 的 leading-relaxed(1.625)，标题反而变松 */
         h2 {
-            @apply text-[28px]/[1.2] text-secondary-foreground font-semibold mt-[42px] mb-5 border-b border-border pb-3 opacity-90;
+            @apply text-[26px]/[1.2] text-secondary-foreground font-semibold mt-[42px] mb-5 border-b border-border pb-3 opacity-90;
         }
         h3 {
-            @apply text-[22px]/[1.3333] text-secondary-foreground font-semibold mt-5 mb-4 border-b border-border pb-1 opacity-90;
+            @apply text-[20px]/[1.3333] text-secondary-foreground font-semibold mt-5 mb-4 border-b border-border pb-1 opacity-90;
         }
         h4 {
             @apply text-[18px]/[1.4] text-secondary-foreground font-semibold mt-4 mb-3 opacity-90;
