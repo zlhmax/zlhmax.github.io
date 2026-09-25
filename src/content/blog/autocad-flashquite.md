@@ -3,7 +3,7 @@ draft: false
 date: "02-01-2018"
 title: "AutoCAD闪退（包括重装依旧闪退）的解决方案"
 description: "闪退多半是 ADLM 许可文件损坏：清掉 FLEXnet 目录里的许可文件让 CAD 重新生成即可，不用重装，更不用删注册表。"
-category: "engineering"
+category: "observation"
 tags: ["AutoCAD", "CAD", "故障排查"]
 author: "lhZhang"
 ---

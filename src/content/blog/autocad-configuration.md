@@ -3,7 +3,7 @@ draft: false
 date: "02-04-2017"
 title: "AutoCAD配置加速,使其运行更快!"
 description: "从经典工作界面、硬件加速，到关闭通讯中心与清理图纸垃圾 —— 7 个让 AutoCAD 启动和绘图更流畅的设置。"
-category: "engineering"
+category: "observation"
 tags: ["AutoCAD", "CAD", "效率"]
 author: "lhZhang"
 ---
