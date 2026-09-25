@@ -3458,3 +3458,46 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 - 目视：图标呈柔和浅灰、三者一致、清晰可辨（不过淡）、与圆角边框搭配协调 ✓（截图 `Desktop/页头图标_改后_20260926.png` / `页头图标_线上实拍_20260926.png`）
 
 **④ 提交**：`a62a9d3 feat(header): lighten utility icon colors to match nav text`（2 文件 4 增 4 删）
+
+
+---
+
+## 九十九、页头 3 图标「悬停色」改为网站超链色 · 2026-09-26
+
+**需求**：Eddy「这 3 个图标，鼠标悬停的时候图标的颜色能否修改为与网站整体的超链一致？」
+
+**① 站点超链色的权威来源（先查 token，不猜色值）**
+`src/styles/global.css:86-87`：
+```css
+/* 全站超链接 hover 色：浅色 #2467FF / 深色 #6EA8FF，由 --link-hover 切换 */
+--color-link: var(--link-hover);
+```
+`--link-hover: #58B798`（**light 与 dark 同值**，`global.css:132 / :172`）→ 生成 Tailwind 工具类 **`text-link`**。
+全站既有用法均为 `hover:text-link`：页头 Breadcrumb（`ui/breadcrumb.tsx:25`）· 博客/作品集卡片标题与箭头 · `BackButton` · 首页两个区块标签 · 作品集详情外链。
+→ 故「与网站整体的超链一致」= **`hover:text-link`**（`#58B798`），而不是页头那条下划线用的 `decoration-current`。
+
+**② 改动（2 文件 4 处）**：把上一轮为「防悬停变深」而设的 `hover:text-muted-foreground` 换成 `hover:text-link`
+
+```diff
+- className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-muted-foreground"
++ className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-link"
+  （搜索桌面断点、RSS 按钮、ThemeToggle 同改）
+```
+
+**③ 验收（本地 + 线上，亮暗双模式 + 真实指针悬停）**
+
+| 检查 | 结果 |
+|---|---|
+| 悬停 3 个图标（亮色）| 全部 = **`rgb(88, 183, 152)`** = `#58B798` ✓，`svg.fill` 同步 ✓ |
+| 悬停 3 个图标（暗色）| 全部 = **`rgb(88, 183, 152)`** ✓（`--link-hover` 亮暗同值，无需单写 `.dark`）|
+| 常态（不悬停）| 仍为 `oklab(0.552 0.00439355 -0.015385 / 0.8)`（上一轮的浅灰，未回归）✓ |
+| 过渡 | `transition-property: all` / `0.15s` → 颜色平滑淡入 ✓（与站内链接一致）|
+| 悬停时按钮底色 | `bg-muted` 浅灰填充（outline 变体原有 ✓）；边框 `border-border` **未动** ✓ |
+| 线上 CSS sha256 | 与本地 `Head.C1qbkjVI.css` 一致 ✓，部署约 66 秒 |
+
+**④ ⚠️ 本轮踩到的「假异常」（记录以免下次误判）**：首轮线上验收时，第 1 个按钮的**常态**读数出现 `oklab(0.7083 -0.0974 0.0176 / 0.993)`（偏绿、alpha 0.993）——
+那是**脚本在悬停后立刻回读、采到了 0.15s 过渡的中间态** ✗，不是缺陷。
+补做「干净常态复测」（指针移开 + 等 1.2s + 连读 3 次）→ 三次**全部** = 浅灰 `oklab(0.552 … /0.8)` ✓ 三者一致 ✓。
+**教训：测 hover 相关颜色时，常态读数必须先把指针移开并等过渡结束（> transition-duration）再采，且连采多次确认稳定。**
+
+**⑤ 提交**：`001f6ff feat(header): use site link color for utility icon hover`（2 文件 4 增 4 删）
