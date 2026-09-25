@@ -3197,3 +3197,48 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **⑤ 提交**：`effdd39 feat(home): align Shenzhen China label to 16px with the other two`（1 文件 1 增 1 删）
 
 **⑥ 首页三处衬线字 —— 当前定档**：`Cormorant Garamond Variable`（`.cormorant-serif`）· **16px** · weight 400；来源参考站 `detour.xocoweb.workers.dev` 的文章标题字体。
+
+
+---
+
+## 九十三、页头导航字号「小一号」11.52px → 9.6px · 2026-09-25
+
+**需求**：Eddy「再将页头的 HOME TRAVEL BLOG 的字体改小一号」
+
+**换算依据**（本项目既有惯例，已固化进技能 §「用户说字号调小 N 号」）：**「号」= 1~2px 不等**，
+历史证据：阅读导轨三次「再调小一号」= 12→11→10→9px（1px/号）；详情页日期行「调小一号」= 14→12px（2px/号）。
+→ 按规则**取 2px/号**并明确声明 + 给备选。
+
+**① 改动（1 文件 · 1 行）**
+
+```diff
+- <BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase …">
++ <BreadcrumbList className="text-[0.6rem] font-bold tracking-[0.16em] uppercase …">
+```
+
+- `0.72rem`(11.52px) → `0.6rem`(**9.6px**)，−1.92px ≈ 2px/号；取 `rem` 干净值而非 `9.52px` 任意值。
+- **`tracking-[0.16em]` 是 em 相对单位 → 字距自动等比缩小**：1.8432px → **1.536px**（无需单独改）。
+- 字重 700 / uppercase / Manrope / 下划线四要素 / 当前页同色 —— **全部保持不变**。
+
+**② 验收（本地 + 线上，三页逐一）**
+
+| 项 | 实测 |
+|---|---|
+| font-family / weight / transform | `Manrope Variable` / **700** / **uppercase** ✓（未动）|
+| **font-size** | **9.6px** ✓（本地 ✓ / 线上 ✓）|
+| letter-spacing | **1.536px** ✓（0.16em 等比 ✓）|
+| 导航盒 | 166.08 × 14.39px（原 11.52px 时更高）|
+| 三页（首页/blog/travel）| 全部 9.6px ✓ |
+| 当前页 vs 链接颜色 | **仍同色**（`oklab(0.552 … / 0.8)`）✓ **无回归** |
+| 字体加载 / 线上 CSS | true ✓ / sha256 与本地 `Head.DNC3TcRQ.css` 一致 ✓（部署约 88 秒）|
+
+**③ 已同时给出三档对照图**（`Desktop/页头导航_字号三档对照_20260925.png`）：11.52px（原档，与参考站一致）/ 10.4px / 9.6px（本次）。
+观感：9.6px **仍清晰可辨**（700 粗体 + 1.536px 字距支撑），但已接近「小字」区间。
+
+**④ 与参考站的关系（需知悉）**：参考站 `astro-template-blog-folio.vercel.app` 导航是 **11.52px** ——
+本次下调后**本站不再与参考站一致**。备选档位（一句话可切）：`text-[0.65rem]`(10.4px) / `text-[0.625rem]`(10px) / 回 `text-[0.72rem]`(11.52px)。
+
+**⑤ 提交**：`4e1d654 feat(nav): reduce header nav font size one step to 0.6rem`（1 文件 1 增 1 删）
+
+**⑥ 页头导航当前定档**：`Manrope Variable` · **9.6px** · 700 · tracking `0.16em`(1.536px) · uppercase ·
+下划线 solid/2px/离字6px/淡入300ms/hover `#58B798` · 当前页与链接同色。
