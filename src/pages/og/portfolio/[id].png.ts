@@ -15,7 +15,7 @@ export const GET: APIRoute = async ({ props }) => {
   const { title, description, category, date } = item.data;
   const formattedDate = format(
     parse(date, "dd-MM-yyyy", new Date()),
-    "MMM dd, yyyy",
+    "MMMM dd, yyyy",
   );
 
   const png = await generateOGImage({

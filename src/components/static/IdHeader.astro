@@ -7,7 +7,7 @@ import { parse, format } from "date-fns";
 const { backUrl, items, compact = false } = Astro.props;
 
 const parsedDate = parse(items.date, "dd-MM-yyyy", new Date());
-const formattedDate = format(parsedDate, "MMM dd, yyyy");
+const formattedDate = format(parsedDate, "MMMM dd, yyyy");
 ---
 
 <div class="border border-border mt-5 p-6">

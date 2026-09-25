@@ -5,7 +5,7 @@ import { format, parse } from "date-fns";
 
 export function BlogCard({ item }: { item: blogConfig }) {
   const parsedDate = parse(item.data.date, "dd-MM-yyyy", new Date());
-  const formattedDate = format(parsedDate, "MMM d, yyyy");
+  const formattedDate = format(parsedDate, "MMMM d, yyyy");
 
   return (
     <a href={`/blog/${item.id}`} className="group flex flex-col gap-2 p-3 border border-border/50 hover:border-border active:border-border hover:bg-muted animation hover:scale-102 active:scale-100 select-none">
