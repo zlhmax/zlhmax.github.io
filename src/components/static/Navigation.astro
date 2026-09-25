@@ -20,8 +20,9 @@ const labelOf = (item: string) => labels[item] ?? item;
 {
   site_config.bNavigation && (
     <>
-      <Breadcrumb className="select-none">
-        <BreadcrumbList>
+      <Breadcrumb className="select-none nav-breadcrumb">
+        {/* 字号/字重/字距/大写对齐参考站；末尾变体用于压掉 BreadcrumbPage 里硬编码的 font-normal */}
+        <BreadcrumbList className="text-[0.72rem] font-bold tracking-[0.16em] uppercase [&_[data-slot=breadcrumb-page]]:font-bold">
           {/* Home */}
           <BreadcrumbItem>
             {isCurrent("/") ? (
