@@ -2682,3 +2682,51 @@ src/portfolio-config.json           插入 17 行条目（外科式 patch，未�
 
 **顺带发现（未处理）**：`Introduction.astro:11-20` 的 badges 容器在无 `badges` 配置时是**空的死标记**（0 高）。要彻底干净可给它加条件渲染，但本次用户只要求调间距，未擅动 ✓。
 
+
+
+### 八十一：仓库一致性核查 + 三处治理（`07cc72e`）
+
+**用户提问**：「过去做的那么多修改，是否有保持 Github 里的文件与本地的一致？」
+
+**核查结论（现役 `zlhmax`）**：
+| 检查项 | 结果 |
+|---|---|
+| 本地 HEAD vs `zlhmax/main` | **同一 SHA**（当时 `f07176c`）|
+| 本地领先 / 远端领先 | **0 / 0** ✓ |
+| 工作区变更 | **0 条目** ✓ |
+| `src/` `public/` 未跟踪文件 | **0 个** ✓ |
+| 遗留 stash / 多余分支 | 无 ✓ |
+
+→ 同 SHA + 工作区零变更 = **GitHub tracked 文件与本地逐字节一致**（Git 层面保证）。
+
+**查出并处理的 3 件事**：
+
+**① 分支 upstream 追踪指向模板仓库 ✗（隐患）**
+`git branch -vv` 显示 `main ... [upstream/main: ahead 150]` → 裸跑 `git push` 会试图推到 `hansdash/Ryze`（别人的模板仓库）。
+修：`git branch --set-upstream-to=zlhmax/main main` → 现为 `* main 07cc72e [zlhmax/main]` ✓
+
+**② `origin`（lhzhang06）远端实际已失效 ✗**
+`git fetch --all` 报 `remote: Repository not found.`（仓库已删或转私有）。
+处理：先记录最后已知 SHA **`83c4bc9065272fefa6670489caaf502bd6ef9487`**，并**验证它是当前 HEAD 的祖先**（`git merge-base --is-ancestor` → 是 ✓）→ 确认**删 remote 不丢任何提交** → `git remote remove origin`。
+→ 本地领先它 136 个提交（= 冻结后全部工作）；恢复命令：`git remote add origin https://github.com/lhzhang06/lhzhang06.github.io.git`
+
+**③ `_local-verification/`（80 条改动记录）此前被 gitignore → 只在本地、无备份 ✗**
+处理：`.gitignore` 去掉整目录忽略（保留 `_*.log`），`git add -A` → 提交 **34 个文件**（含 `部署到GitHub-Pages记录.md` 175KB、`本地建站记录.md`、9 个 verify 脚本、archive 里的旧头像/favicon/resume、头像候选图），目录内 2 个 `_push*.log` 仍忽略。提交 `07cc72e`。
+
+**入库前必做的敏感扫描（仓库是 PUBLIC ✗）**：
+`grep -inE 'password|token|secret|api[_-]?key|authorization|bearer|ghp_|github_pat|sk-…|授权码|<自己的邮箱>' _local-verification/`
+→ 命中仅 **2 处**，均为 CSS「design **token**」的正常用词（误报 ✓）；
+另扫邮箱 → 只有 `lhzhang05@gmail.com` / `lhzhang06@gmail.com` / `zlhmax@github.com`（自有 ✓）+ 模板占位 `jane.doe@example.com`；
+再扫业务词（Ashley/Konda/Newton/ACHSLO/WBOC/chargeback/单价/报价）→ **0 命中** ✓。
+→ 结论：**无凭据、无业务内容，可安全入库** ✓
+
+**复核（独立性证据）**：
+- GitHub **raw CDN** 直抓记录文件 → **HTTP 200 / 174110 字节** ✓（不依赖本地 git 视角）
+- 线上站 4 条路由 **全 200** ✓；再量上一轮改动的计算值：`padding-top=12px`、盒顶距 25px、文档高 1384 → **CI 重建后仍是最新构建** ✓
+- 远端树 `_local-verification/` 下跟踪文件 **33 个** ✓；远端 = 本地 = `07cc72e` ✓
+
+**⚠️ 字节数差异（174110 vs 175132）的成因 —— 必须会解释，否则像 bug**：
+`core.autocrlf=true` → 本地工作区是 **CRLF**，仓库内统一存 **LF**。
+实测：工作区文件 **CRLF 1022 行**，而**字节差正好 = 1022** → **纯换行符归一化，内容零差异** ✓
+（另注：本地该文件是**混合换行**——我历次用 Python `open(...,"a")` 追加写的是 LF，之前 checkout 的部分是 CRLF，所以 2684 行里 CRLF 只占 1022 行。markdown 渲染无影响。）
+
