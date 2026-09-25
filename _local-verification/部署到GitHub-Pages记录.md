@@ -2912,3 +2912,50 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **④ 提交**：`c581aaf feat(nav): add hover underline to nav links`（1 文件 3 增 3 删）
 
 **⑤ 可选档位（如需一句话切换）**：下划线离字距离 `underline-offset-4`、线型 `decoration-dotted/wavy`、粗细 `decoration-2`、悬停淡入（常态透明线 + `hover:decoration-current` + `transition-colors`）。
+
+
+---
+
+## 八十六、导航悬停下划线升级：离字加远 + Wavy 加粗 + 淡入 · 2026-09-25
+
+**需求**：Eddy「下划线离字距离加大，线型 Wavy 加粗 和 淡入效果」
+
+**① 改法（一行 className，全部走任意变体，不动共享组件）**
+
+```diff
++ [&_a]:underline [&_a]:decoration-wavy [&_a]:decoration-2 [&_a]:underline-offset-4
++ [&_a]:decoration-transparent [&_a]:transition-[color,text-decoration-color]
++ [&_a]:duration-300 [&_a:hover]:decoration-current
+- [&_a:hover]:underline
+```
+
+| 需求 | 实现 | 实测计算值 |
+|---|---|---|
+| 离字距离加大 | `underline-offset-4` | `text-underline-offset: 4px`（原 auto≈1.5px）|
+| Wavy 加粗 | `decoration-wavy` + `decoration-2` | `style: wavy` / `thickness: 2px` |
+| **淡入** | 常态画**透明**波浪线 `decoration-transparent` → 悬停 `hover:decoration-current`；配 `transition-[color,text-decoration-color] duration-300` | 常态 `rgba(0,0,0,0)` → 悬停 `rgb(88,183,152)` |
+
+**② 淡入为什么要这么做（关键原理）**
+- `text-decoration-color` 是**可动画属性**；而「有无下划线」（`text-decoration-line`）**不可平滑过渡**，直接 `hover:underline` 只能瞬间出现/消失。
+- 所以做法是：**线一直画着**（`underline` 常开）但常态给**透明色**（不可见、**不产生布局位移**），悬停把颜色换成 `currentColor` → 颜色插值自然形成淡入淡出。
+- ⚠️ `transition` 必须写成**工具类**（`transition-[color,text-decoration-color]`）：链接自带 `transition-colors`，写在 `@layer` 里的 CSS 会输给它（老坑，见 5.1）。
+- 同时把 `color` 一并放进 transition → 原有的 hover 变绿也跟着平滑。
+
+**③ 验收（含「淡入确实在跑」的硬证据）**
+
+| 状态 | 期望 | 本地 | 线上 |
+|---|---|---|---|
+| 常态 | `underline / wavy / 2px / 4px / rgba(0,0,0,0)` | ✓ | ✓ |
+| 悬停 100ms（过渡中）| **半透明中间色** | `rgba(103,158,142,0.54)` ✓ | `rgba(106,149,138,0.408)` ✓ |
+| 悬停结束 | `rgb(88,183,152)` | ✓ | ✓ |
+| 移开 | 回到 `rgba(0,0,0,0)`（不可见）| ✓ | ✓ |
+| 当前页 `<span>` 悬停 | `line=none`（非超链不加）| ✓ | ✓ |
+| transition | `color, text-decoration-color / 0.3s` | ✓ | ✓ |
+
+- **读取过渡中间值 = 证明淡入在起作用的唯一硬办法**（`getComputedStyle` 在动画中会返回当前插值 ✓）。只测「悬停后是绿色」无法区分「淡入」与「瞬变」。
+- 线上 `www.lhzhang.cn`：**CSS sha256 与本地 `dist/_astro/Head.MYbbmMui.css` 一致** ✓（部署约 66 秒）
+- 视觉复核：波浪线在字母下方有明显间隙、不压字、不与 `•` 分隔符重叠 ✓；常态完全看不到 ✓
+
+**④ 提交**：`024db01 feat(nav): wavy thicker underline with fade-in on hover`（1 文件 4 增 2 删）
+
+**⑤ 可继续调的档位**：`underline-offset-6/8`（更远）、`decoration-[3px]`（更粗）、`duration-500`（更慢的淡入）、`decoration-dotted`（改点线）。
