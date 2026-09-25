@@ -2993,3 +2993,34 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **③ 提交**：`6e97590 feat(nav): use straight underline instead of wavy on hover`（1 文件 3 增 3 删）
 
 **④ 备注**：线型可选 `decoration-solid`(默认) / `decoration-dotted` / `decoration-dashed` / `decoration-wavy`，与本轮保留的离字距离、线宽、淡入参数相互独立，一句话即可切换任一维度。
+
+
+---
+
+## 八十八、悬停下划线离字距离 4px → 8px · 2026-09-25
+
+**需求**：Eddy「离字 4px 改为 8px」
+
+**① 改动（换一个类）**
+
+```diff
+- [&_a]:underline-offset-4
++ [&_a]:underline-offset-8
+```
+
+**保留不动**：`decoration-2`(线宽 2px)、实线(默认 solid)、`decoration-transparent` + `hover:decoration-current` + `transition-[color,text-decoration-color] duration-300`（淡入）。
+
+**② 验收（本地 + 线上）**
+
+| 项 | 实测 |
+|---|---|
+| offset | `text-underline-offset: **8px**`（本地 ✓ / 线上 ✓）|
+| style / thick | `solid` / `2px` ✓ 未变 |
+| 淡入 | 100ms 中间态 `rgba(101,162,143,0.604)` → 结束 `rgb(88,183,152)` → 移开 `rgba(0,0,0,0)` ✓ |
+| 当前页 `<span>` | `line=none` ✓ |
+| 线是否被裁 | **目视确认完整可见、未断、未变淡** ✓（8px 离得远，**必须**检查祖先容器有无 `overflow:hidden/clip`）|
+| 线上 CSS | sha256 与本地 `dist/_astro/Head.B1phN1zt.css` 一致 ✓（部署约 66 秒）|
+
+**③ 提交**：`df93fa3 feat(nav): increase underline offset to 8px`（1 文件 2 增 2 删）
+
+**④ 经验**：`underline-offset` 越大，越要**目视确认线没被父容器裁掉**——`text-decoration` 不参与布局（不会撑高容器），所以容器不加高也「正常」，但线可能被 `overflow` 切掉；这类改动**只量计算值不够**，一定要看渲染图。
