@@ -3024,3 +3024,46 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **③ 提交**：`df93fa3 feat(nav): increase underline offset to 8px`（1 文件 2 增 2 删）
 
 **④ 经验**：`underline-offset` 越大，越要**目视确认线没被父容器裁掉**——`text-decoration` 不参与布局（不会撑高容器），所以容器不加高也「正常」，但线可能被 `overflow` 切掉；这类改动**只量计算值不够**，一定要看渲染图。
+
+
+---
+
+## 八十九、悬停下划线离字距离 8px → 6px（定档）· 2026-09-25
+
+**需求**：Eddy「离字 8px 修改为 6px」
+
+**① 改动（换一个类）**
+
+```diff
+- [&_a]:underline-offset-8
++ [&_a]:underline-offset-6
+```
+
+**保留不动**：实线(默认 solid)、`decoration-2`(线宽 2px)、`decoration-transparent` + `hover:decoration-current` + `transition-[color,text-decoration-color] duration-300`（淡入）。
+
+**② 验收（本地 + 线上）**
+
+| 项 | 实测 |
+|---|---|
+| offset | `text-underline-offset: **6px**` ✓（本地 ✓ / 线上 ✓）|
+| style / thick | `solid` / `2px` ✓ 未变 |
+| 淡入 | 100ms 中间态 `rgba(103,158,142,0.54)` → 结束 `rgb(88,183,152)` → 移开 `rgba(0,0,0,0)` ✓ |
+| 当前页 `<span>` | `line=none` ✓ |
+| 线是否被裁 | 目视完整可见、未断 ✓ |
+| 线上 CSS | sha256 与本地 `dist/_astro/Head.BkIauJKA.css` 一致 ✓（部署约 88 秒）|
+
+**③ 提交**：`54b7e94 feat(nav): set underline offset to 6px`（1 文件 2 增 2 删）
+
+**④ 本站页头导航超链悬停下划线 —— 当前定档配置（后续调整以此为准）**
+
+```
+[&_a]:underline [&_a]:decoration-2 [&_a]:underline-offset-6 [&_a]:decoration-transparent
+[&_a]:transition-[color,text-decoration-color] [&_a]:duration-300 [&_a:hover]:decoration-current
+```
+| 维度 | 当前值 | 走过的档位 |
+|---|---|---|
+| 线型 | 实线(solid) | ~~wavy~~ → 实线 |
+| 线宽 | 2px (`decoration-2`) | — |
+| 离字距 | **6px** (`underline-offset-6`) | ~~auto~~ → 4 → 8 → **6** |
+| 淡入 | 300ms | — |
+| hover 色 | `rgb(88,183,152)`（= `#58B798`，站点 `--link-hover`）| — |
