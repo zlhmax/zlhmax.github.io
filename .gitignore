@@ -14,8 +14,9 @@ yarn-error.log*
 pnpm-debug.log*
 _*.log
 
-# local verification artifacts (不随站点发布)
-_local-verification/
+# local verification artifacts —— 2026-09-25 起建站/部署记录已入库备份（不再整目录忽略）
+# 仅忽略目录内的临时日志（由上面的 _*.log 规则覆盖）
+# _local-verification/
 
 # environment variables
 .env

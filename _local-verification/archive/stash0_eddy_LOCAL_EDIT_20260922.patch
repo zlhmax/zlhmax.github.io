@@ -1,0 +1,39 @@
+diff --git a/src/components/static/FeaturedBlog.astro b/src/components/static/FeaturedBlog.astro
+index 5c04a74..049b1cb 100644
+--- a/src/components/static/FeaturedBlog.astro
++++ b/src/components/static/FeaturedBlog.astro
+@@ -18,7 +18,7 @@ const blogs = (await getCollection("blog"))
+     site_config.featured.blog.visible && blogs.length > 0 && (
+         <section class="bg-background border border-border p-6 mt-10">
+             <a href="/blog" class="flex items-center justify-start group w-fit gap-2 select-none">
+-                <span class="text-muted-foreground group-hover:text-secondary-foreground animation">thoughts, tutorials and engineering insights</span>
++                <span class="text-muted-foreground group-hover:text-secondary-foreground animation">thoughts, daily blog</span>
+                 <RiArrowRightUpLine className="size-0 group-hover:size-4 scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 animation" />
+             </a>
+             <div class="mt-6 flex flex-col">
+diff --git a/src/components/static/FeaturedPortfolio.astro b/src/components/static/FeaturedPortfolio.astro
+index bd28d2a..a80d06e 100644
+--- a/src/components/static/FeaturedPortfolio.astro
++++ b/src/components/static/FeaturedPortfolio.astro
+@@ -39,7 +39,7 @@ const enriched = await Promise.all(
+     site_config.featured.portfolio.visible && projects.length > 0 && (
+         <section class="bg-background border border-border p-6 mt-10">
+             <a href="/portfolio" class="flex items-center justify-start group w-fit gap-2 select-none">
+-                <span class="text-muted-foreground group-hover:text-secondary-foreground animation">things i've built and shipped</span>
++                <span class="text-muted-foreground group-hover:text-secondary-foreground animation">places I've been to and seen</span>
+                 <RiArrowRightUpLine className="size-0 group-hover:size-4 scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 animation" />
+             </a>
+             <div class="mt-6">
+diff --git a/src/components/static/FooterId.astro b/src/components/static/FooterId.astro
+index 020af69..37446c2 100644
+--- a/src/components/static/FooterId.astro
++++ b/src/components/static/FooterId.astro
+@@ -21,8 +21,6 @@ const { type, prev, next } = Astro.props;
+         <div>
+             <p class="text-sm text-muted-foreground">
+                 powered by <a href="https://astro.build/" target="_blank" rel="noopener noreferrer" class="hover:text-accent-foreground transition-colors">Astro</a>
+-                <span class="text-muted-foreground/80">&</span>
+-                <a href="https://astro.build/themes/details/ryze/" target="_blank" rel="noopener noreferrer" class="hover:text-accent-foreground transition-colors">Ryze</a>
+             </p>
+         </div>
+     </div>
