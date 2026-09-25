@@ -3284,3 +3284,53 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **⑤ 页头导航当前定档**：`Manrope Variable` · **10.2px** · 700 · tracking `0.16em`(1.632px) · uppercase ·
 下划线 solid/2px/离字 6px/淡入 300ms/hover `#58B798` · 当前页与链接同色。
 （与参考站 11.52px 已不一致 —— 用户主动下调，回退档 `text-[0.72rem]`。）
+
+
+---
+
+## 九十五、Blog 文章正文「标题上方间隙」减半 · 2026-09-26
+
+**需求**：Eddy「Blog文章页面的正文内容里，段落的标题上方的空白间隙偏大，能减小一半？」
+
+**① 定位**：正文排版在 `src/styles/typography.css` 的 `@layer base { .prose { … } }`（**不是** Tailwind 工具类写在各处）。
+改前定义：
+
+| 层级 | 改前 | 折算 |
+|---|---|---|
+| `h2` | `mt-21` | 21 × 0.25rem = **84px** ← 用户看到的「偏大」主因 |
+| `h3` | `mt-10` | **40px** |
+| `h4` | `mt-8` | **32px** |
+
+**用量实测**（9 篇文章）：**h2 主导**（7 篇用 h2，其中 `markdown-reference` 有 10 个、`autocad-configuration` 7 个）；h3 只有 `markdown-learn`(3) 与 `autocad-flashquite`(1)；h4 全站 0 个。
+→ 所以观感问题集中在 **h2 的 84px**。
+
+**② 改动（1 文件 4 行）** —— **只减 mt，`mb` 一字未动**
+
+```diff
+- h2 { @apply … font-semibold mt-21 mb-5 … }
++ h2 { @apply … font-semibold mt-[42px] mb-5 … }   /* 84 → 42px */
+- h3 { @apply … font-semibold mt-10 mb-4 … }
++ h3 { @apply … font-semibold mt-5 mb-4 … }        /* 40 → 20px */
+- h4 { @apply … font-semibold mt-8  mb-3 … }
++ h4 { @apply … font-semibold mt-4 mb-3 … }        /* 32 → 16px */
+```
+
+- h2 用**任意值 `mt-[42px]`**（42 不是 0.25rem 的整数倍，用 `mt-10.5` 也可但任意值零歧义）；h3/h4 落在干净档位 `mt-5`/`mt-4`。
+- 编译产物核对：`.prose h2{margin-top:42px…}`、`.prose h3{margin-top:calc(var(--spacing) * 5)}`(20px)、`.prose h4{… * 4}`(16px) ✓
+
+**③ 验收（关键：量「实际渲染间隙」= 前一元素下缘 → 标题上缘，不是只看 margin 值）**
+
+| 层级 | 改前（线上）| 改后（本地 & 线上）|
+|---|---|---|
+| h2 × 10（markdown-reference）| margin-top **84px**，实际间隙 **84** | margin-top **42px**，实际间隙 **42** ✓ 精确减半 |
+| h3 × 3（markdown-learn）| margin-top **40px**，实际间隙 **40** | margin-top **20px**，实际间隙 **20**（其中 1 处 **24**）✓ |
+| h4 | 无用例 | 同上（16px）|
+| margin-bottom | 20 / 16 / 12px | **完全未动** ✓ |
+
+- ⚠️ **h3 有一处间隙是 24px 而非 20px**：其前一个元素是 `<pre>`（自带 `my-6` = 24px），**相邻 margin 折叠取较大值** → `max(24, 20) = 24`。属 CSS 正常行为，不是 bug；如要求绝对精确需另调 `pre` 的 margin（本次未动）。
+- 线上 CSS sha256 与本地一致（`Head.CmU3YY2W.css` / `_id_@_@astro.Dv-TKtMM.css` / `IdLayout.DbX94k4-.css` 三个全对 ✓），部署约 66 秒。
+- **目视前后对照**：`Desktop/标题间距_前后对照_20260926.png`（上 84px / 下 42px）—— 42px 紧凑而不拥挤，标题与其所辖内容关系更清晰，下方间距未动、搭配协调 ✓
+
+**④ 提交**：`e927f8f feat(prose): halve heading top margins`（1 文件 4 增 4 删）
+
+**⑤ 正文排版当前档位**：h2 **30px**/mt **42px**/mb 20px + 下边框；h3 **24px**/mt **20px**/mb 16px + 下边框；h4 **20px**/mt **16px**/mb 12px。
