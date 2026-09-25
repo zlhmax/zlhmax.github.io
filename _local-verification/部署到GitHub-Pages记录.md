@@ -3160,3 +3160,40 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 **④ 提交**：`36a9dd3 feat(home): bump Shenzhen China label to 15px`（1 文件 1 增 1 删）
 
 **⑤ 备选档位**：若要三处真正一致 → 该行改 `text-[16px]`；若仍觉纤细 → 该行加 `font-medium`/`font-semibold`（variable 支持 300–700）。
+
+
+---
+
+## 九十二、首页副标题「Shenzhen, China」15px → 16px（三处定档一致）· 2026-09-25
+
+**需求**：Eddy「改成 16」（承接上一条：原写「提到 15px（与另两处一致）」，但另两处实测为 16px → 确认改为 16px）
+
+**① 改动（1 文件）**
+
+```diff
+- <p class="space-y-3 text-[15px] leading-relaxed … cormorant-serif">
++ <p class="space-y-3 text-base leading-relaxed … cormorant-serif">
+```
+
+- 用语义类 **`text-base`（=16px）** 而非 `text-[16px]`：与另两处「无字号类 → 继承 16px」同源。
+- 同样**只留一个字号类**（把 15px 的任意值撤掉），避免两套 font-size 竞争。
+
+**② 验收（本地 + 线上，三处一致性判定）**
+
+| 位置 | font-family | font-size | weight | line-height |
+|---|---|---|---|---|
+| **Shenzhen, China** | Cormorant Garamond Variable | **16px** ✓ | w400 | 26px |
+| Thoughts I've had for a while | 同 ✓ | **16px** ✓ | w400 | 24px |
+| Places I've been to and seen | 同 ✓ | **16px** ✓ | w400 | 24px |
+
+- **线上重试日志直接印证切换过程**：第 1–2 次读到 `15px, 16px, 16px`（旧版）→ 第 3 次读到 **三处全 16px** ✓（部署约 66 秒）。
+- 线上 CSS sha256 与本地 `dist/_astro/Head.SGvCck2c.css` 一致 ✓；`document.fonts.check('400 16px "Cormorant Garamond Variable"')` = true ✓
+
+**③ 行高差异（如实记录，未擅自改动）**：Shenzhen 一行 lh=26px（16×1.625，来自该元素**原有的** `leading-relaxed`），另两处 lh=24px（16×1.5）。
+因三处均为**单行**元素，**观感无差别**，仅简介卡高 2px；`leading-relaxed` 不属本次要求范围，故保留不动。备选：如要行高也完全一致，删掉该 p 上的 `leading-relaxed` 即可。
+
+**④ 布局影响**：简介卡高度 164.75（14px 时）→ 166.38（15px）→ **168px（16px）**；文档总高 1384 → 1385 → **1387**；无重叠错位 ✓
+
+**⑤ 提交**：`effdd39 feat(home): align Shenzhen China label to 16px with the other two`（1 文件 1 增 1 删）
+
+**⑥ 首页三处衬线字 —— 当前定档**：`Cormorant Garamond Variable`（`.cormorant-serif`）· **16px** · weight 400；来源参考站 `detour.xocoweb.workers.dev` 的文章标题字体。
