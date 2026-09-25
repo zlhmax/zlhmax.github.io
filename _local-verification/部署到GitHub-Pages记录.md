@@ -2730,3 +2730,55 @@ src/portfolio-config.json           插入 17 行条目（外科式 patch，未�
 实测：工作区文件 **CRLF 1022 行**，而**字节差正好 = 1022** → **纯换行符归一化，内容零差异** ✓
 （另注：本地该文件是**混合换行**——我历次用 Python `open(...,"a")` 追加写的是 LF，之前 checkout 的部分是 CRLF，所以 2684 行里 CRLF 只占 1022 行。markdown 渲染无影响。）
 
+
+
+### 八十二：本地文件夹 `ryze` → `zlhmax` 改名（`b2af36a` 后）
+
+**用户需求**：「能否将本地的文件夹名 ryze 修改为 zlhmax?」
+
+**改名时机选择**：动手前刚验过「本地=远端 0/0、工作区干净」→ 即使中途出问题也能从 GitHub 重新克隆，**零数据风险** ✓
+
+**① 改名前的侦察（全部用绝对路径）**：
+| 检查 | 结果 |
+|---|---|
+| 仓库内 3 个 `.cmd` 启动器 | 全部用 `cd /d "%~dp0"` **自相对路径** → 改名后照常可用 ✓ |
+| `.git/config` | **无绝对路径** → git 不依赖目录名 ✓ |
+| 桌面启动器 | ✗ **`C:/Users/edzhang/Desktop/推送部署.cmd` 写死 `call "D:\Myblog\ryze\推送部署.cmd"`** → 必须改 |
+| 技能库 `hermes/skills` | **0 处**引用 `Myblog/ryze` ✓（历来讲路径都用通用写法）|
+| 记忆 MEMORY.md | 只有通用示例 `D:/Myblog/x` ✓ 无需改 |
+| 占用进程 | 8099 无监听 ✓；3 个 python 全是 Hermes 自身（gateway/serve/kernel）✓ |
+
+**② 改名被 Windows 拒绝：`WinError 32 另一个程序正在使用此文件`**（`mv`、`os.rename` 连试 8 次 + 24s 全部失败）
+
+**定位锁的方法（本次探索出的三招，可复用）**：
+1. **逐个子项试改名**（改名后立刻改回，安全）→ 实测 `.git`/`dist`/`node_modules`/`src` **全部可改** ✗ → **锁在 `ryze` 目录本身**（不是文件锁、不是 DLL 加载）✓
+2. **扫进程已加载模块**：`Get-Process | %{ $_.Modules | ? FileName -like "*Myblog*" }` → 无命中 → 排除 DLL 占用 ✓
+3. **查进程 cwd 与资源管理器窗口**：两个 `bash.exe` 命令行里都写着 `builtin cd -- /c/Users/edzhang`（= 我的终端后端，**已在外** ✓）；`execute_code` 内核 cwd 也在外面 ✓；**但资源管理器窗口停在 `file:///D:/Myblog`** ✗（选中 `ryze` 时会持有目录句柄）
+
+**③ 绕过方案（目录级改名被锁时可用）**：**新建目标目录 + 逐个搬移顶层项**（每个顶层项的 `os.rename` 是**同卷原子改名**，秒级完成）：
+```python
+# 先全量预检（逐项改名再改回）→ 全部通过才动手
+os.makedirs(DST)
+for name in items: os.rename(SRC/name, DST/name)   # 25 项，任一项失败即回滚已搬项 + 删空目录
+```
+实测：**25 个顶层项全部搬移成功**（`.git` / `.astro` / `dist` / `node_modules` / `src` / `public` / 3 个 `.cmd` …），耗时数秒 ✓
+
+**④ 桌面启动器同步修改**：`call "D:\Myblog\ryze\推送部署.cmd"` → `zlhmax`。
+⚠️ **必须保持 GBK 编码 + CRLF**（该文件是中文 Windows 默认代码页写的，且无 `chcp`）→ 用 Python `open(p,'rb')` 读字节替换后回写，**不能**用会写成 UTF-8 的写文件工具（否则 cmd 里中文全乱）✓
+
+**⑤ 新路径验证**：
+| 检查 | 结果 |
+|---|---|
+| `git status` | **0 条目变更** ✓ |
+| `HEAD` / `zlhmax/main` | `b2af36a` / `b2af36a`（0/0）✓ |
+| 提交历史 | **278 个提交** 完整 ✓ |
+| remote / 分支追踪 | `upstream zlhmax` / `zlhmax/main` ✓ |
+| **完整构建** | **19 页 + pagefind 索引 19 页** ✓ |
+
+**⚠️ 构建第一次失败（值得记）**：`ERR_PNPM_PACKAGE_MANAGER_REMOVE_MODULES_DIR — directory: 拒绝访问 (os error 5)`。
+pnpm 发现项目路径变了、想重建 `node_modules` 但删不掉 → **直接重试即成功**（搬移后 Windows Defender 正在扫描新位置，属**瞬时占用**）。
+→ **教训：大目录搬移后第一次构建/pnpm 操作失败，先重试一次再排查** ✓
+
+**⑥ 遗留**：原 `ryze` 只剩**一个空文件夹**，仍被那个目录句柄占着（`rmdir` 连试 6 次 WinError 32 ✗）。
+**无害** ✓ —— 资源管理器刷新该窗口或重启后即可删除；功能上改名已完成（内容全在新路径 ✓）。
+
