@@ -30,7 +30,7 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
                     site_config.introduction.subHeadingItems.map((item) => (
                         <a href={item.url} target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 opacity-80 hover:opacity-100 active:opacity-100 animation group w-fit">
                             <SubHeadingIcon type={item.type as siteConfig["introduction"]["subHeadingItems"][number]["type"]} />
-                            <p class="space-y-3 text-sm leading-relaxed group-hover:text-link animation group-active:text-foreground cormorant-serif">{item.label}</p>
+                            <p class="space-y-3 text-[15px] leading-relaxed group-hover:text-link animation group-active:text-foreground cormorant-serif">{item.label}</p>
                         </a>
                     ))
             }
