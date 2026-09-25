@@ -3123,3 +3123,40 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 - 备选（任一句可切）：字号 14→16px（与另两处一致）／字重 400→500 或 600（variable 支持 300–700）／加斜体 italic。
 
 **⑥ 提交**：`310e03e feat(home): apply Cormorant Garamond to three serif labels`（6 文件 22 增 3 删）
+
+
+---
+
+## 九十一、首页副标题「Shenzhen, China」14px → 15px · 2026-09-25
+
+**需求**：Eddy「把 Shenzhen, China 从 14px 提到 15px（与另两处一致)」
+
+**⚠️ 需求里存在数字冲突（已如实向用户指出）**：另两处（Thoughts… / Places…）实测是 **16px**，不是 15px。
+处置：**按用户字面给的 15px 执行**，同时把「改成 16px 才真正一致」作为一句话可切的备选报给用户。
+
+**① 改动（1 文件）**
+
+```diff
+- <p class="space-y-3 text-sm leading-relaxed … cormorant-serif">
++ <p class="space-y-3 text-[15px] leading-relaxed … cormorant-serif">
+```
+
+- **直接把 `text-sm` 换成 `text-[15px]`**（而不是两个都留）：两者都设 `font-size`，同时存在时谁生效取决于 Tailwind 内部排序，**去掉冲突类最稳**（删除优于新增）。
+- `leading-relaxed` 仍在 → 行高按 1.625 倍等比走：14px→22.75px 变为 15px→**24.375px**（观感仍紧凑一致）。
+
+**② 验收（本地 + 线上）**
+
+| 项 | 本次 | 另两处（未动）|
+|---|---|---|
+| font-family | `Cormorant Garamond Variable` ✓ | 同 ✓ |
+| **font-size** | **15px** ✓（本地 ✓ / 线上 ✓）| **16px** |
+| weight / line-height | w400 / 24.375px ✓ | w400 / 24px |
+| 字体已加载 | true ✓ | ✓ |
+
+**布局影响（一并量了）**：简介卡 `section` 高度 164.75 → **166.38px**；文档总高 1384 → **1385px**（+1px，可忽略 ✓）；无重叠/错位（目视 ✓）。
+
+**③ 线上**：CSS sha256 与本地 `dist/_astro/Head.CJLgW4P0.css` 一致 ✓（部署约 66 秒）
+
+**④ 提交**：`36a9dd3 feat(home): bump Shenzhen China label to 15px`（1 文件 1 增 1 删）
+
+**⑤ 备选档位**：若要三处真正一致 → 该行改 `text-[16px]`；若仍觉纤细 → 该行加 `font-medium`/`font-semibold`（variable 支持 300–700）。
