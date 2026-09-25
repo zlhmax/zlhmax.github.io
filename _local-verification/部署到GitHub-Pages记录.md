@@ -3413,3 +3413,48 @@ h2 **28px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **22px**/1.3333/m
 **④ 正文排版当前完整档位（本档）**：
 h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/mt 20px/mb 16px/pb 4px/下边框 · h4 **18px**/1.4/mt 16px/mb 12px · 正文 16px/1.625 · 标题字重 600。
 演进线：字号 30/24/20 → 28/22/18 → **26/20/18**；h2 上间距 84 → **42px**，h3 40 → **20px**，h4 32 → **16px**。
+
+
+---
+
+## 九十八、页头右侧 3 图标颜色调浅 → 与 HOME TRAVEL BLOG 同色 · 2026-09-26
+
+**需求**：Eddy「首页页头右边的那 3 个图标的颜色能否调浅一点，可按 HOME TRAVEL BLOG 的字体颜色」（附截图：搜索 / 月亮 / RSS 三个圆角方框按钮）
+
+**① 定位与根因**
+
+- 组件：`src/components/static/Utility.astro`（搜索 ×2 断点 + RSS）+ `src/components/client/ThemeToggle.tsx`（主题）→ **共 4 个元素**。
+- 根因：三者都用 shadcn `<Button variant="outline" size="icon-xs">`，而 `button.tsx` 的 outline 变体**只定义了 hover 色**（`hover:text-foreground`），**没有基础文字色** → 图标继承 body 的 `text-foreground`。
+
+| 对象 | 改前实测色 | 说明 |
+|---|---|---|
+| 导航 `<a>`（HOME/TRAVEL/BLOG）| `oklab(0.552 0.00439355 -0.015385 / 0.8)` | = `text-muted-foreground/80` ← **目标色** |
+| 页头 4 个图标按钮 / svg.fill | `oklch(0.141 0.005 285.823)` | = `foreground`（深 ✗，亮度 0.141 vs 0.552）|
+
+**② 改动（2 文件 4 处）** —— 直接用与导航同一个 token（**不是写死色值**，暗色自动跟随）
+
+```diff
+- <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden">
++ <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-muted-foreground">
+  （搜索桌面断点同改；RSS 按钮同改）
+- <Button variant="outline" size="icon-xs" onClick={toggleTheme} className="cursor-pointer">
++ <Button variant="outline" size="icon-xs" onClick={toggleTheme} className="cursor-pointer text-muted-foreground/80 hover:text-muted-foreground">
+```
+
+- ⚠️ **hover 必须一起改**：outline 变体自带 `hover:text-foreground`，若只改常态色，**悬停时会变深**——那是**新增**的视觉行为（改前常态=hover 态都是 foreground，本来没有变色）✗。故改为 `hover:text-muted-foreground`（同族浅色，亮度仍 0.552，只是不透明度 0.8→1.0，属细微反馈 ✓）。
+- 圆角边框（`border-border` `bg-background`）**未动**（用户只说图标颜色）。
+
+**③ 验收（本地 + 线上，亮暗双模式）**
+
+| 检查 | 结果 |
+|---|---|
+| 亮色：4 个图标 / svg.fill | 全部 = `oklab(0.552 0.00439355 -0.015385 / 0.8)` **与导航逐位相同** ✓ |
+| 暗色：4 个图标 | 全部 = `oklab(0.705 0.00415142 -0.0144141 / 0.8)` **与导航相同**（token 自动跟随 ✓，无需单写暗色）|
+| RSS 内层 `<a href="/rss.xml">` | 同色 ✓（继承按钮色）|
+| 悬停态（第 1 个按钮）| `oklch(0.552 0.016 285.938)` —— **亮度仍 0.552，未变深** ✓；bg = `bg-muted` 浅灰（原有反馈）|
+| 按钮盒 | 3 个均 24×24，间距一致 ✓ |
+| 线上 CSS sha256 | 与本地一致 ✓（`Head.C1qbkjVI.css`），部署约 66 秒 |
+
+- 目视：图标呈柔和浅灰、三者一致、清晰可辨（不过淡）、与圆角边框搭配协调 ✓（截图 `Desktop/页头图标_改后_20260926.png` / `页头图标_线上实拍_20260926.png`）
+
+**④ 提交**：`a62a9d3 feat(header): lighten utility icon colors to match nav text`（2 文件 4 增 4 删）
