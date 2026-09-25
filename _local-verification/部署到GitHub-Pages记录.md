@@ -3242,3 +3242,45 @@ grep 编译产物时容易只看后半截而误判成全站规则。正确做法
 
 **⑥ 页头导航当前定档**：`Manrope Variable` · **9.6px** · 700 · tracking `0.16em`(1.536px) · uppercase ·
 下划线 solid/2px/离字6px/淡入300ms/hover `#58B798` · 当前页与链接同色。
+
+
+---
+
+## 九十四、页头导航字号 9.6px → **10.2px**（用户指定精确值）· 2026-09-26
+
+**需求**：Eddy「字号改为 10.2px」—— 精确数值（非「小一号」式模糊表述）。
+
+**① 改动（1 文件 · 1 行）**
+
+```diff
+- <BreadcrumbList className="text-[0.6rem] font-bold tracking-[0.16em] uppercase …">      /* 9.6px */
++ <BreadcrumbList className="text-[10.2px] font-bold tracking-[0.16em] uppercase …">
+```
+
+- **用户给了精确 px → 直接用任意值类 `text-[10.2px]`**，不再折算 rem（10.2/16 = 0.6375rem 是丑数）。
+  （技能里「优先用干净 rem 档」只适用于**模糊的「小一号」**；精确值一律照字面实现。）
+- 小数 px 浏览器按子像素渲染，实测计算值就是 **10.2px**，无取整问题。
+- `tracking-[0.16em]` 仍为 em 相对 → 字距自动等比：1.536px → **1.632px**（= 0.16 × 10.2 ✓ 无需手改）。
+- 字重 700 / uppercase / Manrope / 下划线四要素 / 当前页同色 —— 全部未动。
+
+**② 验收（本地 + 线上，三页逐一 + 悬停四要素）**
+
+| 项 | 实测 |
+|---|---|
+| **font-size** | **10.2px** ✓（本地 ✓ / 线上 ✓）|
+| letter-spacing | **1.632px** ✓（0.16em 等比 ✓）|
+| font-family / weight / transform | `Manrope Variable` / 700 / uppercase ✓（未动）|
+| 三页（首页/blog/travel）| 全部 10.2px ✓ |
+| 当前页 vs 链接 | **仍同色** ✓ 无回归 |
+| 悬停 Travel | `underline` / **solid** / 线宽 **2px** / 离字 **6px** / 色 `rgb(88,183,152)` ✓ 四要素完整 |
+| 未悬停 | `underline` + 色 `rgba(0,0,0,0)`（常态透明线，淡入机制正常）✓ |
+| 字体加载 / 线上 CSS | true ✓ / sha256 与本地 `Head.BqJ6ei6K.css` 一致 ✓（部署约 66 秒）|
+
+**③ 四档对照图已给用户**：`Desktop/页头导航_字号四档对照_20260926.png`（11.52 / 10.4 / **10.2 本次** / 9.6）。
+观感：10.2px 清晰可辨、比例协调；与 10.4px 差 0.2px 属**细调级**差异（可用小字对比看出）。
+
+**④ 提交**：`7075c9f feat(nav): set header nav font size to 10.2px`（1 文件 1 增 1 删）
+
+**⑤ 页头导航当前定档**：`Manrope Variable` · **10.2px** · 700 · tracking `0.16em`(1.632px) · uppercase ·
+下划线 solid/2px/离字 6px/淡入 300ms/hover `#58B798` · 当前页与链接同色。
+（与参考站 11.52px 已不一致 —— 用户主动下调，回退档 `text-[0.72rem]`。）
