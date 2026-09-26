@@ -379,10 +379,10 @@ pagefind-modal .pf-summary {
 /* ============================================================
    主题风格切换开关（滑动式）—— 版式对齐参考站 chopstack.com
    结构：button.theme-switch > span.theme-switch__knob > 太阳/月亮 svg
-   尺寸：2026-09-26 按 Eddy 要求由 44×24 缩到 40×22（参考站为 44×24）
-        各值推导：圆钮 = 高 − 2×边框(2) − 2×内边距(4) = 22−6 = 16px
-                  位移 = 宽 − 2×内边距(4) − 2×边框(2) − 圆钮(16) = 18px
-                  图标 = 圆钮 × 60%（参考站 11.2/18.4 的比例）
+   尺寸：2026-09-26 曾缩到 40×22，同日 Eddy 要求改回 **44×24（参考站原值）**
+        各值推导：圆钮 = 高 − 2×边框(1px) − 2×内边距(2px) = 24−6 = 18.4px
+                  位移 = 宽 − 2×内边距(4) − 2×边框(2) − 圆钮(18.4) = 19.2px
+                  图标 = 圆钮 × 60% ≈ 11.03px（参考站 11.2px，差 1.4%）
    配色全部走本站现有 token（--border/--muted/--background/--muted-foreground），
    因此亮/暗两态自动跟随，无需额外写 .dark 配色。
    ============================================================ */
@@ -390,8 +390,8 @@ pagefind-modal .pf-summary {
     display: inline-flex;
     align-items: center;
     flex: none;
-    width: 2.5rem;       /* 40px（原参考站 2.75rem）*/
-    height: 1.375rem;    /* 22px（原参考站 1.5rem）*/
+    width: 2.75rem;      /* 44px（参考站原值）*/
+    height: 1.5rem;      /* 24px（参考站原值）*/
     padding: 0.125rem;   /* 2px */
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -408,8 +408,8 @@ pagefind-modal .pf-summary {
 .theme-switch__knob {
     display: grid;
     place-items: center;
-    width: 1rem;         /* 16px = 高 − 边框 − 内边距 */
-    height: 1rem;
+    width: 1.15rem;      /* 18.4px = 高 − 边框 − 内边距 */
+    height: 1.15rem;
     border-radius: 50%;
     background: var(--background);
     color: var(--muted-foreground);   /* 图标浅灰（Eddy 指定）*/
@@ -418,10 +418,10 @@ pagefind-modal .pf-summary {
     transition: transform 0.32s var(--ease-out);
 }
 .dark .theme-switch__knob {
-    transform: translateX(1.125rem);   /* 18px */
+    transform: translateX(1.2rem);   /* 19.2px */
 }
 .theme-switch__knob svg {
-    width: 60%;          /* = 9.6px，沿用参考站 图标/圆钮 ≈ 60% 的比例 */
+    width: 60%;          /* ≈11.03px，沿用参考站 图标/圆钮 ≈ 60% 的比例 */
     height: 60%;
 }
 .theme-icon-moon,
