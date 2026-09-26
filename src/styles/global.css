@@ -374,3 +374,60 @@ pagefind-modal .pf-summary {
     color: var(--link-hover);
     transform: translateY(-2px);
 }
+
+
+/* ============================================================
+   主题风格切换开关（滑动式）—— 版式对齐参考站 chopstack.com
+   结构：button.theme-switch > span.theme-switch__knob > 太阳/月亮 svg
+   尺寸：2026-09-26 按 Eddy 要求由 44×24 缩到 40×22（参考站为 44×24）
+        各值推导：圆钮 = 高 − 2×边框(2) − 2×内边距(4) = 22−6 = 16px
+                  位移 = 宽 − 2×内边距(4) − 2×边框(2) − 圆钮(16) = 18px
+                  图标 = 圆钮 × 60%（参考站 11.2/18.4 的比例）
+   配色全部走本站现有 token（--border/--muted/--background/--muted-foreground），
+   因此亮/暗两态自动跟随，无需额外写 .dark 配色。
+   ============================================================ */
+.theme-switch {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    width: 2.5rem;       /* 40px（原参考站 2.75rem）*/
+    height: 1.375rem;    /* 22px（原参考站 1.5rem）*/
+    padding: 0.125rem;   /* 2px */
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--muted);
+    cursor: pointer;
+    transition:
+        background-color 0.28s var(--ease-out),
+        border-color 0.28s var(--ease-out);
+}
+.theme-switch:focus-visible {
+    outline: 2px solid var(--link-hover, currentColor);
+    outline-offset: 2px;
+}
+.theme-switch__knob {
+    display: grid;
+    place-items: center;
+    width: 1rem;         /* 16px = 高 − 边框 − 内边距 */
+    height: 1rem;
+    border-radius: 50%;
+    background: var(--background);
+    color: var(--muted-foreground);   /* 图标浅灰（Eddy 指定）*/
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+    transform: translateX(0);
+    transition: transform 0.32s var(--ease-out);
+}
+.dark .theme-switch__knob {
+    transform: translateX(1.125rem);   /* 18px */
+}
+.theme-switch__knob svg {
+    width: 60%;          /* = 9.6px，沿用参考站 图标/圆钮 ≈ 60% 的比例 */
+    height: 60%;
+}
+.theme-icon-moon,
+.dark .theme-icon-sun {
+    display: none;
+}
+.dark .theme-icon-moon {
+    display: block;
+}
