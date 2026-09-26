@@ -3501,3 +3501,87 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 **教训：测 hover 相关颜色时，常态读数必须先把指针移开并等过渡结束（> transition-duration）再采，且连采多次确认稳定。**
 
 **⑤ 提交**：`001f6ff feat(header): use site link color for utility icon hover`（2 文件 4 增 4 删）
+
+
+---
+
+## 一百、参考站 chopstack.com「风格切换按钮」分析与本地落地预览 · 2026-09-26
+
+**需求**：Eddy「请读取分析这个网站（https://chopstack.com/）导航右边的那个风格切换按钮的效果，如果想把我的网站上的风格切换效果修改成这样的，具体要怎么操作？」
+
+### ① 参考站解剖（量计算值 + 抓原始 CSS，不靠看图猜）
+
+它也是 Astro 站（`data-astro-cid-*`）。**结构**：
+```html
+<button type="button" class="theme-switch ml-1" role="switch" aria-checked="false"
+        data-theme-toggle aria-label="Switch to dark mode">
+  <span class="theme-switch__knob" aria-hidden="true">
+    <svg class="theme-icon-sun"  viewBox="0 0 24 24" fill="none">…8 道光芒 + 圆 r=4…</svg>
+    <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none">…月牙 path…</svg>
+  </span>
+</button>
+```
+
+**它的原始 CSS（`/_astro/BaseLayout.*.css` 摘录，权威依据）**：
+```css
+.theme-switch{border:1px solid var(--border);background:var(--muted);cursor:pointer;
+  border-radius:var(--radius-full);width:2.75rem;height:1.5rem;flex:none;padding:.125rem;
+  display:inline-flex;align-items:center;
+  transition:background-color var(--duration) var(--ease-out),border-color var(--duration) var(--ease-out)}
+.theme-switch:hover{border-color:var(--border-strong)}
+.theme-switch__knob{background:var(--background);width:1.15rem;height:1.15rem;color:var(--foreground);
+  border-radius:50%;display:grid;place-items:center;transform:translate(0);
+  box-shadow:0 1px 2px #0003;transition:transform .32s var(--ease-out)}
+:root[data-theme=dark] .theme-switch__knob{transform:translate(1.2rem)}
+.theme-switch__knob svg{width:.7rem;height:.7rem}
+.theme-icon-moon,:root[data-theme=dark] .theme-icon-sun{display:none}
+:root[data-theme=dark] .theme-icon-moon{display:block}
+```
+（`--duration:.28s`、`--ease-out:cubic-bezier(.22,1,.36,1)`、`--radius-full:999px`）
+
+**两态实测**：
+
+| 项 | 亮态 | 暗态 |
+|---|---|---|
+| 轨道盒 | 44×24 @radius 999px / pad 2px | 同 |
+| 轨道 bg / border | `rgb(244,244,245)`=`--muted` / `rgb(230,230,232)`=`--border` | `rgb(29,29,33)` / `rgb(69,69,76)` |
+| knob 盒 / 位移 | 18.39×18.39 / `translate(0)` | 同 / **`translate(19.2px)`** |
+| knob bg | `#fff`=`--background` | `rgb(16,16,18)` |
+| knob 阴影 | `0 1px 2px rgba(0,0,0,.2)` | 同 |
+| 太阳 / 月亮 | `display:block` 11.19px / `display:none` | `none` / **`block` 11.19px** |
+
+**关键结论**：它用的 token **名与我站完全相同**（`--border/--muted/--background/--foreground`）→ **可近乎原样移植，配色自动跟随我站**；只需把 `:root[data-theme=dark]` 改写成我站用的 **`.dark`**。
+
+### ② 我站现状 vs 改造后
+
+| | 改造前 | 改造后（本地预览）|
+|---|---|---|
+| 结构 | shadcn `<Button size="icon-xs">` + **单图标切换**（月亮⇄太阳） | `button[role=switch]` > `span.theme-switch__knob` > 太阳+月亮双 svg |
+| 尺寸 | 24×24 方钮 | **44×24 胶囊 + 滑动圆钮** |
+| 动画 | 图标直接替换（无位移） | **knob `transform` 0.32s 滑动 + 两 svg `display` 切换** |
+| 无障碍 | `aria-label` | 还带 **`role=switch` + `aria-checked`** |
+| 配色 | 上一轮设定的浅灰/超链色 | knob 用 `--background`、图标用 `--foreground`（**跟随 token，亮暗自动**）|
+
+### ③ 具体操作（2 个文件）
+
+1. **`src/components/client/ThemeToggle.tsx`** —— 保留原有状态逻辑（localStorage / `prefers-color-scheme` / 同时写 `.dark` class 与 `data-theme` 属性），**只替换返回的 JSX** 为上面的 `button/span/双 svg` 结构（内联 svg，不再依赖 `@remixicon/react` 与 `Button`）。
+2. **`src/styles/global.css`** —— 在**文件末尾**（`@layer` 之外，避免输给 Tailwind 工具类）追加 38 行 `.theme-switch` / `.theme-switch__knob` 样式；暗态选择器用我站的 **`.dark`**；hover 边框用 `color-mix(in oklab, var(--foreground) 18%, var(--border))` 代替参考站的 `--border-strong`（我站没有该 token，未新增全局 token）；`:focus-visible` 用 `--link-hover`。
+
+### ④ 本地实测（与参考站逐项对齐）
+
+| 检查 | 结果 |
+|---|---|
+| 轨道盒 / radius / pad | **44×24 / 999px / 2px** ✓ 与参考站相同 |
+| knob | **18.39×18.39** ✓；位移 `matrix(…,0,0)` → **`matrix(…,19.2,0)`** ✓ |
+| knob 阴影 / transition | `0 1px 2px rgba(0,0,0,.2)` ✓；`transform 0.32s` ✓（缓动取我站 `--ease-out`）|
+| 图标 | 11.19px；亮=太阳 `block`/月亮 `none`，暗=**反转** ✓ |
+| 状态联动 | 点击后 `html.class=dark` **且** `data-theme=dark` ✓，`aria-checked` 同步 ✓ |
+| 页头布局 | **无横向溢出**（scrollWidth = clientWidth = 1056）✓ |
+| 目视 | 亮态浅灰胶囊+白色圆钮(太阳)、暗态右滑+月亮，比例/圆角/阴影精致，iOS 滑动开关观感 ✓ |
+
+- 截图：`Desktop/开关预览_两态对照_20260926.png`（上亮下暗）、`参考 chopstack_开关_两态对照_20260926.png`
+
+### ⑤ 状态：**本地预览，未提交、未推送**（等 Eddy 拍板）
+- 工作区改动：`src/components/client/ThemeToggle.tsx`、`src/styles/global.css`（均未 `git add`）
+- 回退方式：`git checkout -- src/components/client/ThemeToggle.tsx src/styles/global.css`
+- 可选档位：① 开关尺寸（现 44×24，可缩到 40×22 / 36×20）② 圆钮内图标颜色（现 `--foreground` 深色=参考站原样；可改 `--muted-foreground` 更柔和）③ hover 边框是否保留
