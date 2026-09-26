@@ -50,6 +50,13 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
                         </a>
                     ))
             }
+            {
+                site_config.bRssFeed && (
+                    <a href="/rss.xml" class="social-btn" aria-label="rss">
+                        <SocialIcon type="rss" className="size-[0.85rem]" />
+                    </a>
+                )
+            }
         </div>
         {
                 site_config.introduction.description && (

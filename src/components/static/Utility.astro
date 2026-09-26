@@ -2,30 +2,21 @@
 import site_config from "@/site-config.json";
 import ThemeToggle from "../client/ThemeToggle";
 import { Button } from "../ui/button";
-import { RiRssLine, RiSearchLine } from "@remixicon/react";
+import { RiSearchLine } from "@remixicon/react";
 ---
 
-<div class="flex gap-1">
+<div class="flex gap-3">
     {
         site_config.bPageFind && (
             <>
-                <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden text-muted-foreground/80 hover:text-link" aria-label="Search">
+                <Button variant="outline" size="icon-xs" className="search-trigger flex md:hidden border-transparent shadow-none text-muted-foreground/80 hover:text-link" aria-label="Search">
                     <RiSearchLine />
                 </Button>
-                <Button variant="outline" size="icon-xs" className="search-trigger hidden md:flex text-muted-foreground/80 hover:text-link" aria-label="Search (Ctrl+K)">
+                <Button variant="outline" size="icon-xs" className="search-trigger hidden md:flex border-transparent shadow-none text-muted-foreground/80 hover:text-link" aria-label="Search (Ctrl+K)">
                     <RiSearchLine />
                 </Button>
             </>
         )
     }
     {site_config.bThemeToggle && <ThemeToggle client:load />}
-    {
-        site_config.bRssFeed && (
-            <Button variant="outline" size="icon-xs" className="text-muted-foreground/80 hover:text-link" aria-label="rss">
-                <a href="/rss.xml" class="p-1" aria-label="rss">
-                    <RiRssLine />
-                </a>
-            </Button>
-        )
-    }
 </div>
