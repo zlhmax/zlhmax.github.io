@@ -3585,3 +3585,57 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 - 工作区改动：`src/components/client/ThemeToggle.tsx`、`src/styles/global.css`（均未 `git add`）
 - 回退方式：`git checkout -- src/components/client/ThemeToggle.tsx src/styles/global.css`
 - 可选档位：① 开关尺寸（现 44×24，可缩到 40×22 / 36×20）② 圆钮内图标颜色（现 `--foreground` 深色=参考站原样；可改 `--muted-foreground` 更柔和）③ hover 边框是否保留
+
+
+---
+
+## 一百〇一、滑动开关定档 40×22 · 圆钮图标浅灰 · 去掉 hover 边框（**已上线**）· 2026-09-26
+
+**需求**：Eddy 看了本地预览后选三档 —— ① 开关尺寸（44×24 → 40×22 / 36×20）② 圆钮图标换浅灰 ③ hover 边框不保留。
+
+### ① 处理方式
+
+- **尺寸**：Eddy 同时列了 40×22 与 36×20 未指定单选 → **按 40×22 做主档落地**（22px 高度与旁边 24px 方形图标按钮最搭），并**把 44×24 / 40×22 / 36×20 三档同屏渲染出对比图**供他一眼切换（延续他「试试看」式迭代的习惯）。
+- **浅灰图标**：`.theme-switch__knob` 的 `color` 由 `var(--foreground)` 改为 **`var(--muted-foreground)`**（亮态 `oklch(0.552 0.016 285.938)`、暗态自动 `oklch(0.705 0.015 286.067)`）。
+- **去 hover 边框**：删除 `.theme-switch:hover{border-color:…}` 整条规则（编译产物已确认 0 命中）。`:focus-visible` 的 outline **保留**（键盘可达性基线，非 hover；若也不要可一句话去掉）。
+
+### ② 尺寸推导公式（重要，方便以后再缩档）
+
+```
+圆钮边长 = 高度 − 2×边框(1px) − 2×内边距(2px) = 高度 − 6
+暗态位移 = 宽度 − 2×内边距(4) − 2×边框(2) − 圆钮 = 宽度 − 6 − 圆钮
+图标尺寸 = 圆钮 × 60%（沿用参考站 11.2/18.4 ≈ 60% 的比例）
+```
+
+| 档位 | 轨道 | 圆钮 | 图标 | 暗态位移 |
+|---|---|---|---|---|
+| 44×24（参考站原值）| 44×24 | 18.39×18.39 | 11.03px | 19.2px |
+| **40×22（本次采用）** | **40×22** | **16×16** | **9.59px** | **18px** |
+| 36×20 | 36×20 | 14×14 | 8.39px | 16px |
+
+- 36×20 档的 CSS（换档时把 `.theme-switch` / `.theme-switch__knob` / `.dark .theme-switch__knob` 三处替换即可）：
+```css
+.theme-switch{width:2.25rem;height:1.25rem}
+.theme-switch__knob{width:.875rem;height:.875rem}
+.dark .theme-switch__knob{transform:translateX(1rem)}
+```
+（图标尺寸写的是 `60%`，会随圆钮自动缩放，换档不用改。）
+
+### ③ 验收（本地 + 线上，亮暗双态）
+
+| 检查 | 线上实测 |
+|---|---|
+| 轨道 | **40×22** · radius 999px · pad 2px · border 1px ✓ |
+| 圆钮 | **16×16** · 亮 `translate(0)` / 暗 **`translate(18px)`** ✓ |
+| 圆钮颜色 | 亮 `oklch(0.552 0.016 285.938)`、暗 `oklch(0.705 0.015 286.067)` = `--muted-foreground` ✓ |
+| 圆钮阴影 / 过渡 | `0 1px 2px rgba(0,0,0,.2)` · `transform 0.32s` ✓ |
+| 图标 | 9.59px；亮=太阳 `block`/月亮 `none`，暗=反转 ✓ |
+| 语义 | `role=switch` + `aria-checked=false/true` 正确切换 ✓ |
+| 页头布局 | 无横向溢出（scrollWidth = clientWidth = 1056）✓ |
+| 线上 CSS | sha256 与本地 `Head.BWBHExrs.css` 一致 ✓，部署约 80 秒 |
+
+- 图：`Desktop/开关尺寸_三档对比_20260926.png`、`Desktop/开关_线上_两态_20260926.png`
+
+### ④ 提交
+- `1cc41ce docs: archive round 100 (… + local preview)`（纯文档，先于功能提交）
+- `9a3acb6 feat(header): replace theme toggle with sliding switch`（`ThemeToggle.tsx` + `global.css`）
