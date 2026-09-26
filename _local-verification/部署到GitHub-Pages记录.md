@@ -3679,3 +3679,39 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 
 ### ④ 提交
 - `8e68c54 feat(header): borderless search icon, wider gap, move rss to intro card`（2 文件 11 增 13 删）
+
+
+---
+
+## 一百〇三、开关改回 44×24 · 简介卡去掉 Instagram（**已上线**）· 2026-09-26
+
+**需求**：Eddy「1. 再将导航的风格切换图标修改为 44×24；2. 在首页简介卡片那里的 6 个图标去掉 Instagram 图标」。
+
+### ① 改动（2 文件）
+
+| 文件 | 改动 |
+|---|---|
+| `src/styles/global.css` | 开关尺寸回到参考站原值：`width 2.5rem→**2.75rem**`(44px)、`height 1.375rem→**1.5rem**`(24px)、圆钮 `1rem→**1.15rem**`(18.4px)、暗态位移 `1.125rem→**1.2rem**`(19.2px)；图标仍是 `60%`（随圆钮自动缩放，**无需改**）。注释同步更新为“曾缩到 40×22，同日改回 44×24”。|
+| `src/site-config.json` | 外科式**只删一行** `{ "type": "instagram", "url": "https://www.instagram.com/" },`（**未** 整体 `json.load`+`dumps` 写回；lint 通过，前后逗号仍合法）|
+
+### ② 验收（线上实测）
+
+| 检查 | 线上实测 |
+|---|---|
+| 轨道 | **44×24** · radius 999px ✓（回到参考站原值）|
+| 圆钮 | **18.39×18.39** ✓；暗态 `matrix(…,19.2,0)` → 位移 **19.2px** ✓ |
+| 圆钮图标 | 11.03px · 浅灰 `oklch(0.552 0.016 285.938)` ✓（暗态自动变 `oklch(0.705…)`）|
+| 页头布局 | 无横向溢出 ✓（44px 宽仍在 1056px 窄窗内）|
+| 社交行 | **5 个** = `[email, tiktok, x, github, rss]` ✓ |
+| Instagram | **已移除**（labels 里 `in` 判定 = False；产物 `instagram` 出现 0 次）✓ |
+| 5 个图标样式 | `(w,h,border,radius,color,svgW)` 去重 = **1 条** → 完全一致 ✓ |
+| 线上 CSS sha256 | 与本地 `Head.O_x5jUQu.css` 一致 ✓，部署约 80 秒 |
+
+- 图：`Desktop/开关_44x24_终版_20260926.png`、`Desktop/简介卡_5图标_20260926.png`、`Desktop/线上_开关_44x24_20260926.png`
+
+### ③ 备注
+- 开关尺寸最终定档 **44×24（= 参考站 chopstack.com 原值）**；此前 40×22 / 36×20 两档的推导公式仍留在技能库，日后要再缩可直接套用。
+- Instagram 只是从 `socialItems` 数组里删掉一行；日后要加回，往数组里补一行 `{ "type": "instagram", "url": "…" }` 即可（图标与类型均原生支持）。
+
+### ④ 提交
+- `cabe6be refactor(header): restore switch to 44x24 and drop instagram icon`（2 文件 10 增 11 删）
