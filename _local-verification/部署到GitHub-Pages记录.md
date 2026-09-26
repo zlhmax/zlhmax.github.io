@@ -3639,3 +3639,43 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 ### ④ 提交
 - `1cc41ce docs: archive round 100 (… + local preview)`（纯文档，先于功能提交）
 - `9a3acb6 feat(header): replace theme toggle with sliding switch`（`ThemeToggle.tsx` + `global.css`）
+
+
+---
+
+## 一百〇二、搜索图标去外框 + 拉大与开关间距 · RSS 移到简介卡社交行（**已上线**）· 2026-09-26
+
+**需求**：Eddy「① 将搜索的图标去外外框线，并加大与风格切换按钮之间的空白间隙；② 将导航栏的 RSS 图标移至首页简介卡片的那 5 个图标之后并使用与 5 个图标相同的样式」。
+
+### ① 改动（2 文件 3 处）
+
+| 文件 | 改动 |
+|---|---|
+| `src/components/static/Utility.astro` | ① 容器 `flex gap-1` → **`flex gap-3`**（间距 4px → **12px**）；② 两个搜索按钮加 **`border-transparent shadow-none`**；③ **删除整个 RSS 块**（含 `bRssFeed` 判断）并从 import 移除 `RiRssLine` |
+| `src/components/static/Introduction.astro` | 在 `socialItems` 循环**之后**追加 RSS 按钮，`class="social-btn"`、`aria-label="rss"`、`href="/rss.xml"`、`<SocialIcon type="rss" className="size-[0.85rem]" />`，仍由 **`site_config.bRssFeed`** 控制显隐 |
+
+- **无需动图标库/类型**：`src/lib/icons.tsx` 的 `socialIconMap` 原本就有 **`rss: RiRssFill`**，`src/lib/types.ts` 的 `socialIconType` 也已含 `"rss"` → 直接可用，且拿到的是与其余 5 个一致的 **Fill** 版本（原页头用的是 `RiRssLine` 线性版）。
+- **外框处理要点**：shadcn `outline` 变体同时带 `border` 与 **`shadow-xs`**。只把 border 变透明后，**仍能看到一圈很淡的方形痕迹**（5% 黑阴影）→ 必须**同时**加 `shadow-none` 才是真正的“无框图标”（与旁边无边框的滑动开关、参考站 `.icon-btn` 一致）。
+
+### ② 验收（线上实测）
+
+| 检查 | 线上实测 |
+|---|---|
+| 搜索按钮 border | `1px rgba(0, 0, 0, 0)` **透明** ✓ |
+| 搜索按钮 shadow | 五层全为 `rgba(0,0,0,0) 0 0 0 0` ✓（无残留方框）|
+| 搜索右缘 → 开关左缘 | **12px**（原 4px，3 倍）✓ |
+| 页头 `aria-label=rss` 数量 | **0**（已移除）✓ |
+| 简介卡社交行 | `[email, tiktok, instagram, x, github, **rss**]` = **6 个** ✓ |
+| 6 个图标样式 | 去重后 **仅 1 条**：32×32 · border `oklch(0.92 0.004 286.32)` · radius `9999px` · color `oklch(0.552 0.016 285.938)` · svg 13.59px ✓ **完全一致** |
+| RSS 悬停 | `color=rgb(88,183,152)`（=`--link-hover`）· 边框着色 · `translateY(-2px)` ✓ 与其余 5 个同款 |
+| 线上 CSS sha256 | 与本地一致 ✓，部署约 60 秒 |
+
+- 图：`Desktop/页头_搜索无框_终版_20260926.png`、`Desktop/简介卡_社交行含RSS_20260926.png`、`Desktop/线上_页头_搜索无框_20260926.png`、`Desktop/线上_简介卡_6图标_20260926.png`
+
+### ③ 本轮踩坑（记录）
+
+1. **⚠️ 选择器踩隐藏断点**：`document.querySelector('header button.search-trigger')` 命中的是**移动端那个 `flex md:hidden`** 按钮（在 ≥768px 下 `display:none` → 盒 0×0），照它截图会拍到空白。**必须先按 `getBoundingClientRect().width > 0` 过滤可见元素**。
+2. **⚠️ 不要用截断后的 className 做字符串判据**：脚本里 `cls.slice(0,90)` 把 `shadow-none` 切掉了 → 线上其实早已生效却判为“未上线”，白跑 13 轮轮询。**纯样式改动一律量计算值**（borderColor / boxShadow / 盒坐标）。
+
+### ④ 提交
+- `8e68c54 feat(header): borderless search icon, wider gap, move rss to intro card`（2 文件 11 增 13 删）
