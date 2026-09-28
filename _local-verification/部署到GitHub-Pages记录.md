@@ -3715,3 +3715,59 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 
 ### ④ 提交
 - `cabe6be refactor(header): restore switch to 44x24 and drop instagram icon`（2 文件 10 增 11 删）
+
+
+---
+
+## 一百〇四、Travel 列表页头加一行副标题「Places I've been to and seen」（**已上线**）· 2026-09-26
+
+**需求**：Eddy「能否在 Travel 页面的简介卡片的 Travel 下增加一行文字，内容为“Places I've been to and seen”，字体样式与大小保持与首页上的一致」。
+
+### ① 关键约束
+`IndexHeader.astro`（`<div class="border border-border p-6 mt-5 bg-background">` + `<BackButton>` + `<h1 class="pt-3 text-4xl … intro-handwriting">`）是 **Blog 与 Travel 两个列表页共用**的组件 →
+**绝不能改共享默认行为**，必须加**可选 prop**，只让 Travel 传值（本项目既有约定：只对某页生效用 prop 开关）。
+
+### ② 改动（2 文件 4 行）
+
+```diff
+  --- src/components/static/IndexHeader.astro
+- const { url, heading } = Astro.props;
++ // subtitle 为可选：只有传了的页面（当前仅 Travel）才会在标题下方多渲染一行小字
++ const { url, heading, subtitle } = Astro.props;
+  ...
+      <h1 class="pt-3 text-4xl opacity-90 select-none intro-handwriting">{heading}</h1>
++     {subtitle && <p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">{subtitle}</p>}
+
+  --- src/pages/portfolio/index.astro
+- <IndexHeader url="/" heading="Travel" />
++ <IndexHeader url="/" heading="Travel" subtitle="Places I've been to and seen" />
+```
+
+**字体对齐做法（要点）**：首页那一处的写法是
+`<span class="text-muted-foreground group-hover:text-link animation cormorant-serif">Places I've been to and seen</span>`
+—— 它**没有显式字号**，靠**继承**得到 16px。搬到页头组件里上下文不同，故**显式写 `text-base`**（=16px）后再复用同一个无竞争的 CSS 类 **`.cormorant-serif`**（只提供 font-family），确保「与首页一致」不依赖父级。
+未带 `group-hover:text-link`（此页不是链接，无 group 父级）。
+
+### ③ 验收（本地 + 线上：与首页同句逐项比对计算值）
+
+| 属性 | /portfolio/ 新行 | 首页同句 | 结论 |
+|---|---|---|---|
+| font-family | `"Cormorant Garamond Variable", "Cormorant Garamond", Georgia, "Times New Roman", serif` | 同 | **✓ 一致** |
+| font-size | **16px** | 16px | **✓ 一致** |
+| font-weight | **400** | 400 | **✓ 一致** |
+| line-height | **24px** | 24px | **✓ 一致** |
+| color | `oklch(0.552 0.016 285.938)` | 同 | **✓ 一致** |
+
+- 位置：副标题左缘 @x=**105** = H1 左缘 @x=105 → **与标题左对齐** ✓；H1 底缘→副标题顶缘 = **4px**（`mt-1`）
+- H1 仍为 36px 手写体（`intro-handwriting` = Lucida 栈）✓
+- **Blog 列表页不受影响** ✓：`/blog/` 产物与该文案 0 命中、线上实测无该副标题
+- 线上 CSS 与本地产物一致；部署约 72 秒
+
+- 图：`Desktop/Travel页头_加副标题_20260926.png`、`Desktop/线上_Travel页头副标题_20260926.png`
+
+### ④ 提交
+- `456efbe feat(travel): add serif subtitle line to travel list header`（2 文件 4 增 2 删）
+- ⚠️ 本次推送首次失败（`Failed to connect to github.com port 443 after 21072 ms`）→ 同机重试第 1 次即成功（瞬时网络波动），`curl https://github.com` 复测 200 ✓ —— **推送失败先重试，再判断是不是网络/VPN 问题**。
+
+### ⑤ 可选档位
+副标题与标题的间距现为 `mt-1`（4px），若要更松可一句话切 `mt-2`(8px) / `mt-3`(12px)。
