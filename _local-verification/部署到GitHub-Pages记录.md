@@ -3813,3 +3813,39 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 1. **Playwright `goto(wait_until="load")` 会 60s 超时** → 改用 **`wait_until="domcontentloaded"` + 固定 `wait_for_timeout`**，并套 3–4 次重试。
 2. **`page.screenshot()` 会卡在 `waiting for fonts to load` 而超时**（字体自托管，网络差时 `document.fonts.ready` 迟迟不 resolve）→ 此场景改用**纯数值验收**（`getComputedStyle` + `getBoundingClientRect`）不截图；视觉图用**本地 dist**（8099）出。
 3. git push 报 `Failed to connect ... 443` / `Recv failure: Connection was reset` 时**同命令重试即成功**（本轮第 1 轮重试就过），`curl` 复测 200 —— 先重试，别急着判定 VPN/断网。
+
+
+---
+
+## 一百〇六、Blog 列表页头加一行副标题「Thoughts I've had for a while」（**已上线**）· 2026-09-26
+
+**需求**：Eddy「能否在 Blog 页面的简介卡片中的 Blog 下增加一行文字，内容为“Thoughts I've had for a while”」。
+
+### ① 改动（1 行）—— 复用上一轮为 Travel 加的 `subtitle` prop
+```diff
+- <IndexHeader url="/" heading="Blog" />
++ <IndexHeader url="/" heading="Blog" subtitle="Thoughts I've had for a while" />
+```
+（`IndexHeader.astro` 里那段 `{subtitle && <p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">…</p>}` 是 2026-09-26 为 Travel 加的，本次直接复用，共享组件本身**不用再动**。）
+
+### ② 验收（本地 + 线上）
+
+| 检查 | 结果 |
+|---|---|
+| Blog 副标题字体 vs **首页同句** | font-family / **16px** / **400** / line-height **24px** / color `oklch(0.552 0.016 285.938)` —— **5 项全部一致** ✓ |
+| 左缘对齐 | 副标题 @x=**105** = H1 @x=**105** ✓ |
+| H1 底 → 副标题顶 | **4px**（与 Travel 页相同）✓ |
+| Blog 卡片高 | **131px**（= Travel 卡片高，两页现在完全一致）✓  padding 上12 下12 ✓ |
+| Travel 页未受影响 | `/portfolio/` 仍**不含**该文案 ✓，其副标题仍在（16px）✓ |
+| 产物 | `<h1 …>Blog</h1>` 紧随 `<p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">Thoughts I&#39;ve had for a while</p>` ✓ |
+| 线上生效耗时 | 轮询到**第 8 轮（≈100 秒）**才生效（部署/CDN 略慢）→ 线上验收轮询次数要留足 |
+
+- 图：`Desktop/Blog页头_加副标题_20260926.png`
+
+### ③ ⚠️ 本轮小坑（记录）
+产物 HTML 会把撇号编码为 **`&#39;`** —— 用字面 `grep "Thoughts I've had for a while"` 会**假阴性（0 命中）**，让人误以为没渲染。
+**判据改为**：① `grep 'Thoughts'` 等不含撇号的片段，或 ② 直接看 `getComputedStyle` / `textContent` 实测。
+（顺带说明：上一轮 Travel 的产物检查之所以 1 命中，命中的是 `<meta description>` 里的同句，不是卡片。）
+
+### ④ 提交
+- `37a5707 feat(blog): add serif subtitle line to blog list header`（1 文件 1 增 1 删）
