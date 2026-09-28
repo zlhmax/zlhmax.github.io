@@ -3849,3 +3849,77 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 
 ### ④ 提交
 - `37a5707 feat(blog): add serif subtitle line to blog list header`（1 文件 1 增 1 删）
+
+
+---
+
+## 一百〇七、列表页筛选工具栏 4 个图标：悬停对齐首页社交图标 + 尺寸 −20% · 2026-09-26
+
+**需求**：① Eddy「Travel 与 Blog 页面上的简介卡片与下面的内容列表卡片之间的在最右边的那 4 个图标，鼠标悬停时的效果能否修改成与首页的那 5 个图标一致?」② 「这 4 个图标的大小尺寸能否调小 20%?」
+
+### ① 定位
+「两卡之间、最右边」= `src/hooks/useFilter.tsx` 里的 **`FilterControls`**（容器 `<div class="flex items-center gap-2 justify-end px-3">`），正好 **4 个图标按钮**：
+| # | 功能 | 图标 | 原尺寸 |
+|---|---|---|---|
+| 0 | 筛选（Popover 触发器）| `RiFilterLine` / `RiFilterFill` | 32×32，字形 16px |
+| 1 | 升序 | `RiArrowUpSLine` | 32×32，字形 20px（`size-5`）|
+| 2 | 降序 | `RiArrowDownSLine` | 32×32，字形 20px（`size-5`）|
+| 3 | 重置（无筛选时 `disabled`）| `RiLoopLeftLine` | 32×32，字形 16px（`size-4`）|
+
+### ② 改动（2 文件）
+
+**A. `useFilter.tsx`：给 4 个 Button 都加 `filter-icon-btn`**
+```diff
+- className={cn("cursor-pointer", isFilterActive && "bg-muted")}
++ className={cn("cursor-pointer filter-icon-btn", isFilterActive && "bg-muted")}
+  （另 3 个同理：sortOrder 升/降 与重置）
+```
+
+**B. `global.css`：新增 `.filter-icon-btn`（对齐 `.social-btn` 的悬停三要素）**
+```css
+.filter-icon-btn:hover, .filter-icon-btn:focus-visible {
+    border-color: color-mix(in srgb, var(--link-hover) 45%, var(--border));
+    transform: translateY(-2px);
+}
+.filter-icon-btn:hover svg, .filter-icon-btn:focus-visible svg { fill: var(--link-hover); }
+```
+- **故意重置“背景填充”**：shadcn Button 的 hover 底色同时承担“升序/降序/筛选选中态”的视觉区分，去掉会让选中态在悬停瞬间消失；保留则与站点其它图标按钮（页头 3 图标）做法一致。
+- 图标色是 `fill-*` 工具类（不是 `text-*`）→ 必须写 `.filter-icon-btn:hover svg { fill: … }` 才能变色。
+
+**C. 尺寸 −20%（精确换算，用户给的百分比照字面算）**
+| 对象 | 原值 | 改动 | 改后实测 |
+|---|---|---|---|
+| 4 个按钮 | `size="icon-sm"` = 32px | 追加 `size-[25.6px]` | **25.59×25.59** ✓ |
+| 筛选/重置字形 | 16px | `size-[12.8px]` | **12.8×12.8** ✓ |
+| 升/降序字形 | 20px（`size-5`）| `size-4` | **16×16** ✓（20×0.8 正好整数）|
+
+### ③ 验收
+
+**悬停（已上线 ✓ 线上实测）**：
+| 检查 | 线上实测 |
+|---|---|
+| border | `color(srgb 0.647192 0.81493 0.766653)` —— **与首页 `.social-btn` 悬停逐位相同** ✓ |
+| svg.fill | `rgb(88, 183, 152)` ✓（= `--link-hover`）|
+| transform | `matrix(1, 0, 0, 1, 0, -2)` = 上移 2px ✓ |
+| 首页基准对照 | 三者完全一致 ✓（对照图 `Desktop/筛选图标_对照_20260926.png`）|
+| 重置按钮（#3）| 无筛选时 `disabled` → 不接收 hover，属正确行为 ✓ |
+
+**尺寸（本地实测，**尚未推送** ✗）**：4 个按钮 32→**25.59px**、字形 16/20/20/16 → **12.8/16/16/12.8**（各 −20% ✓）
+- 对照图：`Desktop/筛选图标_缩小前后_20260926.png`（缩小后比例仍协调、更精致）
+
+### ④ 提交与推送状态
+- `39a58d9 feat(list): match filter toolbar icon hover to social icons` —— **已推送、已上线** ✓
+- `040094b refactor(list): scale filter toolbar icons down by 20 percent` —— **仅本地提交，推送被网络阻断** ✗
+
+### ⑤ ⚠️ 本次网络故障诊断（重要，记录以便复用）
+| 目标 | 结果 |
+|---|---|
+| `www.lhzhang.cn`（GitHub Pages/CDN）| **200** ✓ |
+| baidu / npmmirror | 200 ✓ |
+| `raw.githubusercontent.com` | 301 ✓（可达）|
+| **`github.com:443`** | **✗ 不可达**（curl 000、`/dev/tcp` 连接失败）→ git HTTPS push 失败 `Failed to connect … port 443` |
+| `github.com:22` | **✓ 端口可连**（但本机 **无 `~/.ssh` 密钥**，无法用 SSH 推送）|
+| `ssh.github.com:443` | ✓ 端口可连（同样需要 SSH 密钥）|
+
+**结论**：这是**仅针对 github.com 的路径阻断**（不是全断网）—— 站点/CDN 与其它站点均正常。
+**可选规避**：① 打开 VPN 后重试（最简，此前多次瞬时故障皆自愈）② 生成 SSH 密钥并加到 GitHub，改走 **22 端口**（长期可绕开 443 阻断，但会改变现有 GCM/HTTPS 流程）。
