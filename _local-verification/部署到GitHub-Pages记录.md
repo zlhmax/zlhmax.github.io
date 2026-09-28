@@ -3771,3 +3771,45 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 
 ### ⑤ 可选档位
 副标题与标题的间距现为 `mt-1`（4px），若要更松可一句话切 `mt-2`(8px) / `mt-3`(12px)。
+
+
+---
+
+## 一百〇五、列表页头卡片上下留白减半 25→13px（**已上线**，Travel + Blog 同步）· 2026-09-26
+
+**需求**：Eddy「刚才修改的简介卡片中间三行文字与上下边线之间的空白偏大，能否减小一半？」—— 指 **Travel 列表页的页头卡片**（back / Travel / Places… 共 3 行文字）。
+
+### ① 判定与确认流程
+`IndexHeader.astro` 的卡片 `<div class="border border-border p-6 mt-5 bg-background">` 是 **Blog 与 Travel 共用** →
+按本项目约定「共享组件/共享间距的属性要先问再动」，**先改本地预览并做前后对照图**，再用 clarify 让 Eddy 选定范围。
+**Eddy 选定：两个页面都收紧（保持 Travel + Blog 一致）** ✓ —— 即共用组件改法本身。
+
+### ② 改动（1 行）
+
+```diff
+- <div class="border border-border p-6 mt-5 bg-background">
++ <div class="border border-border px-6 py-3 mt-5 bg-background">
+```
+
+- 只收**上下**（`p-6` 的上下 24px → `py-3` = **12px**），**左右保持 24px 不变** —— 对应他说的「与**上下**边线之间的空白」。
+- 未动 `mt-5`（卡片外的上边距）与内部各行的间距（`pt-3`/`mt-1`）。
+
+### ③ 验收（线上实测；含共用页对照）
+
+| 页面 | padding | 上边线→首行顶 | 末行底→下边线 | 卡片高 | 结论 |
+|---|---|---|---|---|---|
+| **/portfolio/** | 上12 右24 下12 左24 | **13px**（改前 25） | **13px**（改前 25） | **131px**（改前 155）| ✓ 减半 |
+| **/blog/** | 上12 右24 下12 左24 | **13px** | **13px** | **103px**（改前 127）| ✓ 减半 |
+
+- 注：**23px 与 13px 都含 1px 边框**（24+1 / 12+1），所以实测 25→13 而非 24→12 —— 属正常。
+- 目视：收紧后排版仍舒适，文字未贴到边线；左右 24 / 上下 12 的观感协调 ✓
+- 图：`Desktop/页头卡留白_前后对照_20260926.png`（本地 before/after）、`Desktop/线上_两列表页头卡_20260926.png`
+
+### ④ 提交
+- `7f36a41 refactor(header): halve vertical padding of list page header card`（1 文件 1 增 1 删）
+
+### ⑤ ⚠️ 本轮环境坑（重要，已写入技能）
+网络降级期间（github push 间歇 reset、站点 `load` 事件拖住）：
+1. **Playwright `goto(wait_until="load")` 会 60s 超时** → 改用 **`wait_until="domcontentloaded"` + 固定 `wait_for_timeout`**，并套 3–4 次重试。
+2. **`page.screenshot()` 会卡在 `waiting for fonts to load` 而超时**（字体自托管，网络差时 `document.fonts.ready` 迟迟不 resolve）→ 此场景改用**纯数值验收**（`getComputedStyle` + `getBoundingClientRect`）不截图；视觉图用**本地 dist**（8099）出。
+3. git push 报 `Failed to connect ... 443` / `Recv failure: Connection was reset` 时**同命令重试即成功**（本轮第 1 轮重试就过），`curl` 复测 200 —— 先重试，别急着判定 VPN/断网。
