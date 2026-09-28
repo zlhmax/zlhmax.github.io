@@ -16,7 +16,7 @@ const allItems = (await getCollection("blog"))
 
 <IndexLayout title="Blog - lhZhang" description="Thoughts on engineering, reliability, AI, and observation" image="/og/default.png">
     <div transition:animate="fade">
-        <IndexHeader url="/" heading="Blog" />
+        <IndexHeader url="/" heading="Blog" subtitle="Thoughts I've had for a while" />
 
         <div class="mt-3">
             <FilterBlog client:load items={allItems} />
