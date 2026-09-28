@@ -158,7 +158,7 @@ export function FilterControls<T extends FilterType>({ filter }: FilterControlsP
       <Popover open={filterOpen} onOpenChange={setFilterOpen}>
         <PopoverTrigger
           render={
-            <Button variant={isFilterActive ? "secondary" : "outline"} size="icon-sm" className={cn("cursor-pointer", isFilterActive && "bg-muted")}>
+            <Button variant={isFilterActive ? "secondary" : "outline"} size="icon-sm" className={cn("cursor-pointer filter-icon-btn", isFilterActive && "bg-muted")}>
               <span className="relative">
                 {!isFilterActive && <RiFilterLine className="fill-muted-foreground" />}
                 {isFilterActive && <RiFilterFill className="fill-muted-foreground" />}
@@ -196,15 +196,15 @@ export function FilterControls<T extends FilterType>({ filter }: FilterControlsP
       </Popover>
 
       <div className="flex gap-1">
-        <Button variant={sortOrder === "asc" ? "secondary" : "outline"} size="icon-sm" onClick={() => setSortOrder("asc")} className="cursor-pointer">
+        <Button variant={sortOrder === "asc" ? "secondary" : "outline"} size="icon-sm" onClick={() => setSortOrder("asc")} className="cursor-pointer filter-icon-btn">
           <RiArrowUpSLine className="size-5 fill-muted-foreground" />
         </Button>
-        <Button variant={sortOrder === "desc" ? "secondary" : "outline"} size="icon-sm" onClick={() => setSortOrder("desc")} className="cursor-pointer">
+        <Button variant={sortOrder === "desc" ? "secondary" : "outline"} size="icon-sm" onClick={() => setSortOrder("desc")} className="cursor-pointer filter-icon-btn">
           <RiArrowDownSLine className="size-5 fill-muted-foreground" />
         </Button>
       </div>
 
-      <Button variant={isFilterActive ? "outline" : "secondary"} size="icon-sm" onClick={handleReset} disabled={!isFilterActive} className={cn("cursor-pointer", !isFilterActive && "cursor-not-allowed")}>
+      <Button variant={isFilterActive ? "outline" : "secondary"} size="icon-sm" onClick={handleReset} disabled={!isFilterActive} className={cn("cursor-pointer filter-icon-btn", !isFilterActive && "cursor-not-allowed")}>
         <RiLoopLeftLine className="size-4 fill-muted-foreground" />
       </Button>
     </div>

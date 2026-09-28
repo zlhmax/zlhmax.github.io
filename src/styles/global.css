@@ -431,3 +431,27 @@ pagefind-modal .pf-summary {
 .dark .theme-icon-moon {
     display: block;
 }
+
+
+/* ============================================================
+   列表页筛选/排序工具栏（4 个图标按钮：筛选 / 升序 / 降序 / 重置）
+   悬停效果对齐首页简介卡的社交图标 .social-btn：
+     边框染绿（--link-hover 与 --border 45% 混合）+ 图标变绿 + 上移 2px
+   注：故意不改“背景填充” —— shadcn Button 的 hover 底色同时承担
+       “升序/降序/筛选 选中态”的视觉区分，去掉会让选中态在悬停瞬间消失。
+   ============================================================ */
+.filter-icon-btn {
+    transition:
+        border-color 0.28s var(--ease-out),
+        color 0.28s var(--ease-out),
+        transform 0.28s var(--ease-out);
+}
+.filter-icon-btn:hover,
+.filter-icon-btn:focus-visible {
+    border-color: color-mix(in srgb, var(--link-hover) 45%, var(--border));
+    transform: translateY(-2px);
+}
+.filter-icon-btn:hover svg,
+.filter-icon-btn:focus-visible svg {
+    fill: var(--link-hover);
+}
