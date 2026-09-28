@@ -1,10 +1,12 @@
 ---
 import BackButton from "./BackButton.astro";
 
-const { url, heading } = Astro.props;
+// subtitle 为可选：只有传了的页面（当前仅 Travel）才会在标题下方多渲染一行小字
+const { url, heading, subtitle } = Astro.props;
 ---
 
 <div class="border border-border p-6 mt-5 bg-background">
     <BackButton url={url} />
     <h1 class="pt-3 text-4xl opacity-90 select-none intro-handwriting">{heading}</h1>
+    {subtitle && <p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">{subtitle}</p>}
 </div>
