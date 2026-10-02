@@ -14,15 +14,15 @@
            ⚠️ 任意字号不带行高 → 必须用 text-[Npx]/[ratio] 保住行高比例，否则会继承浏览器默认行高
            2026-10-02：字重 semibold(600) → normal(400) 取消粗体；颜色改用 --prose-heading-fg（去掉 opacity-90） */
         h2 {
-            @apply text-[24px]/[1.5] font-normal mt-[42px] mb-5 border-b border-border pb-3;
+            @apply text-[24px]/[1.5] font-semibold mt-[30px] mb-3 border-b border-border pb-3;
             color: var(--prose-heading-fg);
         }
         h3 {
-            @apply text-[18px]/[1.5] font-normal mt-5 mb-4 border-b border-border pb-1;
+            @apply text-[18px]/[1.5] font-semibold mt-[30px] mb-3 border-b border-border pb-1;
             color: var(--prose-heading-fg);
         }
         h4 {
-            @apply text-[16px]/[1.5] font-normal mt-4 mb-3;
+            @apply text-[16px]/[1.5] font-semibold mt-[30px] mb-3;
             color: var(--prose-heading-fg);
         }
 

@@ -82,10 +82,9 @@
     /* --font-mono: "JetBrains Mono Variable", monospace; */
     /* 代码块/技术元素保持等宽；中文回落思源黑体 */
     --font-mono: "Geist Mono Variable", "Noto Sans SC Variable", monospace;
-    /* 整站正文/标题：**系统字体栈**（与搜狐新闻一致的做法）
-       —— 中文：Apple 设备走苹方 PingFang SC、Windows 走微软雅黑；拉丁字母/数字走 Arial。
-       不下载任何字体文件（零体积），各设备用各自的系统字体，观感与设备原生一致。 */
-    --font-sans: "PingFang SC", Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;
+    /* 整站正文/标题：**思源黑体（Noto Sans SC，自托管）**（2026-10-02 Eddy 选 C：中性黑体、跨平台统一）
+       —— 加载失败时回落苹方/雅黑；圆黑体资产仍保留在 public/fonts/ChillRoundGothic（未被引用、访客不下载） */
+    --font-sans: "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 
     /* color */
     /* 全站超链接 hover 色：浅色 #2467FF / 深色 #6EA8FF，由 --link-hover 切换 */

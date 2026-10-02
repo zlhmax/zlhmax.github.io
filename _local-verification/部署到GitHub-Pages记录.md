@@ -4324,3 +4324,45 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑥ 提交
 - `feat(blog): align article line-height with reference site`（含归档「一百一十六」）
+
+
+---
+
+## 一百一十七、字体换**思源黑体** + 标题 **600** + 标题间距对齐参考站（**已上线**）· 2026-10-02
+
+**背景**：读完参考站 `sudoriaa.github.io/Kanade-Astro` 后，Eddy 就三项待决事项拍板：**① 字体 = 思源黑体（C）② 标题字重 = 600（B）③ 段落间距 = 对齐参考站（B）**。
+
+### ① 字体：→ 思源黑体（自托管，跨平台统一）
+`src/styles/global.css`
+```css
+/* 改前（搜狐式系统栈） */
+--font-sans: "PingFang SC", Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;
+/* 改后（思源黑体优先，自托管） */
+--font-sans: "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+```
+- 依赖与导入**本就存在**（`@fontsource-variable/noto-sans-sc` ^5.3.0 + `global.css:9` 的 `@import`）→ 无需新增 ✓
+- 不采用参考站的**造字工房悦圆**（其真实文件为 `RTWS YueRoundedGothic **Demo**`，商用授权存疑）✓
+- 圆黑体资产仍保留在 `public/fonts/ChillRoundGothic/`（无引用、访客不下载）
+
+### ② 标题字重：400 → **600**（与参考站一致）
+`src/styles/typography.css` 的 `.prose h2/h3/h4` 与 `IdHeader.astro` 的 `<h1>`：`font-normal` → **`font-semibold`**
+（注：上一轮 Eddy 曾要求「取消粗体」，本轮明确改为 600 → 以最新指令为准）
+
+### ③ 标题间距：对齐参考站 `margin: 2em 0 .8em` → 落地为 **上 30px / 下 12px**
+| 选择器 | 改前 | 改后 |
+|---|---|---|
+| `h2` | `mt-[42px] mb-5`（42/20）| **`mt-[30px] mb-3`（30/12）** |
+| `h3` | `mt-5 mb-4`（20/16）| **`mt-[30px] mb-3`（30/12）** |
+| `h4` | `mt-4 mb-3`（16/12）| **`mt-[30px] mb-3`（30/12）** |
+
+### ④ 验收（本地 CDP 实测）
+| 对象 | BEFORE（线上）| AFTER（本地）|
+|---|---|---|
+| `h1` | 28 / 42 · **400** | 28 / 42 · **600** ✓ |
+| `h2` | 24 / 36 · **400** · 42/20 | 24 / 36 · **600** · **30/12** ✓ |
+| `p` | 15 / 25.5 · 400 | 15 / 25.5 · 400（未动）✓ |
+
+**字体真实渲染（CDP）**：`main h1` / `.prose h2` / `.prose p` → **`Noto Sans SC`** ✓（思源黑体生效 ✓，中文 141 字形）
+
+### ⑤ 提交
+- `feat(blog): switch to noto sans sc with 600 headings and tighter spacing`（含归档「一百一十七」）
