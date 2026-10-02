@@ -4137,3 +4137,57 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 - **零字体下载** ✓（比原方案省下全部 CJK 分块请求）；**加粗**由系统雅黑/苹方的**真 Bold** 承担 ✓
 - **圆黑体资产保留但已无人引用**（`public/fonts/ChillRoundGothic/` 305 块 / 18MB + `chillroundgothic.css`）→ 保留以便一句话切回；**站点访客不会下载它们**（无 CSS 引用）。若确认不再需要，可另行清理。
 - 回归方式：把 `--font-sans` 改回 `"ChillRoundGothic", "Noto Sans SC Variable", …` 即可。
+
+
+---
+
+## 一百一十三、Blog 文章页：标题/段落**取消粗体** + 文字**颜色调浅**（**已上线**）· 2026-10-02
+
+**需求**：Eddy「再将 BLOG 文章页面的标题和段落的字体取消粗体和字体颜色改浅一点」。
+
+### ① 改动前实测（线上）
+| 对象 | 字重 | 颜色 | 备注 |
+|---|---|---|---|
+| 文章标题 `main h1` | **600** | `oklch(0.141)`（= `--foreground` 最深）| 还叠了 `opacity-90` |
+| 段落标题 `.prose h2/h3/h4` | **600** | `oklch(0.21)`（= `--secondary-foreground`）| 还叠了 `opacity-90` |
+| 正文段落 `.prose p` | 400（本来不粗）| `oklab(0.21 … / 0.8)` | 有效亮度 ≈25% |
+| 加粗 `strong` | 600 | `oklch(0.141)`（最深）| 文章中有 3~5 处 |
+
+### ② 新增专用变量（明/暗各一套）
+`src/styles/global.css` 的 `:root` 与 `.dark` 各加两个变量（便于一处调档）：
+```css
+:root { --prose-fg: oklch(0.38 0.006 285.885); --prose-heading-fg: oklch(0.30 0.006 285.885); }
+.dark { --prose-fg: oklch(0.8 0.005 285.885);  --prose-heading-fg: oklch(0.88 0.004 285.885); }
+```
+> 深色模式方向相反（**更柔和的浅灰**而非纯白），避免「浅色值直接套到深底上」导致对比度崩塌。
+
+### ③ 规则改动（`src/styles/typography.css`）
+| 选择器 | 改前 | 改后 |
+|---|---|---|
+| `.prose` | `text-secondary-foreground/80` | `color: var(--prose-fg)` |
+| `.prose h2/h3/h4` | `text-secondary-foreground font-semibold … opacity-90` | `font-normal …` + `color: var(--prose-heading-fg)` |
+| `.prose p` | 自带 `text-secondary-foreground/80` ✗（**会覆盖 .prose 的颜色**，必须单独改）| 只留 `text-base leading-relaxed` |
+| `.prose li` | 同上 | 只留 `leading-relaxed text-base` |
+| `.prose strong` | `font-semibold text-foreground` | `font-semibold` + `color: var(--prose-heading-fg)`（**保留加粗语义**，只随正文调浅）|
+
+`src/components/static/IdHeader.astro`（文章页大标题）：
+```html
+<!-- 改前 --> <h1 class="text-3xl font-semibold opacity-90">
+<!-- 改后 --> <h1 class="text-3xl font-normal text-[color:var(--prose-heading-fg)]">
+```
+
+### ④ 验收（本地 CDP 实测）
+| 对象 | BEFORE（线上）| AFTER（本地/线上）|
+|---|---|---|
+| `main h1` | 600 · `oklch(0.141)` @.9 | **400** · **`oklch(0.30)`** |
+| `.prose h2` | 600 · `oklch(0.21)` @.9 | **400** · **`oklch(0.30)`** |
+| `.prose p` | 400 · 有效 ≈25% | **400** · **`oklch(0.38)`** |
+| 深色模式 h1/h2 · p | — | **0.88** · **0.80** |
+
+**对比度（WCAG）**：正文 38% 于白底 ≈ **7.6:1**、标题 30% ≈ **10.8:1**、深色模式正文 ≈ **9:1** → 均远超 AA(4.5:1) 要求 ✓
+
+### ⑤ 影响范围（重要说明）
+`.prose` 与 `IdHeader` 为 **Blog 文章页 + Travel 文章页共用** → 本次改动**两处文章页同时生效**（列表页、首页、导航、页脚**不受影响**）。若日后只需 Blog，可加页面级作用域。
+
+### ⑥ 提交
+- `feat(blog): unbold and lighten article headings and body text`（含归档「一百一十三」）
