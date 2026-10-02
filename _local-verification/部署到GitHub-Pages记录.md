@@ -4551,3 +4551,42 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `feat(blog): remove bold from article headings`（含归档「一百二十二」）
+
+
+---
+
+## 一百二十三、文章**副标题 + 正文**换「搜狐同款系统字体栈」+ 16px + 行高 1.9（**已上线**）· 2026-10-02
+
+**需求**（Eddy 两轮合并）：
+1. 将 Blog 文章页的**副标题与正文**字体改为与参考网页 `sohu.com/a/1083181893_318740` 的**正文字体一致**，**字号 16px**；先在本地构建、他确认后再推送；
+2. 正文**行高改为 1.9**。
+
+### ① 读取参考站（搜狐）
+| 项 | 实测 |
+|---|---|
+| 字体栈 | `"PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif` |
+| `@font-face` 数量 | **0**（无 webfont，纯系统字体）|
+| CDP 真实渲染 | 标题 `Arial(2) \| Microsoft YaHei(35)` · 正文 `Microsoft YaHei(14)` |
+
+→ 即：**Windows 中文=微软雅黑、英文数字=Arial**；Apple 设备走苹方。
+
+### ② 改动（3 个文件）
+| 文件 | 改动 |
+|---|---|
+| `global.css` | 新增 `--article-text-font: "PingFang SC", Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;`（放在 `:root` 的颜色令牌区）|
+| `typography.css` | `.prose p` / `.prose li` / `.prose a` / `.prose blockquote p` → 加 `font-family: var(--article-text-font)`；**字号统一 16px**（顺带把遗留的 `a`/`ul`/`ol`/`li>ul`/`blockquote p` 的 15px 一并提到 16px）；**正文行高** `text-[16px]/[2.0]` → **`/[1.9]`** |
+| `IdHeader.astro` | 文章副标题（描述）加 `[font-family:var(--article-text-font)]`，字号 15 → **16px** |
+
+> **标题仍保持圆黑体**（Eddy 只要求「副标题和正文」）→ 页面呈现「标题圆体 + 正文雅黑」的混搭，已告知并留待其决定是否统一。
+
+### ③ 验收（CDP 实测，before=线上 / after=本地）
+| 对象 | BEFORE（线上）| AFTER（本地→线上）|
+|---|---|---|
+| 正文 `p` | 15px / 30px（×2.0）· **Chill Round Gothic** | **16px / 30.4px（×1.9）· `Arial + Microsoft YaHei`** ✓ |
+| 副标题 | 15px · Chill Round Gothic | **16px · `Arial + Microsoft YaHei`** ✓ |
+| 标题 `h1` / `h2` | 28/42 · 24/36 · 圆黑体 | **未动**（仍圆黑体）✓ |
+
+→ 正文/副标题的真实渲染与搜狐**逐项一致** ✓
+
+### ④ 提交
+- `feat(blog): use system stack 16px and 1.9 line-height for article text`（含归档「一百二十三」）

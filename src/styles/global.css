@@ -153,6 +153,9 @@
        —— 带柔和紫调的中灰；标题与正文同色（与该站一致） */
     --prose-fg: #4c4551;
     --prose-heading-fg: #4c4551;
+    /* 文章页【副标题 + 正文】字体：对齐参考站（搜狐）—— **系统字体栈**（该站 @font-face 数为 0）
+       —— Windows 中文=微软雅黑 / 拉丁=Arial；Apple 走苹方。标题仍保持圆黑体（Eddy 只要求副标题与正文） */
+    --article-text-font: "PingFang SC", Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;
     --accent: oklch(0.967 0.001 286.375);
     --accent-foreground: oklch(0.21 0.006 285.885);
     /* --accent-foreground: oklch(0.577 0.245 27.325); */

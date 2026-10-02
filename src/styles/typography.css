@@ -3,15 +3,15 @@
 
 @layer base {
     .prose {
-        @apply text-[15px]/[2.0];
+        @apply text-[16px]/[1.9];
         /* 正文色：对齐参考站 --text #4c4551（2026-10-02 Eddy：取消粗体 + 颜色按参考站） */
         color: var(--prose-fg);
 
         /* Headings（上间距 mt：对齐参考站 30px / 下 12px）
            字号演进（每次「小一号」= -2px）：30/24/20 → 28/22/18 → 26/20/18 → 现 24/18/16
-           正文 15px；行高：标题 1.5、正文 2.0（均对齐参考站 Kanade-Astro）
+           正文 **16px**；行高：标题 1.5、正文 **1.9**（2026-10-02 Eddy 指定）
            ⚠️ 任意字号不带行高 → 必须用 text-[Npx]/[ratio] 保住行高比例，否则会继承浏览器默认行高
-           2026-10-02：字重 600 恢复粗体（对齐参考站）；颜色 --prose-heading-fg（#4c4551） */
+           2026-10-02：字重 400（取消粗体）；颜色 --prose-heading-fg（#4c4551） */
         h2 {
             @apply text-[24px]/[1.5] font-normal mt-[30px] mb-3 border-b border-border pb-3;
             color: var(--prose-heading-fg);
@@ -26,32 +26,36 @@
         }
 
         p {
-            @apply text-[15px]/[2.0];
+            @apply text-[16px]/[1.9];
+            font-family: var(--article-text-font);
         }
 
         a {
-            @apply text-secondary-foreground font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-muted-foreground decoration-1 text-[15px];
+            @apply text-secondary-foreground font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-muted-foreground decoration-1 text-[16px];
+            font-family: var(--article-text-font);
         }
 
         ul {
-            @apply list-disc list-outside mt-3 ml-6 mb-5 space-y-1 text-[15px];
+            @apply list-disc list-outside mt-3 ml-6 mb-5 space-y-1 text-[16px];
         }
         ol {
-            @apply list-decimal list-outside mt-3 ml-8 mb-5 space-y-1 text-[15px];
+            @apply list-decimal list-outside mt-3 ml-8 mb-5 space-y-1 text-[16px];
         }
         li {
-            @apply text-[15px]/[2.0];
+            @apply text-[16px]/[1.9];
+            font-family: var(--article-text-font);
         }
         li > ul,
         li > ol {
-            @apply mt-1 mb-0 text-[15px];
+            @apply mt-1 mb-0 text-[16px];
         }
 
         blockquote {
             @apply border border-border border-l-3 bg-muted border-l-secondary-foreground/80 py-3 px-5 my-6 not-italic;
         }
         blockquote p {
-            @apply my-0 text-muted-foreground text-[15px];
+            @apply my-0 text-muted-foreground text-[16px];
+            font-family: var(--article-text-font);
         }
 
         code:not(pre code) {
