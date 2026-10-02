@@ -4016,3 +4016,50 @@ cdp.send("CSS.getPlatformFontsForNode", {"nodeId": node["nodeId"]})
 1. **`while read` 循环里 curl 会抢走 stdin** → 用 `</dev/null` 或独立 FD（`3< file`）。
 2. **Python 在 Windows 写的 URL 列表是 CRLF** → 行尾 `` 让 curl 请求到 `…woff2%0D` 全部 404 → 循环里 `u="${u%$''}"` 剥掉。
 3. 推送曾再遇 `github.com:443` 阻断（连通性复测 200/22/443 全通后**重试即成功**）→ 仍是瞬时抽风，先重试。
+
+
+---
+
+## 一百一十、全站中文字体 → **寒蝉圆黑体 ChillRoundGothic**（含**真 700 字重**）· 2026-09-26
+
+**需求**：Eddy「① 列表页也换 ② 全站都换 ③ 换 ChillRoundGothic 圆黑体」—— 三项合并 = **全站中文换成圆黑体**（①由②覆盖；③解决上一版只有 400 字重、加粗靠合成的问题）。
+
+### ① 字体来源（关键发现）
+**ZeoSeven Fonts（ZSFT）** 提供该字体的 **cn-font-split 分块包，且按字重分端点**：
+- Regular 400：`https://fontsapi.zeoseven.com/83/main/result.css` → **151 块**
+- **Bold 700：`https://fontsapi.zeoseven.com/83/bold/result.css` → 154 块**（注意路径是**小写 `bold`**；大写 `Bold` 与 `/83/700/` 都返回 404）
+- 另有 `medium` / `heavy` 等端点（`/83/medium/`、`/83/heavy/` 均 200）
+- 授权 **SIL OFL-1.1**，上游 `github.com/Warren2060/ChillRoundGothic`（ttf 目录含 7 个字重，各约 12MB）
+
+### ② 改动
+| 位置 | 改动 |
+|---|---|
+| `public/fonts/ChillRoundGothic/regular/` | 151 块（8.00 MB，镜像自 ZSFT）|
+| `public/fonts/ChillRoundGothic/bold/` | **154 块（8.34 MB）**，`font-weight:700` |
+| `src/styles/chillroundgothic.css` | 305 条 `@font-face`（家族名统一 `ChillRoundGothic`、URL 本地化、去 `local()`、补 `font-weight`）|
+| `global.css` | `@import "./chillroundgothic.css"`；**`--font-sans` 首位**加 `"ChillRoundGothic"`（→ 全站正文+标题）|
+| `blog/[id].astro` | **移除**上一轮的 `class="font-chill"`（不再需要页面级作用域）|
+
+### ③ 验收（本地 CDP 实测 + 线上）
+| 检查 | 结果 |
+|---|---|
+| 博客文章页 `main p/h1/h2` | **Chill Round Gothic**（56/14/5 字形）✓ |
+| **Travel 详情页** `main p/h1` | **Chill Round Gothic**（30/10）✓ ← 全站生效 |
+| **博客列表页卡片** `a h3` / `a p` | **Chill Round Gothic**（14/56）✓ |
+| 导航 `.nav-breadcrumb a` | **Manrope** ✓ 未被动（专用字体保持不变）|
+| 首页衬线字 `.cormorant-serif` | **Cormorant Garamond** ✓ 未被动 |
+| **拉丁不受影响** | 分块 `unicode-range` 中 `U+41`(A) 命中 **0** → 英文/数字仍走思源黑体（结构保证）✓ |
+| **Bold 真字重** | `document.fonts.check('400'/'600'/'700')` 全 **True**；已加载字重 = **['400','700']**；h2 计算 `font-weight:600` 由 **700** 承接 ✓ |
+| 按需加载 | 单篇文章只下 **regular 12 块 + bold 8 块** ✓ |
+| 视觉 | 标题 700 加粗明显、笔画圆润；正文清晰舒适（`Desktop/圆黑体_标题与正文_20260926.png`）|
+
+### ④ 本轮踩坑
+1. **`cn-font-split` 在 node v26 上直接崩溃** ✗（原生 FFI `koffi` 加载 DLL 失败）→ 因此**没走“自己切 Bold”**，改用 ZSFT 现成的 `/83/bold/` 端点（更省事）。若日后要自己切：先降到 node 20/22。
+2. ZSFT 的字重端点是**小写**（`bold`），大写 `Bold`、数字 `700` 都是 404 —— 试路径时先试小写名。
+3. 推送又遇 `github.com:443` 阻断（本轮提交含 11.8MB 字体，对链路更敏感）→ 重试多次 + 必要时开 VPN。
+
+### ⑤ 提交
+- `ba6891a feat(fonts): site-wide chillroundgothic chinese font with real bold weight`
+
+### ⑥ 待办（需 Eddy 确认后才动）
+- 上一轮的 **`public/fonts/ChillRoundM/`（55 个文件 / 3.8MB）已被本次取代、不再被任何 CSS 引用** → 建议删除，但按约定**先列清单待确认**；`src/styles/chillroundm.css` 同理。
