@@ -4236,3 +4236,44 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `feat(blog): reduce article heading and body font sizes`（含归档「一百一十四」）
+
+
+---
+
+## 一百一十五、Blog 列表页卡片副标题字号对齐首页卡片（**已上线**）· 2026-10-02
+
+**需求**：Eddy「BLOG 文章列表页的副标题比首页 BLOG 卡片中的副标题大一些，请按首页的字体字号修改列表页的」。
+
+### ① 定位过程（先量后改）
+第一轮按字面找「页头副标题」→ 实测**两处页头副标题完全一致**（均 16px/24px/400/Cormorant）✗ → 说明指的不是页头。
+第二轮按**文章卡片**量 → 命中：
+
+| 元素 | 首页卡片（`FeaturedBlogCard`）| 列表页卡片（`BlogCard`）| 结论 |
+|---|---|---|---|
+| 分类 | 12px | 11px | 小差（未改）|
+| 标题 | 18px / 24.75 | 18px / 24.75 | **一致** ✓ |
+| **副标题（描述）** | **14px / 22.75**（`text-sm leading-relaxed`）| **16px / 24**（`text-base`）| ✗ **列表页偏大** ← 命中 |
+
+### ② 改动（1 行，照抄首页规格）
+`src/components/client/BlogCard.tsx:21`
+```tsx
+<!-- 改前 --> <p className="mt-0.5 text-base text-muted-foreground">{item.data.description}</p>
+<!-- 改后 --> <p className="mt-0.5 text-sm text-muted-foreground leading-relaxed">{item.data.description}</p>
+```
+保留原有 `mt-0.5` 间距（只对齐「字体字号」，不动布局）✓
+
+### ③ 验收（本地 CDP 实测）
+| 位置 | BEFORE | AFTER |
+|---|---|---|
+| Blog 列表页卡片副标题 | 16px / 24 | **14px / 22.75** ✓ |
+| 首页卡片副标题 | 14px / 22.75 | 14px / 22.75（未动）✓ |
+
+**一致性核对**：首页 = Blog 列表页 = **14px / 22.75** ✓ 逐项一致。
+
+### ④ 影响范围
+- `BlogCard` 仅被 `FilterBlog`（**Blog 列表页**）使用 → 改动面精确 ✓
+- **Travel 列表页不受影响**：其 `PortfolioCard` 的卡片结构不同（标题 20px + 标签 12px），**本来就没有副标题段落** → 无同类问题 ✓
+- 备注：`PortfolioCard` 里有一个 `opacity-0`（悬停才显示）的描述段落仍是 16px，如需一并对齐可另行处理。
+
+### ⑤ 提交
+- `fix(blog): match list card subtitle size to homepage card`（含归档「一百一十五」）
