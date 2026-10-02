@@ -4659,3 +4659,47 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑥ 提交
 - `feat(nav): add icons before navigation items`（含归档「一百二十五」）
+
+---
+
+## 一百二十六、Blog 列表页**静态分页**（照搬参考站 navfolio）+ 样式/尺寸对齐筛选按钮（**已上线**）· 2026-10-02
+
+**需求**：Eddy ①「读取参考站 astro.navfolio.site 的 Blog 列表分页 + GitHub 源码，确认是否增加相同分页」→ ②选定「**A 照搬静态分页**」③「分页控件移到文章卡片外框线内部」④「按钮显示效果与筛选工具栏按钮一致」⑤「每页 8 篇」⑥「图标（按钮）大小也修改一致」。
+
+### ① 参考站基准（源码 + 线上实测）
+- 路由：`src/pages/blog/page/[page].astro` 用 `getStaticPaths()` 生成 `/blog/page/2/`…；第 1 页 = `/blog/`
+- 每页篇数：配置 `pages.blog.postsPerPage`（参考站 = 6，本站按 Eddy 要求 = **8**）
+- 页码算法：`src/utils/pagination.ts` 的 `getPaginationItems()`（≤8 页全列，>8 页用 `'ellipsis'`）
+- 线上 `.pagination-pages`：`display:flex` · gap 8px · `justify-content:center` · 当前页 `aria-current="page"`；参考站共 4 页（≈20+ 篇）
+- **关键架构差异**：参考站的分类/标签/系列是**独立静态页**，故其分页与分类不冲突
+
+### ② 改动（5 个文件）
+| 文件 | 改动 |
+|---|---|
+| `src/lib/blogPaging.ts` | **新增**：`POSTS_PER_PAGE = 8` + 共用排序/总页数/路径函数 |
+| `src/pages/blog/page/[page].astro` | **新增**：`getStaticPaths()` 生成第 2..N 页 |
+| `src/pages/blog/index.astro` | 改：第 1 页切前 8 篇 + 传 `pageInfo` |
+| `src/components/client/FilterBlog.tsx` | 改：新增 `pageInfo` prop → 框内渲染静态分页；**修掉二次切片丢文章 bug**；按钮样式/尺寸对齐 `.filter-icon-btn` |
+| `src/components/client/BlogPagination.tsx` | Eddy 先前自行新增的**前端分页**（保留为后备分支，未删）|
+
+### ③ 分页控件位置与样式（Eddy 逐轮要求）
+1. 初版在卡片框**下方** → 移入 `space-y-0 border border-border p-6`（**卡片外框内部**）；DOM 断言：父容器 class = 卡片外框 ✓、框内子元素 = 8 卡 + 分页 ✓
+2. 按钮对齐筛选工具栏**实测值**：尺寸 **`size-[25.6px]`**（实测 25.59×25.59）、圆角 **8px**、间距 `gap-2`、常态白底+边框、**当前页无边框 + `bg-muted`**、禁用更浅、悬停边框混入 `--link-hover` + 上浮 2px
+
+### ④ 验收（本地 8099 + 构建 + 线上）
+| 项 | 结果 |
+|---|---|
+| 分页结果 | 第 1 页 **8 篇** + 第 2 页 **1 篇** = 9 篇无丢失 ✓ |
+| 按钮尺寸 | 分页 25.59×25.59 = 筛选按钮 25.59×25.59 ✓ |
+| 构建 | 20 页（+1 = 新分页路由）✓ |
+| 线上 | 两页 200、卡片数 8 / 1、分页导航正确 ✓ |
+
+### ⑤ 🐛 修复的 bug
+`FilterBlog` 内部另有 `POSTS_PER_PAGE = 6`，静态分页下**二次切片** → 第 1 页只显示 6 篇（丢 2 篇）。修法：传 `pageInfo` 时不再切片，内部常量同步改 8。
+
+### ⑥ 遗留（待 Eddy 决定）
+- `src/components/static/BlogPageNav.astro`（本次新增后因分页并入 `FilterBlog` 而**未被引用**）→ 待确认删除
+- A 方案副作用：分类筛选只作用于**当前页**的 8 篇（参考站以「独立分类页」解决）
+
+### ⑦ 提交
+- `feat(blog): add static pagination to blog list`（含归档「一百二十六」）

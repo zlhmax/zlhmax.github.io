@@ -1,0 +1,43 @@
+---
+import FilterBlog from "@/components/client/FilterBlog";
+import IndexHeader from "@/components/static/IndexHeader.astro";
+import IndexLayout from "@/layouts/IndexLayout.astro";
+import { getSortedBlogPosts, getTotalPages, POSTS_PER_PAGE } from "@/lib/blogPaging";
+
+// 第 2 页起（第 1 页 = /blog/）：按参考站 astro.navfolio.site 的静态分页做法，
+// 构建期就把全部文章切片并生成 /blog/page/2/、/blog/page/3/ …（每页 6 篇）
+export async function getStaticPaths() {
+  const allItems = await getSortedBlogPosts();
+  const totalPages = getTotalPages(allItems.length);
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const currentPage = index + 2;
+    const start = (currentPage - 1) * POSTS_PER_PAGE;
+
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        items: allItems.slice(start, start + POSTS_PER_PAGE),
+        currentPage,
+        totalPages,
+      },
+    };
+  });
+}
+
+const { items, currentPage, totalPages } = Astro.props;
+---
+
+<IndexLayout
+    title={`Blog - Page ${currentPage} - lhZhang`}
+    description="Thoughts on engineering, reliability, AI, and observation"
+    image="/og/default.png"
+>
+    <div transition:animate="fade">
+        <IndexHeader url="/" heading="Blog" subtitle="Thoughts I've had for a while" />
+
+        <div class="mt-3">
+            <FilterBlog client:load items={items} pageInfo={{ current: currentPage, total: totalPages }} />
+        </div>
+    </div>
+</IndexLayout>
