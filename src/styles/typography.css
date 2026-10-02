@@ -3,15 +3,15 @@
 
 @layer base {
     .prose {
-        @apply text-[15px]/[2.2];
-        /* 正文色：比默认更浅更柔和（2026-10-02 Eddy：取消粗体 + 颜色调浅） */
+        @apply text-[15px]/[2.0];
+        /* 正文色：对齐参考站 --text #4c4551（2026-10-02 Eddy：取消粗体 + 颜色按参考站） */
         color: var(--prose-fg);
 
         /* Headings（上间距 mt：对齐参考站 30px / 下 12px）
            字号演进（每次「小一号」= -2px）：30/24/20 → 28/22/18 → 26/20/18 → 现 24/18/16
-           正文 15px；行高：标题 1.5（对齐参考站）；**正文 1.7 → 2.55 → 2.2（2026-10-02 Eddy 先要 +50%，看后回落到 2.2）**
+           正文 15px；行高：标题 1.5、正文 2.0（均对齐参考站 Kanade-Astro）
            ⚠️ 任意字号不带行高 → 必须用 text-[Npx]/[ratio] 保住行高比例，否则会继承浏览器默认行高
-           2026-10-02：字重 normal(400) → semibold(600) 恢复粗体（对齐参考站）；颜色 --prose-heading-fg */
+           2026-10-02：字重 600 恢复粗体（对齐参考站）；颜色 --prose-heading-fg（#4c4551） */
         h2 {
             @apply text-[24px]/[1.5] font-semibold mt-[30px] mb-3 border-b border-border pb-3;
             color: var(--prose-heading-fg);
@@ -26,7 +26,7 @@
         }
 
         p {
-            @apply text-[15px]/[2.2];
+            @apply text-[15px]/[2.0];
         }
 
         a {
@@ -40,7 +40,7 @@
             @apply list-decimal list-outside mt-3 ml-8 mb-5 space-y-1 text-[15px];
         }
         li {
-            @apply text-[15px]/[2.2];
+            @apply text-[15px]/[2.0];
         }
         li > ul,
         li > ol {

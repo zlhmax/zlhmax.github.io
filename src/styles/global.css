@@ -149,10 +149,10 @@
     --secondary-foreground: oklch(0.21 0.006 285.885);
     --muted: oklch(0.967 0.001 286.375);
     --muted-foreground: oklch(0.552 0.016 285.938);
-    /* 文章页（.prose 正文 / 标题）文字色：比默认更浅、更柔和（2026-10-02 Eddy 要求）
-       —— 只作用于 Blog/Travel 文章正文区，不动导航/列表/页脚 */
-    --prose-fg: oklch(0.38 0.006 285.885);
-    --prose-heading-fg: oklch(0.30 0.006 285.885);
+    /* 文章页（.prose 正文 / 标题）文字色：对齐参考站 Kanade-Astro 的 --text = #4c4551（2026-10-02）
+       —— 带柔和紫调的中灰；标题与正文同色（与该站一致） */
+    --prose-fg: #4c4551;
+    --prose-heading-fg: #4c4551;
     --accent: oklch(0.967 0.001 286.375);
     --accent-foreground: oklch(0.21 0.006 285.885);
     /* --accent-foreground: oklch(0.577 0.245 27.325); */
