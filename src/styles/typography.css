@@ -3,55 +3,56 @@
 
 @layer base {
     .prose {
-        @apply text-base leading-relaxed;
+        @apply text-[15px]/[1.625];
         /* 正文色：比默认更浅更柔和（2026-10-02 Eddy：取消粗体 + 颜色调浅） */
         color: var(--prose-fg);
 
         /* Headings（上间距 mt 已按用户要求减半：h2 84→42px / h3 40→20px / h4 32→16px；下方 mb 未动）
-           字号已两次「小一号」（每次 -2px）：30/24/20 → 28/22/18 → 现 26/20/18（h4 停在 18 不再降，避免掉进正文字号 16px）
+           字号演进（每次「小一号」= -2px）：30/24/20 → 28/22/18 → 26/20/18 → 现 24/18/16
+           正文同步 -1px：16 → 15px（2026-10-02 第三次调小：标题 -2px、正文 -1px，整体系列 24/18/16/15）
            ⚠️ 任意字号不带行高 → 必须用 text-[Npx]/[ratio] 保住原行高比例（1.2 / 1.3333 / 1.4），
-              否则会继承 .prose 的 leading-relaxed(1.625)，标题反而变松
+              否则会继承浏览器默认行高，标题反而变松
            2026-10-02：字重 semibold(600) → normal(400) 取消粗体；颜色改用 --prose-heading-fg（去掉 opacity-90） */
         h2 {
-            @apply text-[26px]/[1.2] font-normal mt-[42px] mb-5 border-b border-border pb-3;
+            @apply text-[24px]/[1.2] font-normal mt-[42px] mb-5 border-b border-border pb-3;
             color: var(--prose-heading-fg);
         }
         h3 {
-            @apply text-[20px]/[1.3333] font-normal mt-5 mb-4 border-b border-border pb-1;
+            @apply text-[18px]/[1.3333] font-normal mt-5 mb-4 border-b border-border pb-1;
             color: var(--prose-heading-fg);
         }
         h4 {
-            @apply text-[18px]/[1.4] font-normal mt-4 mb-3;
+            @apply text-[16px]/[1.4] font-normal mt-4 mb-3;
             color: var(--prose-heading-fg);
         }
 
         p {
-            @apply text-base leading-relaxed;
+            @apply text-[15px]/[1.625];
         }
 
         a {
-            @apply text-secondary-foreground font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-muted-foreground decoration-1 text-base;
+            @apply text-secondary-foreground font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-muted-foreground decoration-1 text-[15px];
         }
 
         ul {
-            @apply list-disc list-outside mt-3 ml-6 mb-5 space-y-1 text-base;
+            @apply list-disc list-outside mt-3 ml-6 mb-5 space-y-1 text-[15px];
         }
         ol {
-            @apply list-decimal list-outside mt-3 ml-8 mb-5 space-y-1 text-base;
+            @apply list-decimal list-outside mt-3 ml-8 mb-5 space-y-1 text-[15px];
         }
         li {
-            @apply leading-relaxed text-base;
+            @apply text-[15px]/[1.625];
         }
         li > ul,
         li > ol {
-            @apply mt-1 mb-0 text-base;
+            @apply mt-1 mb-0 text-[15px];
         }
 
         blockquote {
             @apply border border-border border-l-3 bg-muted border-l-secondary-foreground/80 py-3 px-5 my-6 not-italic;
         }
         blockquote p {
-            @apply my-0 text-muted-foreground text-base;
+            @apply my-0 text-muted-foreground text-[15px];
         }
 
         code:not(pre code) {
