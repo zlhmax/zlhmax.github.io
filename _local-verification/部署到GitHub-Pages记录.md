@@ -3963,3 +3963,56 @@ cdp.send("CSS.getPlatformFontsForNode", {"nodeId": node["nodeId"]})
 
 ### ④ 状态
 - **本次未改动任何站点文件**，无提交（仅记录 + 技能库固化 §5.4「量参考站真实渲染字体」）。
+
+
+---
+
+## 一百〇九、博客文章页中文字体 → **寒蝉半圆体 ChillRoundM（圆体）**（**已上线**）· 2026-09-26
+
+**需求**：Eddy「请将我的网站里 BLOG 的中文内容字体换成这款圆体」（承接上一轮对参考站 astro.navfolio.site 的字体查证）。
+
+### ① 接入方案：自托管 **cn-font-split 分块**（不搬 6.36MB 的 ttf）
+- 字体来源：`cdn.jsdelivr.net/gh/eterfinal/ReiFonts/ChillRoundM/result.css`（cn-font-split 7.2.1 生成，**ChillRoundM v1.800**，基于 Zen Maru Gothic，SIL OFL-1.1 免费商用）
+- **55 个 unicode-range 分块**（共 3.8MB）下载到 **`public/fonts/ChillRoundM/<hash>.woff2`**
+- 生成 **`src/styles/chillroundm.css`**：55 条 `@font-face`，URL 改为本地绝对路径、去掉 `local()`、家族名统一为 **`ChillRoundM`**
+- 在 `global.css` 顶部 `@import "./chillroundm.css";`
+
+### ② 作用域：**只挂博客文章页**，不动共享布局
+博客文章页 `src/pages/blog/[id].astro` 的结构是 `<IdLayout><article>…</article></IdLayout>`，而 `IdLayout` 是 **Blog 与 Travel 详情页共用**，且它的 `type` prop **不落到 DOM** →
+**不改进共享布局**，只给文章页自己的 `<article>` 加类：`<article class="font-chill">` ✓
+
+```css
+.font-chill {
+    font-family: "ChillRoundM", "Noto Sans SC Variable", "Microsoft YaHei", "PingFang SC",
+        "Geist Variable", sans-serif;
+}
+```
+
+### ③ 为什么「放首位」不会换掉拉丁字母（关键）
+实测该分块方案的 **`unicode-range` 只覆盖 CJK / 全角标点，不含 `U+0000-00FF`**（校验：基本拉丁覆盖数 = 0）→
+`ChillRoundM` 放首位时，**中文走圆体、拉丁与数字自动落到 Noto Sans SC**，与改动前完全一致 ✓
+
+### ④ 验收（本地 + 线上，用 CDP 看**真实渲染字体**）
+| 检查 | 结果 |
+|---|---|
+| 本地文章页 `article p` | **寒蝉半圆体 42 字形** + **Noto Sans SC 14 字形**（拉丁/数字 ✓）|
+| 本地 `h1` / `h2` | 中文 → 寒蝉半圆体 ✓ |
+| 分块按需加载 | 单篇文章只下载 **26/55** 块 ✓ |
+| 线上 `document.fonts.check('16px ChillRoundM')` | **True** ✓（未用到的块保持 `unloaded` ✓）|
+| 线上字体文件 | `/fonts/ChillRoundM/<hash>.woff2` → **200** ✓ |
+| **其它页面**（`/`、`/portfolio/`、`/portfolio/angkor-wat/`）| **不含 ChillRoundM** ✓ 完全不受影响 |
+| 字号/行距 | 仅新增 `font-family`，**零改动** ✓ |
+| 视觉 | 笔画末端圆润、观感更柔和；正文小字号下仍清晰（对照图 `Desktop/圆体_前后对照_20260926.png`）|
+
+**注**：寒蝉半圆体**只有 400 单字重**，文章 h2 的 600 由浏览器**合成加粗**，视觉上比思源略细。
+
+### ⑤ 体积
+`public/fonts/ChillRoundM` = **3.8MB / 55 文件**（仓库原有 `public/fonts` 已 16MB，属同一量级）；`dist` 23MB。
+
+### ⑥ 提交
+- `8f294ca feat(blog): use chillroundm rounded chinese font for blog articles`（2 改 + 55 字体 + 1 新 CSS）
+
+### ⑦ 本轮踩坑（记录）
+1. **`while read` 循环里 curl 会抢走 stdin** → 用 `</dev/null` 或独立 FD（`3< file`）。
+2. **Python 在 Windows 写的 URL 列表是 CRLF** → 行尾 `` 让 curl 请求到 `…woff2%0D` 全部 404 → 循环里 `u="${u%$''}"` 剥掉。
+3. 推送曾再遇 `github.com:443` 阻断（连通性复测 200/22/443 全通后**重试即成功**）→ 仍是瞬时抽风，先重试。
