@@ -4621,3 +4621,41 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ④ 提交
 - `feat(blog): reduce article subtitle and body font size to 14px`（含归档「一百二十四」）
+
+---
+
+## 一百二十五、导航项**加小图标**（含对齐修正 + Travel 换「友链」同款）（**已上线**）· 2026-10-02
+
+**需求**：Eddy ①「读取参考站导航栏效果，首页/文章/留言/友链/关于 前各有小图标，按此在我的首页导航 Home/Travel/Blog 也加小图标」②「小图标没有与文字对齐，怎么修改？」③「图标再减少 −0.5px」④「将 Travel 前的小图标更换为参考网站上的友链前的小图标」。全部要求**先本地构建确认再推送**。
+
+### ① 参考站基准（CDP 实测 Kanade-Astro）
+- 图标实现 = **Iconify 类名**（`icon-[bx--bxs-home-circle]` 等），5 项：首页/文章/留言/友链/关于
+- 规格：项 78×70 · 字号 15px · **图标↔文字间距 7px**（≈0.47em）· 项间距 15px · 图标**实心风格**、色随文字 · 当前页有**短下划线条**
+- 「友链」图标 = **MingCute `link-3-line`**（两环相扣的**线性**链接图标，**MIT** 许可）
+
+### ② 改动（2 个文件）
+| 文件 | 改动 |
+|---|---|
+| `src/components/static/NavLinkIcon.tsx` | **新增**：原样复刻 MingCute `link-3-line` 的 SVG（`fill="none"` `stroke="currentColor"` `stroke-width="2"`，path 原样） |
+| `src/components/static/Navigation.astro` | ① 新增 `navIcons` 映射 + `ICON_CLS`；② 三项前各插图标（Home=`RiHome5Fill`、Travel=**`NavLinkIcon`**、Blog=`RiArticleFill`）；③ 导航项加 `[&_a]:inline-flex [&_a]:items-center [&_a]:gap-1`（`[data-slot=breadcrumb-page]` 同款）|
+
+### ③ 对齐问题根因与修法
+- 根因：原 `align-middle` 参照 **x-height**，而文字框**含下降部空间** → 框中心比**视觉中心**低 → 图标**偏低**（实测差 **+0.64px**）
+- 修法：① 导航项改 **`inline-flex items-center`**（真居中；附带好处：下划线**不再延伸到图标下**，只覆盖文字）；② 图标 **`-translate-y-[1px]`** 视觉微调（先 0.5px，Eddy 要求再移 0.5px → 1px）
+
+### ④ 验收（CDP 实测 + 4× 放大目视）
+| 版本 | 图标中心 − 文字盒中心 |
+|---|---|
+| 初版（align-middle）| **+0.64px**（偏低 ✗）|
+| 上移 0.5px | +0.14px |
+| **上移 1px（上线版）** | **−0.36px**（略高 = 视觉居中 ✓）|
+
+- 图标规格：**12×12**（比 10.2px 文字略大 = 参考站同比例 ✓）· 间距 **4px** · 色随文字（`currentColor` ✓）
+- Travel 图标实测：`fill=none` · `stroke=<文字色>` · `strokeWidth=2px` · path = `M12 14a4 4 0 0 0 0-8H6a4 4 0 0 0-1 7.874M12 10a4 4 0 0 0 0 8h6a4 4 0 0 0 1-7.874`（与参考站**逐字一致** ✓）
+
+### ⑤ 遗留（待 Eddy 决定）
+- 线性图标（Travel）在 12px 下描边偏细（有效 1px，参考站 1.25px）→ 可加粗到 `stroke-width: 2.4`。
+- 参考站**当前页高亮**（粉色 + 短下划线条）未加（Eddy 仅要求图标）。
+
+### ⑥ 提交
+- `feat(nav): add icons before navigation items`（含归档「一百二十五」）
