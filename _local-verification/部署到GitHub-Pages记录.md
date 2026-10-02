@@ -3927,3 +3927,39 @@ h2 **26px**/行高 1.2/mt 42px/mb 20px/pb 12px/下边框 · h3 **20px**/1.3333/m
 **⑤ 后续（同日补充）**：Eddy 开启 VPN 后 **`39a58d9..cdb0eaa` 推送成功** ✓ —— 两个提交（尺寸改动 + 本归档）均已上线。
 线上复测（Travel 与 Blog 两页）：按钮 **25.59px**、字形 **12.8 / 16 / 16 / 12.8**（各 −20% ✓）；悬停三要素（border 混色 `color(srgb 0.647192 0.81493 0.766653)` / `svg.fill: rgb(88,183,152)` / `translateY(-2px)`）**仍与首页社交图标完全一致** ✓。
 → **结论：github.com:443 被阻断时，开 VPN 是最直接解法**（本轮 1 次重试即成功）。
+
+
+---
+
+## 一百〇八、查证参考站 `astro.navfolio.site` 的中文文字字体（纯查证，**未改动本站**）· 2026-09-26
+
+**需求**：Eddy「请读取一下这个网站（https://astro.navfolio.site/blog/）的中文文字字体」。
+
+### ① 方法：量**真实渲染字体**，不只看 `font-family` 栈
+`getComputedStyle().fontFamily` 只给声明栈，看不出实际用了哪款。用 CDP：
+```python
+cdp = pg.context.new_cdp_session(pg); cdp.send("DOM.enable"); cdp.send("CSS.enable")
+doc = cdp.send("DOM.getDocument", {"depth": -1})
+node = cdp.send("DOM.querySelector", {"nodeId": doc["root"]["nodeId"], "selector": "article p"})
+cdp.send("CSS.getPlatformFontsForNode", {"nodeId": node["nodeId"]})
+# → [{familyName, glyphCount, isCustomFont}, …]
+```
+配合 ① 含中文元素的 `fontFamily/size/weight/lineHeight` ② `document.fonts` 的加载状态 ③ `document.styleSheets` 里的 `@font-face`（拿 `src` 地址）④ `pg.on("response")` 过滤字体文件请求 + `curl -sIL` 量体积。
+
+### ② 结论
+| 项 | 值 |
+|---|---|
+| **中文实际字体** | **`ChillRoundM UI Subset`**（CDP 实测 `isCustomFont=true`）|
+| **拉丁/数字** | `Maple Mono`（等宽体）|
+| 声明栈 | `"Maple Mono", "ChillRoundM UI Subset", ChillRoundM, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`（标题另有追加 `"PingFang SC", "Microsoft YaHei", system-ui, sans-serif` 兜底的写法）|
+| 字体本体 | **寒蝉半圆体**，PostScript 名 **`ChillRoundM`**，圆体风格，基于日本开源字型 **Zen Maru Gothic** 按 GB2312 调整 |
+| 作者/来源 | 寒蝉字型 · `github.com/Warren2060/ChillRound` |
+| **授权** | **SIL Open Font License 1.1（OFL-1.1）→ 个人与企业均可免费商用** ✓ 无版权风险 |
+| 体积（实测该站）| 子集 `ChillRoundM-ui-subset.woff2` = **155 KB**；完整 `ChillRoundM.ttf` = **6.36 MB** |
+| 字重 | **仅 400 单字重** → 粗体依赖浏览器合成 |
+
+### ③ 若日后要采用（待 Eddy 指令，未执行）
+自托管**子集 woff2**（别直搬 6.36MB 的 ttf），把 `--font-sans` 的中文段换成 `ChillRoundM` —— 保持零外部请求，做法与现有 Noto Sans SC 自托管一致。
+
+### ④ 状态
+- **本次未改动任何站点文件**，无提交（仅记录 + 技能库固化 §5.4「量参考站真实渲染字体」）。
