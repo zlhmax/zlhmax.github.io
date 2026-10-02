@@ -4590,3 +4590,34 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ④ 提交
 - `feat(blog): use system stack 16px and 1.9 line-height for article text`（含归档「一百二十三」）
+
+
+---
+
+## 一百二十四、文章**副标题 + 正文**改小一号（16 → 14px）（**已上线**）· 2026-10-02
+
+**需求**：Eddy「将 BLOG 文章页的副标题和正文的文字字号改小一号」。
+**换算惯例**：用户说「**小一号**」= **−2px**（本站既定约定）→ **16 − 2 = 14px**。
+
+### ① 改动（2 个文件）
+| 文件 | 改动 |
+|---|---|
+| `typography.css` | `.prose` 基准、`.prose p`、`.prose li`、`.prose a`、`ul`/`ol`、`li > ul`/`li > ol`、`blockquote p`：`text-[16px]/[1.9]` → **`text-[14px]/[1.9]`**（行高比例 1.9 **保持不变**）|
+| `IdHeader.astro` | 文章副标题（描述）：`text-[16px]` → **`text-[14px]`**（保留其 `leading-10` 与左侧竖线、字体变量不变）|
+
+**标题未动**：文章大标题 28px、段落标题 24/18/16 保持原样 ✓
+
+### ② 验收（CDP 实测，before=线上 / after=本地）
+| 对象 | BEFORE | AFTER |
+|---|---|---|
+| 副标题 | 16px / 40px | **14px** / 40px |
+| 正文 `p` | 16px / 30.4px（×1.90）| **14px / 26.6px（×1.90）** ✓ |
+| 文章标题 | 28 / 42 | 28 / 42（未动）|
+| 段落标题 `h2` | 24 / 36 | 24 / 36（未动）|
+
+### ③ 遗留（已告知 Eddy，待其决定）
+- 副标题行距仍为 `leading-10`（40px）：字号降至 14px 后比值为 **×2.86**，视觉留白偏大 → 可收到约 **26.6px**（与正文一致），等其指示。
+- `IdHeader` 的副标题组件为 **Blog 文章页 + Travel 详情页共用** → Travel 详情页的描述也会变 14px（该页无正文段落，无其他影响）。
+
+### ④ 提交
+- `feat(blog): reduce article subtitle and body font size to 14px`（含归档「一百二十四」）
