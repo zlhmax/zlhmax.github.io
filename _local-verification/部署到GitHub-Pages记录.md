@@ -4277,3 +4277,50 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `fix(blog): match list card subtitle size to homepage card`（含归档「一百一十五」）
+
+
+---
+
+## 一百一十六、文章页行高对齐参考站 `Kanade-Astro`（**已上线**）· 2026-10-02
+
+**需求**：Eddy 给 `https://sudoriaa.github.io/Kanade-Astro/posts/astro-islands/`，要求「读取其文章页的标题/段落/正文的**字体与排版效果（行高）**」并应用到自己网站的 Blog 文章页。
+
+### ① 读取结果（CDP 实测 + CSS 声明互证）
+| 对象 | 参考站值 | 依据 |
+|---|---|---|
+| **字体** | **造字工房悦圆** `ZaoZiGongFangYueYuan`（自托管 woff2）| `@font-face` + `body{font-family:ZaoZiGongFangYueYuan…}` |
+| 真实渲染 | **`RTWS YueRoundedGothic Demo Regular`**（custom=True）| CDP `CSS.getPlatformFontsForNode` |
+| **正文** | **15px / line-height 1.7** | `body{font-size:15px;line-height:1.7}` |
+| 标题 h1 | 34px / **1.5** / 600 / letter-spacing 2.04px | 实测计算值 |
+| 段落标题 h2/h3 | **font-weight 600** · **line-height 1.5** · margin `2em 0 .8em` | `.prose h2,.prose h3{…}` |
+| 代码块 | 12px / **1.9** / Consolas | `.prose pre{font-size:12px;line-height:1.9}` |
+
+### ② ⚠️ 两处**未照搬**并已告知 Eddy
+1. **字体**：该站用的是**造字工房悦圆**，且 CDP 显示其真实字体名为 **`…Demo Regular`** → **试用版**，商用授权存疑 ✗ → **不搬**（备选：免费开源的**寒蝉圆体 ChillRound**，风格几乎同类；或维持现有搜狐式系统栈）。
+2. **字重**：参考站标题是 **600（粗体）**，但 Eddy 上一轮刚要求**取消粗体** ✗ → **不擅自改回**，仅应用行高，字重待其确认。
+
+### ③ 本次实际应用（行高，即需求中点名者）
+| 对象 | 改前 | 改后 |
+|---|---|---|
+| `.prose` 正文 / `p` / `li` | 15px × **1.625** | 15px × **1.7** |
+| `h2` | 24px × **1.2** | 24px × **1.5** |
+| `h3` | 18px × **1.3333** | 18px × **1.5** |
+| `h4` | 16px × **1.4** | 16px × **1.5** |
+| 文章大标题 `h1`（IdHeader）| 28px × **1.2** | 28px × **1.5** |
+| 代码块 `pre/code` | 14px × 1.625 | 14px × **1.9** |
+
+### ④ 验收（本地 CDP 实测）
+| 对象 | BEFORE（线上）| AFTER（本地）| 参考站 |
+|---|---|---|---|
+| h1 | 28 / 33.6 (1.200) | **28 / 42 (1.500)** | ×1.5 ✓ |
+| h3 | 18 / 23.999 (1.333) | **18 / 27 (1.500)** | ×1.5 ✓ |
+| p | 15 / 24.375 (1.625) | **15 / 25.5 (1.700)** | ×1.7 ✓ |
+| li | 15 / 24.375 (1.625) | **15 / 25.5 (1.700)** | ×1.7 ✓ |
+
+### ⑤ 待 Eddy 拍板的三项
+1. **字体**：要不要换成圆体？→ 建议用**免费的寒蝉圆体 ChillRound**（不用 demo 商用字体）
+2. **字重**：参考站标题是 600 粗体，是否恢复？（与他上一轮「取消粗体」冲突）
+3. **段落间距**：参考站是 `margin: 2em 0 .8em`（≈30px/12px），现为 h2 `42px/20px`
+
+### ⑥ 提交
+- `feat(blog): align article line-height with reference site`（含归档「一百一十六」）
