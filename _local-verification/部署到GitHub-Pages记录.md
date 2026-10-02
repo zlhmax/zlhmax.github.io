@@ -4063,3 +4063,32 @@ cdp.send("CSS.getPlatformFontsForNode", {"nodeId": node["nodeId"]})
 
 ### ⑥ 待办（需 Eddy 确认后才动）
 - 上一轮的 **`public/fonts/ChillRoundM/`（55 个文件 / 3.8MB）已被本次取代、不再被任何 CSS 引用** → 建议删除，但按约定**先列清单待确认**；`src/styles/chillroundm.css` 同理。
+
+
+---
+
+## 一百一十一、清理被取代的 ChillRoundM 资产（**已上线**）· 2026-09-26
+
+**背景**：全站中文字体已换成 **寒蝉圆黑体 ChillRoundGothic**（归档「一百一十」），上一版的 **寒蝉半圆体 ChillRoundM** 不再被任何 CSS 引用。
+
+**删除前安全检查（按约定先列清单并经 Eddy 确认）**
+- 引用扫描：`grep -ril "chillroundm|ChillRoundM|font-chill" src/` → 仅命中 `chillroundm.css` 自身，**无任何外部引用** ✓
+- 可恢复性：文件已在提交 `8f294ca` 中，可用 `git checkout 8f294ca -- public/fonts/ChillRoundM src/styles/chillroundm.css` 恢复 ✓
+- 清单（经 Eddy 回复「删除」确认）：`public/fonts/ChillRoundM/`（55 个 woff2 / 3.8MB）+ `src/styles/chillroundm.css`（76KB），git 跟踪共 **56 个文件**
+
+**执行**
+```bash
+git rm -r public/fonts/ChillRoundM src/styles/chillroundm.css
+```
+
+**构建后复核**
+| 检查 | 结果 |
+|---|---|
+| 磁盘 | 目录与 CSS 均已不存在 ✓ |
+| `pnpm build` | 19 页构建通过 ✓ |
+| `dist/fonts/ChillRoundM/` | **0 个文件**（残留清除 ✓）|
+| 产物 CSS 中 `ChillRoundM` | **0 处引用** ✓ |
+| 圆黑体资产完好 | regular 151 + bold 154 块 ✓ |
+| `dist` 总体积 | 37MB（含自托管 CJK 分块）|
+
+**提交**：`chore(fonts): remove superseded chillroundm assets`（56 个文件删除）
