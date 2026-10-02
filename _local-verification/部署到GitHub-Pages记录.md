@@ -4092,3 +4092,48 @@ git rm -r public/fonts/ChillRoundM src/styles/chillroundm.css
 | `dist` 总体积 | 37MB（含自托管 CJK 分块）|
 
 **提交**：`chore(fonts): remove superseded chillroundm assets`（56 个文件删除）
+
+
+---
+
+## 一百一十二、中文字体改为「搜狐式」**系统字体栈**（**已上线**）· 2026-10-02
+
+**需求来源**：Eddy 给了一篇搜狐新闻 `https://www.sohu.com/a/1082805090_255783`，要求「读取该网页的新闻标题与正文字体，把网站中文字体改成这样」。
+
+### ① 先量搜狐的真实字体（CDP，不只看声明）
+| 对象 | CDP 实际渲染 | `isCustomFont` |
+|---|---|---|
+| 标题（h2）| `Arial(3) \| Microsoft YaHei(25)` | **False** |
+| 正文（article p）| `Arial(13) \| Microsoft YaHei(76)` | **False** |
+
+**结论：搜狐不用任何自定义字体** —— 无 `@font-face` 声明、网络里**零字体文件请求**、仅一个未加载的装饰性 iconfont。它只声明系统字体栈：
+```css
+font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
+```
+→ **Mac/iPhone = 苹方**、**Windows = 微软雅黑**、安卓 = 各自系统黑体。**跟设备走**，永远「原生观感」。
+
+### ② 给 Eddy 的对照预览 + 决策
+用 Playwright 运行时注入（**不改任何文件**）做出「圆黑体 vs 系统雅黑」对照图 → Eddy 选 **A. 系统字体栈（与搜狐完全一致）**。
+
+### ③ 改动（仅 1 行 + 注释）
+`src/styles/global.css`：
+```css
+/* 改前 */
+--font-sans: "ChillRoundGothic", "Noto Sans SC Variable", "Microsoft YaHei", "PingFang SC", "Geist Variable", sans-serif;
+/* 改后（搜狐同款，补上英文名提高跨浏览器兼容） */
+--font-sans: "PingFang SC", Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", sans-serif;
+```
+
+### ④ 验收（本地 CDP + 线上）
+| 检查 | 结果 |
+|---|---|
+| 文章页 `article .prose p` | **`Arial(11) \| Microsoft YaHei(130)`** ✓ ← 与搜狐一致 |
+| 文章页 `article .prose h2` | **`Microsoft YaHei(5)`** ✓ |
+| 首页 / 列表页 / Travel 详情 | 正文均已走系统栈 ✓ |
+| **导航** `.nav-breadcrumb a` | **`Manrope ExtraLight`** ✓ **未被误伤** |
+| **首页衬线句** `.cormorant-serif` | **`Cormorant Garamond Variable`** ✓ **未被误伤** |
+
+### ⑤ 说明与保留项
+- **零字体下载** ✓（比原方案省下全部 CJK 分块请求）；**加粗**由系统雅黑/苹方的**真 Bold** 承担 ✓
+- **圆黑体资产保留但已无人引用**（`public/fonts/ChillRoundGothic/` 305 块 / 18MB + `chillroundgothic.css`）→ 保留以便一句话切回；**站点访客不会下载它们**（无 CSS 引用）。若确认不再需要，可另行清理。
+- 回归方式：把 `--font-sans` 改回 `"ChillRoundGothic", "Noto Sans SC Variable", …` 即可。
