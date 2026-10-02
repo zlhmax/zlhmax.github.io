@@ -82,9 +82,11 @@
     /* --font-mono: "JetBrains Mono Variable", monospace; */
     /* 代码块/技术元素保持等宽；中文回落思源黑体 */
     --font-mono: "Geist Mono Variable", "Noto Sans SC Variable", monospace;
-    /* 整站正文/标题：**思源黑体（Noto Sans SC，自托管）**（2026-10-02 Eddy 选 C：中性黑体、跨平台统一）
-       —— 加载失败时回落苹方/雅黑；圆黑体资产仍保留在 public/fonts/ChillRoundGothic（未被引用、访客不下载） */
-    --font-sans: "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    /* 整站正文/标题：**寒蝉圆黑体 ChillRoundGothic**（自托管，SIL OFL 开源可商用）
+       —— 设计同源「思源黑体 → 圆角化」，作为参考站「造字工房悦圆」的**免费等价替代**
+          （参考站真实字体文件为 RTWS YueRoundedGothic **Demo 试用版**，© 造字工房、不可商用 ✗）
+       含 regular 151 块 + bold 154 块 → 标题 600 有**真 Bold**（非合成）；加载失败回落思源/苹方/雅黑 */
+    --font-sans: "ChillRoundGothic", "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 
     /* color */
     /* 全站超链接 hover 色：浅色 #2467FF / 深色 #6EA8FF，由 --link-hover 切换 */

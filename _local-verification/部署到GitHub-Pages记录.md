@@ -4423,3 +4423,51 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ③ 提交
 - `feat(blog): set article body line-height to 2.2`（含归档「一百一十九」）
+
+
+---
+
+## 一百二十、字体换为**寒蝉圆黑体**（参考站「圆体」的免费等价替代）（**已上线**）· 2026-10-02
+
+**需求**：Eddy 要求读取参考站 `sudoriaa.github.io/Kanade-Astro/posts/astro-islands/` 文章页的标题/段落/正文字体并应用到自己网站。
+
+### ① 读取 + 授权核查（关键：原字体**不可用**）
+| 项 | 实情 |
+|---|---|
+| 参考站声明字体 | `ZaoZiGongFangYueYuan`（**造字工房悦圆**，圆体）|
+| 真实字体文件 | **`RTWSYueRoudGoDemo-Regular`** —— 即「**标准字体演示版 / Demo**」 |
+| 版权 | `All rights reserved © 2010 Zaozi Gongfang` |
+| 官方条款（makefont.com）| 「未经依法授权，任何个人、企业及组织**不得**将造字工房字库及输出的单字用于任何**商业目的或场景**」；个人仅限学习/研究/欣赏目的免费使用 |
+| 字符数 | Demo 仅 **2829 字 / 2500 汉字**（子集，易缺字）|
+| 结论 | ✗ **不能搬到公开站点**（Demo 试用版 + 非商用授权 + 子集缺字）|
+
+### ② 替代方案：**寒蝉圆黑体 ChillRoundGothic**（SIL OFL 开源可商用）
+- 官方定位：「**基于思源黑体，原汁原味的圆角化改变**」→ 与本站此前的思源黑体**同源**、仅做圆角化 → 视觉风格与「悦圆」同属圆体大类 ✓
+- 资产早已备好：`public/fonts/ChillRoundGothic/` **regular 151 块 + bold 154 块（18MB）**，`chillroundgothic.css` 一直保留且仍在 `global.css:12` import ✓
+- 含**真 Bold（700）** → 标题 600 由真粗体承接，非浏览器合成 ✓
+
+### ③ 改动（1 行）
+`src/styles/global.css`
+```css
+/* 改前 */ --font-sans: "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+/* 改后 */ --font-sans: "ChillRoundGothic", "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+```
+> 分块只含 CJK → **中文走圆黑体、拉丁与数字仍走思源黑体**（英文观感不变）✓
+
+### ④ 验收（本地 CDP + 同框对比图）
+| 对象 | 真实渲染 |
+|---|---|
+| `main h1` | **Chill Round Gothic Bold**(12 字形) + Noto(2，拉丁部分) |
+| `.prose h2` | **Chill Round Gothic Bold**(4) ← 600 由**真 Bold** 承接 ✓ |
+| `.prose p` | **Chill Round Gothic**(52) + Noto(拉丁) |
+| 已加载字重 | **['400','700']** ✓ |
+
+**同框对比图**：`Desktop/圆体_参考站vs本站_20261002.png` → 同为圆体风格 ✓ 相似度约 8 成；细微差异 = 本站字重略重于「悦圆」（圆黑体 vs 圆体的设计差异）。
+
+### ⑤ 备选（供 Eddy 后续选择，一句话可切）
+- **寒蝉半圆体 ChillRoundM**（更轻的圆体；文件已删但可从 `git checkout 8f294ca -- public/fonts/ChillRoundM src/styles/chillroundm.css` 恢复）
+- **思源柔黑体**（基于思源黑体的免费圆角版）
+- 保持思源黑体 / 系统栈（回滚：`--font-sans` 改回即可）
+
+### ⑥ 提交
+- `feat(fonts): use chillroundgothic as free substitute for reference rounded font`（含归档「一百二十」）
