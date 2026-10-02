@@ -7,6 +7,9 @@
 @import "@fontsource-variable/geist";
 /* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
 @import "@fontsource-variable/noto-sans-sc";
+/* 中文字体（圆体）：寒蝉半圆体 ChillRoundM（自托管 55 个 unicode-range 分块，SIL OFL-1.1）
+   —— 仅由 .font-chill 启用（当前用在博客文章页），不影响其它页面 */
+@import "./chillroundm.css";
 /* 页头导航字体：Manrope（与参考站 astro-template-blog-folio 导航同款，自托管） */
 @import "@fontsource-variable/manrope";
 /* 首页三处衬线字：Cormorant Garamond（与参考站 detour 的文章标题同款，自托管） */
