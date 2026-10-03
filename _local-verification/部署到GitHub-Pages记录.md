@@ -4855,3 +4855,35 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `feat(blog): add tingxia music app article`（含归档「一百三十」）
+
+---
+
+## 一百三十一、首页 Blog 条数 5 → 6 + 「听下音乐」分类改 observation（**已上线**）· 2026-10-03
+
+**需求**：Eddy ①「将首页的 Blog 文章列表的条数修改为 6 条」②「将刚才那篇听下音乐的分类修改为 observation」。
+
+### ① 首页 Blog 条数 5 → 6
+| 项 | 值 |
+|---|---|
+| 位置 | `src/site-config.json` → `featured.blog.count` |
+| 改动 | `5` → **`6`** |
+| 取数逻辑 | `FeaturedBlog.astro`：`blogs.slice(0, site_config.featured.blog.count ?? 3)` |
+| 实测 | 首页 Blog 卡片 **6 张** ✓；Travel 区仍 3 张（未受影响）✓；展示 6 篇按最新在前 ✓ |
+
+### ② 「听下音乐」分类 daily blog → observation
+| 项 | 值 |
+|---|---|
+| 文件 | `src/content/blog/tingxia-music.md` → `category` |
+| **三处分类定义核对**（本站分类有 3 个定义处，缺一即出问题）| `content.config.ts` 枚举 ✓ / `lib/types.ts` 类型 ✓ / `hooks/useFilter.tsx` 的 `BLOG_CATEGORIES` ✓ —— **三处均已含 `observation`**，无需改动 |
+| 实测 | 详情页分类胶囊显示 **OBSERVATION**（站内胶囊为大写样式）✓；列表页可见 observation 分类词 ✓ |
+| 构建 | 23 页 ✓ |
+
+### ③ 推送受阻与恢复（本轮教训）
+- 现象：`git push` 连续 **12 轮失败**（每轮 ~21s 超时）
+- 诊断（关键）：逐域名探测 —— **`github.com` → 000 失败**，而 `api.github.com` → 200、`codeload.github.com` → 301、`raw.githubusercontent.com` → 301 **均正常**
+  → 结论：**只有 GitHub 主站被阻断**（git push 必须走主站，故无绕过路径）；`api` 可读但写入需 token，不走此路
+- 处置：如实告知 Eddy 并建议**开 VPN**；VPN 开启后一次推送成功 ✓
+- 归档：本条
+
+### ④ 提交
+- `chore(content): home blog count to 6 and recategorize listen-down post`（含归档「一百三十一」）

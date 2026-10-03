@@ -28,7 +28,7 @@
   },
   "featured": {
     "portfolio": { "visible": true },
-    "blog": { "visible": true, "count": 5 },
+    "blog": { "visible": true, "count": 6 },
     "important": "blog"
   }
 }

@@ -3,7 +3,7 @@ draft: false
 date: "03-10-2026"
 title: "听下音乐：把想听的歌，听见也留下"
 description: "一个把「全网搜索 + 试听 + 下载」合在一步里的安卓 App：不用在几个音乐平台之间来回切换，搜到就能听，听完就能把无损文件留在自己手机里。"
-category: "daily blog"
+category: "observation"
 tags: ["音乐", "App", "安卓"]
 author: "lhZhang"
 ---
