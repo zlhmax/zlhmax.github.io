@@ -4907,3 +4907,45 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### 提交
 - `chore(content): polish four blog posts`（含归档「一百三十二」）
+
+---
+
+## 一百三十二、Itinerary 详情页：介绍文字区收紧 + 字体对齐 Blog 正文 + 照片按原比例铺满（**已上线**）· 2026-10-03
+
+**需求**（Eddy 逐轮提出）：
+1. 「Itinerary 文章页面的照片卡片下的文字内容有大面积空白，高度调小 50%」
+2. 「文字内容的左右空白偏大，能否调小一点？」
+3. 「文字内容的字体效果能否与 Blog 文章页面的正文字体一致？」
+4. 「① 文字颜色也统一为 Blog 正文的 #4c4551」+「② 改左对齐」
+5. 「Well done! 文字内容的字体再调大一号」
+6. 「照片显示区域左右两侧有空白，怎么调整参数显示照片最大的尺寸？」
+
+### ① 介绍文字区（`PortfolioDetails.astro`）
+| # | 项目 | 改前 | 改后 |
+|---|---|---|---|
+| 1 | 面板高度 | 固定 **400px**（`h-100`）| **随内容**（`h-auto`；中秋 139px / 黄山 78px）|
+| 2 | 左右留白 | 文字被 `max-w-prose`(577px) 限制 → **左右各 134px** | `max-w-none` + 内层 `px-0` → **左右仅 24px 卡片内边距** |
+| 3 | 字体/字号/行高 | `ChillRoundGothic` 16px/26px | **Blog 正文同款系统栈** · 16px / **30.4px（×1.9）** |
+| 4 | 颜色 | `text-secondary-foreground/80` | **`var(--prose-fg)` = #4c4551（rgb 76,69,81）** |
+| 5 | 对齐 | `text-center` + 内层 **`justify-center`** | **`text-left` + 移除 `justify-center`** → 左边缘偏移 0px |
+
+- 「大一号」按本站惯例 = **+2px**（14 → 16px），行高比 1.9 保持 → 30.4px
+- ⚠️ **踩坑**：只改 `text-align` 不够 —— 短文字仍被父层 `flex justify-center` 居中（**计算值显示 left，渲染图仍居中**）→ 必须**同时去掉 `justify-center`**；再次印证「改完必须看渲染图」
+- ⚠️ 由此**字号与 Blog 正文不再相同**（Blog 14px / 此处 16px），其余四项仍一致（已告知 Eddy，方向待定）
+
+### ② 照片显示区（`PortfolioGallery.tsx`）
+| 参数 | 改前 | 改后 |
+|---|---|---|
+| 容器 | `aspect-video`（写死 16:9 = 846×476）| **删除** → 高度随内容 |
+| 照片 | `w-full h-full object-contain` | **`w-full h-auto object-contain`** |
+| 视频（YouTube 项）| `w-full h-full` | **`w-full aspect-video`**（单独保留 16:9）|
+- 原理：**容器比例 = 照片原始比例** → 不裁切、无留白、铺满整宽
+- 实测：中秋（4:3）**844×633（比例 1.333 = 原图）**；黄山（2.22:1）**844×380（2.222）** —— 留白**归零**（改前分别留 106px / 48px）
+- 备选方案（未采用）：`aspect-[4/3]` 固定比例 / `object-cover` 裁切填满
+- 提示：竖幅照片将按原比例较高（黄山第 8 张 1500×2000 → 846×1128），如需限制可加 `max-h-[70vh]`
+
+### ③ 验收
+- 构建 23 页 ✓；两页实测：高度自适应 ✓、左右 24px ✓、字体/颜色/行高与 Blog 正文逐项一致 ✓、左对齐偏移 0 ✓、照片元素比例 = 原图比例 ✓
+
+### ④ 提交
+- `fix(itinerary): tighten detail intro panel and show photos at natural ratio`（含归档「一百三十二」）

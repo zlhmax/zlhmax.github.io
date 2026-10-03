@@ -76,7 +76,7 @@ export default function PortfolioGallery({ images, videoId, title }: { images: G
 
   return (
     <div onWheel={handleWheel} className="select-none">
-      <div className="aspect-video border border-border overflow-hidden bg-muted">{current.type === "image" ? <img src={current.src} alt={current.alt} className="w-full h-full object-contain" /> : <iframe src={`https://www.youtube.com/embed/${current.videoId}`} title={current.alt} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full" />}</div>
+      <div className="border border-border overflow-hidden bg-muted">{current.type === "image" ? <img src={current.src} alt={current.alt} className="w-full h-auto object-contain" /> : <iframe src={`https://www.youtube.com/embed/${current.videoId}`} title={current.alt} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full aspect-video" />}</div>
 
       {items.length > 1 && (
         <div className="flex justify-center items-center gap-3 mt-8">

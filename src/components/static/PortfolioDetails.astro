@@ -38,9 +38,9 @@ const hasArchitecture = architecture.length > 0;
 
     {
         introduction && (
-            <div class="w-full hidden peer-checked/intro:block h-100 overflow-y-auto no-scrollbar mt-6">
-                <div class="h-full flex items-center justify-center p-6">
-                    <p class="text-base leading-relaxed text-secondary-foreground/80 whitespace-pre-line max-w-prose text-center">{introduction}</p>
+            <div class="w-full hidden peer-checked/intro:block h-auto overflow-y-auto no-scrollbar mt-6">
+                <div class="h-full flex items-center px-0 py-6">
+                    <p class="text-[16px]/[1.9] text-[color:var(--prose-fg)] whitespace-pre-line max-w-none text-left [font-family:var(--article-text-font)]">{introduction}</p>
                 </div>
             </div>
         )
@@ -48,7 +48,7 @@ const hasArchitecture = architecture.length > 0;
 
     {
         hasCapabilities && (
-            <div class="w-full hidden peer-checked/cap:block h-100 overflow-y-auto no-scrollbar mt-6">
+            <div class="w-full hidden peer-checked/cap:block h-auto overflow-y-auto no-scrollbar mt-6">
                 <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {capabilities.map((item) => (
                         <li class="relative p-6 bg-muted/30 hover:bg-background border border-border hover:border-foreground/30 animation group">
@@ -63,7 +63,7 @@ const hasArchitecture = architecture.length > 0;
 
     {
         hasArchitecture && (
-            <div class="w-full hidden peer-checked/arch:block h-100 overflow-y-auto no-scrollbar mt-6">
+            <div class="w-full hidden peer-checked/arch:block h-auto overflow-y-auto no-scrollbar mt-6">
                 <div class="relative space-y-0">
                     {architecture.map((item) => (
                         <div class="border border-border bg-muted/30 p-6 hover:bg-background hover:border-foreground/30 animation mb-3 last:mb-0">
