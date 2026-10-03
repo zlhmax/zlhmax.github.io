@@ -76,7 +76,8 @@ export default function PortfolioGallery({ images, videoId, title }: { images: G
 
   return (
     <div onWheel={handleWheel} className="select-none">
-      <div className="border border-border overflow-hidden bg-muted">{current.type === "image" ? <img src={current.src} alt={current.alt} className="w-full h-auto object-contain" /> : <iframe src={`https://www.youtube.com/embed/${current.videoId}`} title={current.alt} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full aspect-video" />}</div>
+      {/* 零留白 + 照片宽 75% + 容器四周各留 12px 内衬（容器宽 = 75% + 24px，照片仍 75%） */}
+      <div className="w-[calc(75%_+_24px)] mx-auto p-[12px] border border-border overflow-hidden bg-muted">{current.type === "image" ? <img src={current.src} alt={current.alt} className="w-full h-auto object-contain" /> : <iframe src={`https://www.youtube.com/embed/${current.videoId}`} title={current.alt} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full aspect-video" />}</div>
 
       {items.length > 1 && (
         <div className="flex justify-center items-center gap-3 mt-8">
