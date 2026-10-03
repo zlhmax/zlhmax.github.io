@@ -4703,3 +4703,37 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑦ 提交
 - `feat(blog): add static pagination to blog list`（含归档「一百二十六」）
+
+---
+
+## 一百二十七、Travel 列表页**静态分页**（复用 Blog 同一套做法）（**已上线**）· 2026-10-03
+
+**需求**：Eddy「请按相同方法给 Travel 列表页面增加分页控件」→ 后指定「把 Travel 每页改成 6 条并推送」。
+
+### ① 做法（与 Blog 完全同构）
+| 文件 | 改动 |
+|---|---|
+| `src/components/client/PageLinks.tsx` | **新增**：把分页控件抽成**共享组件**（`base` prop 区分 `/blog` 与 `/portfolio`），外观/尺寸与筛选工具栏按钮一致（`size-[25.6px]` / `rounded-[8px]` / `gap-2`）|
+| `src/lib/portfolioPaging.ts` | **新增**：`PORTFOLIO_PER_PAGE = 6` + 日期倒序 + 总页数 |
+| `src/pages/portfolio/page/[page].astro` | **新增**：`getStaticPaths()` 生成 `/portfolio/page/N/`（含 hero 图 `getImage` 精化逻辑）|
+| `src/pages/portfolio/index.astro` | 改：第 1 页切 6 条 + 传 `pageInfo` |
+| `src/components/client/FilterPortfolio.tsx` | 改：+`pageInfo` prop，分页渲染在卡片框内；**2 列网格用 `col-span-full` 通栏** |
+| `src/components/client/FilterBlog.tsx` | **重构**：改用共享 `PageLinks`（行为/外观不变，去重）|
+
+### ② 关键差异点
+- Travel 的卡片框是 **2 列 grid**（`grid grid-cols-1 sm:grid-cols-2 gap-6 border border-border p-6`）→ 分页控件必须 `col-span-full` 才能通栏，实测 `grid-column = 1 / -1`、宽 846px ✓
+- Travel 的数据源是 `portfolio-config.json`（非 content collection），且需 `getImage` 生成 hero 缩略图 → 分页页里**复用同一段精化代码**
+
+### ③ 验收
+| 项 | 结果 |
+|---|---|
+| 演示（临时 4/页）| 第 1 页 **4 张** + 第 2 页 **2 张** = 6 条无丢失 ✓；分页在卡片框内 ✓、通栏 ✓ |
+| 上线（6/页）| Travel 6 条 ÷ 6 = **恰好 1 页** → 无 `portfolio/page` 产物、控件不显示（**预期**，≥7 条自动出现）|
+| 构建 | 20 页 ✓ |
+
+### ④ 遗留（待 Eddy 决定）
+- 若希望**现在就能看到** Travel 分页控件 → 每页数需 ≤ **5**（如 5 或 4）
+- `src/components/static/BlogPageNav.astro`（早前新增后未被引用）→ 待确认删除
+
+### ⑤ 提交
+- `feat(travel): add static pagination to travel list`（含归档「一百二十七」）

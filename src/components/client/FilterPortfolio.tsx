@@ -1,10 +1,18 @@
 "use client";
 
 import { PortfolioCard } from "@/components/client/PortfolioCard";
+import { PageLinks } from "@/components/client/PageLinks";
 import type { portfolioConfig } from "@/lib/types";
 import { FilterControls, useFilter } from "@/hooks/useFilter";
 
-export default function FilterPortfolio({ items }: { items: portfolioConfig[] }) {
+export default function FilterPortfolio({
+  items,
+  pageInfo,
+}: {
+  items: portfolioConfig[];
+  /** 静态分页信息（Astro 构建期给定）；不传则不显示分页 */
+  pageInfo?: { current: number; total: number };
+}) {
   const filter = useFilter(items, "portfolio");
   const { filteredAndSortedItems } = filter;
 
@@ -21,6 +29,17 @@ export default function FilterPortfolio({ items }: { items: portfolioConfig[] })
           {filteredAndSortedItems.map((item) => (
             <PortfolioCard key={item.id} item={item as portfolioConfig} />
           ))}
+
+          {/* 分页控件：在卡片外框线内部、最后一张卡片之后（2 列网格需跨满整行） */}
+          {pageInfo && (
+            <PageLinks
+              current={pageInfo.current}
+              total={pageInfo.total}
+              base="/portfolio"
+              label="Travel pagination"
+              className="col-span-full"
+            />
+          )}
         </div>
       )}
     </div>

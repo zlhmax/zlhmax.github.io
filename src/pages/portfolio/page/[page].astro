@@ -7,16 +7,34 @@ import type { ImageMetadata } from "astro";
 import IndexHeader from "@/components/static/IndexHeader.astro";
 import IndexLayout from "@/layouts/IndexLayout.astro";
 
-// 第 1 页：按日期倒序后只切出前 8 条（第 2 页起在 /portfolio/page/N/）
-const allItems = getSortedPortfolioItems();
-const totalPages = getPortfolioTotalPages(allItems.length);
-const pageItems = allItems.slice(0, PORTFOLIO_PER_PAGE);
+// Travel 列表第 2 页起（第 1 页 = /portfolio/）：与 Blog 相同的静态分页做法，
+// 构建期切片并生成 /portfolio/page/2/、/portfolio/page/3/ …（每页 8 条）
+export async function getStaticPaths() {
+  const allItems = getSortedPortfolioItems();
+  const totalPages = getPortfolioTotalPages(allItems.length);
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const currentPage = index + 2;
+    const start = (currentPage - 1) * PORTFOLIO_PER_PAGE;
+
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        rawItems: allItems.slice(start, start + PORTFOLIO_PER_PAGE),
+        currentPage,
+        totalPages,
+      },
+    };
+  });
+}
 
 type ImageRecord = { default: ImageMetadata };
 const imageModules = import.meta.glob<ImageRecord>("@/assets/portfolio/*/*.{png,jpg,jpeg,webp,gif,avif}", { eager: true });
 
+const { rawItems, currentPage, totalPages } = Astro.props;
+
 const enriched = await Promise.all(
-    pageItems.map(async (item) => {
+    rawItems.map(async (item) => {
         const matches = Object.entries(imageModules)
             .filter(([path]) => path.includes(`/assets/portfolio/${item.id}/`))
             .sort(([a], [b]) => a.localeCompare(b))
@@ -40,12 +58,16 @@ const enriched = await Promise.all(
 );
 ---
 
-<IndexLayout title="Travel - lhZhang" description="精选旅拍与影像记录。Places I've been to and seen." image="/og/default.png">
+<IndexLayout
+    title={`Travel - Page ${currentPage} - lhZhang`}
+    description="精选旅拍与影像记录。Places I've been to and seen."
+    image="/og/default.png"
+>
     <div transition:animate="fade">
         <IndexHeader url="/" heading="Travel" subtitle="Places I've been to and seen" />
 
         <div class="mt-3">
-            <FilterPortfolio client:load items={enriched} pageInfo={{ current: 1, total: totalPages }} />
+            <FilterPortfolio client:load items={enriched} pageInfo={{ current: currentPage, total: totalPages }} />
         </div>
     </div>
 </IndexLayout>
