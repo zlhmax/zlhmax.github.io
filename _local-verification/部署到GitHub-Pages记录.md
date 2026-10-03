@@ -4820,3 +4820,38 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `feat(travel): add mid-autumn article, rename travel to itinerary, taller footer`（含归档「一百二十九」）
+
+---
+
+## 一百三十、Blog 新增「听下音乐」App 分享文章（**已上线**）· 2026-10-03
+
+**需求**：Eddy「分享一个很好用的听音乐和下载音乐的手机 APP，搜索网络介绍这款名为『听下音乐』的 App 的相关内容与图文，你来书写文章标题和副标题以及正文，在正文里增加一个引用：分享下载这个手机 APP 的地址 https://bgg.lanzout.com/b02bjj8pa」。
+
+### ① 联网调研要点（文章据此撰写）
+| 项 | 值 |
+|---|---|
+| 名称 | 听下音乐 / 听·下（App 内常称「听下 Plus」）|
+| 版本 / 包名 | v2.2.4（2026-06）· `com.listendown.music.plus` · 约 19.57 MB · 备案 湘ICP备2023000963号-4A |
+| 系统 | **仅安卓**（无 iOS 版）|
+| 核心能力 | 聚合酷狗/网易云/QQ/酷我等平台搜索接口 · 免费试听并下载付费/VIP 曲目 · 标准 / 320kbps / **无损 FLAC** · 歌词显示 · 下载为本地音频文件、路径可自定义 · 插画风格 UI |
+| 性质 | 第三方聚合下载工具（各下载站多标注「破解/去广告版」）→ 文中已写明「适合自己听，别用于商业用途」|
+
+### ② 文章落地
+| 项 | 值 |
+|---|---|
+| 文件 / 路径 | `src/content/blog/tingxia-music.md` → `/blog/tingxia-music/` |
+| frontmatter | `draft:false` · `date:"03-10-2026"` · `title:"听下音乐：把想听的歌，听见也留下"` · `description`（副标题）· `category:"daily blog"` · `tags:["音乐","App","安卓"]` · `author:"lhZhang"` |
+| 正文结构 | 引子 → **它能做什么**（全网搜索/先试听再下载/多种音质/下载成真正文件/歌词与定时/界面干净）→ **怎么用**（4 步）→ **下载地址**（引用块）→ **几句提醒** → 收尾 |
+| **引用块** | `> **分享下载这个手机 App 的地址：**` + `> <https://bgg.lanzout.com/b02bjj8pa>` |
+
+### ③ 验收
+- 构建 **23 页**（+1）✓
+- 详情页：标题/副标题/4 个 `##` 小标题/引用块内容逐字正确 ✓；蓝奏云地址渲染为可点击链接（href 命中）✓
+- 列表页：**8 篇/页**、共 10 篇 → 2 页 ✓；首篇 = `/blog/tingxia-music`（最新在前）✓；分页控件在场 ✓
+
+### ④ 遗留（待 Eddy 决定）
+- 该 App 属第三方聚合下载工具，站点为**公开站点**：是否保留本次分享与网盘链接、或改用更保守措辞，由 Eddy 定
+- `src/components/static/BlogPageNav.astro`（早前新增后未被引用）仍未提交，待确认删除
+
+### ⑤ 提交
+- `feat(blog): add tingxia music app article`（含归档「一百三十」）
