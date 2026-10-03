@@ -4771,3 +4771,52 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ⑤ 提交
 - `feat(travel): add photo to huangshan gallery`（含归档「一百二十八」）
+
+---
+
+## 一百二十九、Travel 新增「中秋」文章 + 导航改名 itinerary + 页脚 +50%（**已上线**）· 2026-10-03
+
+**需求**（Eddy 连续四项）：
+1. 「请将附件照片创建一篇 Travel 的文章，标题为中秋，时间为 2026年9月26日，你自己按照片来书写副标题和正文」（6 张照片）
+2. 「将首页导航的 Travel 修改为 itinerary」
+3. 「另发现 3 处硬编码『Travel』一起改成 Itinerary」
+4. 「将页尾的整体高度增加 50%，但要保持文字内容的上下间隙一致」
+
+### ① 新增 Travel 文章「中秋」
+| 项 | 值 |
+|---|---|
+| id / 路径 | `mid-autumn` → `/portfolio/mid-autumn/` |
+| 标题 / 日期 | 中秋 · `26-09-2026`（dd-MM-yyyy）|
+| 副标题（`data.description`）| 中秋出行 · 月亮、咖啡与舷窗外的海湾 —— 人在旅途，月亮替我们团圆 |
+| 正文（`introduction`）| 2026 年 9 月 26 日，中秋出行。六张照片是同一趟旅程：出门时抬头，月亮正悬在棕榈树梢，圆得没有一丝缺口；清晨用一杯咖啡启程，飞机滑出跑道、掠过海湾与跨海大桥，海面的反光碎成一片；再往高处，城市的轮廓在机翼下铺成一张地图，云海与蓝天在舷窗外连成一片。人在旅途，月亮替我们团圆。 |
+| 分类/标签/状态 | `photography` · Travel/China/Mid-Autumn/Photography · `photo set`（与站内其他条目一致）|
+
+**照片处理**（6 张，顺序即图集顺序；01 = 月亮作封面点题）：4096×3072 → **2000×1500** · q82 · 128–421KB · 合计 **1.6MB**（全部 ≤0.6MB）
+**校验**：详情页标题「中秋」✓ · 图集 6 张 ✓ · 计数 1/6 ✓ · 正文命中 ✓
+
+> ⚠️ **数据结构要点**：portfolio 条目的「副标题」= `data.description`、「正文」= `introduction`（数组为 JSON，插入新对象用 patch 在末尾 `]` 前追加，勿整体重写）
+
+### ② 导航改名 `Travel` → `itinerary`
+- `src/site-config.json`：`navigationLabels: { "portfolio": "itinerary", "blog": "Blog" }`
+- 导航有 CSS `uppercase` → 实际渲染 **ITINERARY**（与 HOME/BLOG 一致）
+
+### ③ 4 处硬编码「Travel」→「Itinerary」（含 1 处曾漏掉的模板字符串）
+| 文件 | 改动 |
+|---|---|
+| `src/pages/portfolio/index.astro` | `title="Travel - lhZhang"` → `Itinerary - lhZhang`；`heading="Travel"` → `Itinerary` |
+| `src/pages/portfolio/page/[page].astro` | `` title={`Travel - Page ${…}`} `` → `Itinerary - Page …`；`heading="Travel"` → `Itinerary`（+ 注释同步）|
+- ❗ **坑**：`` `Travel - Page …` `` 写在模板字符串里，`grep '"Travel'` 抓不到 → 改名后必须用**宽松模式**（`Travel`）再扫一遍
+- 残留扫描：`src/` 内已无硬编码 Travel 标题/导航（仅条目 tags 的 Travel 分类标签保留）
+
+### ④ 页脚整体高度 +50%（上下间隙保持一致）
+| 项 | 改前 | 改后 |
+|---|---|---|
+| 底栏高度 | 36px | **54px（+50.0%，36×1.5）** |
+| 上下 padding | 8 / 8 | **17 / 17** |
+| 文字上下间隙（实测）| 8 / 8 | **17 / 17 = 一致** ✓ |
+- 算法：54 − 20（内容行高）= 34 → 上下各 17px（严格对称）
+- 改两处：`Footer.astro`（首页/列表页）+ `FooterId.astro`（文章页），均 `py-2` → **`py-[17px]`**
+- 文章页页脚 = 上下篇区块 + 底栏：**底栏** +50% 后整块 164 → 182px（+11%）；若整块也要 +50% 则为 246px（待 Eddy 决定）
+
+### ⑤ 提交
+- `feat(travel): add mid-autumn article, rename travel to itinerary, taller footer`（含归档「一百二十九」）

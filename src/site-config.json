@@ -4,7 +4,7 @@
   "bNavigation": true,
   "homeLabel": "Home",
   "navigationItems": ["portfolio", "blog"],
-  "navigationLabels": { "portfolio": "Travel", "blog": "Blog" },
+  "navigationLabels": { "portfolio": "itinerary", "blog": "Blog" },
   "bPageFind": true,
   "bThemeToggle": true,
   "bRssFeed": true,

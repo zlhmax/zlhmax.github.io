@@ -7,7 +7,9 @@ const postCount = await getPostCount();
 ---
 
 <footer class="mx-auto font-mono antialiased bg-background max-w-4xl text-foreground select-none sticky bottom-0 z-0">
-    <div class="flex items-center justify-between px-1 py-2">
+    {/* 2026-10-03 Eddy 要求：页脚整体高度 +50%（原 36px → 54px），且文字上下间隙保持一致
+        内容行高 20px + 上下 padding 各 17px = 54px（= 36 × 1.5） */}
+    <div class="flex items-center justify-between px-1 py-[17px]">
         <div class="flex items-center gap-4">
             <p class="text-sm text-muted-foreground">
                 &copy; {new Date().getFullYear()}

@@ -7,7 +7,7 @@ import type { ImageMetadata } from "astro";
 import IndexHeader from "@/components/static/IndexHeader.astro";
 import IndexLayout from "@/layouts/IndexLayout.astro";
 
-// Travel 列表第 2 页起（第 1 页 = /portfolio/）：与 Blog 相同的静态分页做法，
+// Itinerary（Travel / portfolio）列表第 2 页起（第 1 页 = /portfolio/）：与 Blog 相同的静态分页做法，
 // 构建期切片并生成 /portfolio/page/2/、/portfolio/page/3/ …（每页 8 条）
 export async function getStaticPaths() {
   const allItems = getSortedPortfolioItems();
@@ -59,12 +59,12 @@ const enriched = await Promise.all(
 ---
 
 <IndexLayout
-    title={`Travel - Page ${currentPage} - lhZhang`}
+    title={`Itinerary - Page ${currentPage} - lhZhang`}
     description="精选旅拍与影像记录。Places I've been to and seen."
     image="/og/default.png"
 >
     <div transition:animate="fade">
-        <IndexHeader url="/" heading="Travel" subtitle="Places I've been to and seen" />
+        <IndexHeader url="/" heading="Itinerary" subtitle="Places I've been to and seen" />
 
         <div class="mt-3">
             <FilterPortfolio client:load items={enriched} pageInfo={{ current: currentPage, total: totalPages }} />
