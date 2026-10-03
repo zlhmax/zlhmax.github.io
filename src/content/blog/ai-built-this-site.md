@@ -1,8 +1,8 @@
 ---
 draft: false
 date: "23-09-2026"
-title: "只能说AI能力太强 太好用了"
-description: "原以为把旧站文章搬到新站要花很多时间，结果从下载 Astro 代码到调整模板、转移旧站内容，不到半天就全部完成。"
+title: "Hermes Agent AI"
+description: "原以为把旧站文章搬到新站要花很多时间，结果使用AI从下载 Astro 代码到调整模板、转移旧站内容，不到半天就全部完成。"
 category: "daily blog"
 tags: ["AI", "建站", "Astro"]
 author: "lhZhang"

@@ -4887,3 +4887,23 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### ④ 提交
 - `chore(content): home blog count to 6 and recategorize listen-down post`（含归档「一百三十一」）
+
+---
+
+## 一百三十二、Eddy 本地修订 4 篇博客文章（标题/引文/层级）（**已上线**）· 2026-10-03
+
+**背景**：Eddy 在本地改了 4 篇文章后发「推送」。工作区出现 4 个 `.md` 修改（与此前相比为新增改动，非本轮脚本所为）：
+
+| 文件 | 改动要点 |
+|---|---|
+| `ai-built-this-site.md` | 标题「只能说AI能力太强 太好用了」→ **「Hermes Agent AI」**；描述中「结果**使用AI**从下载 Astro 代码…」补入「使用AI」 |
+| `autocad-configuration.md` | `[1]` AutoCAD 说明引文**从文末移到开头**（保持文首摘要位） |
+| `autocad-flashquite.md` | 说明引文移到开头；`### 方法/步骤` → **`## 方法/步骤`**（层级归一）；补空行 |
+| `my-new-site.md` | 文首新增**王小波引文**（引文块）；段落顺序调整；「**作品集**」→「**旅行**」（与导航改名一致）；删除「现居深圳」行 |
+
+**处置**：先读 `git diff` 逐文件核对确认是内容修订（非误触及无敏感信息）→ `pnpm build` 通过 → 提交并推送。
+
+**注意**：用户会**直接在工作区编辑内容**后只说一句「推送」→ 收到该指令时**必须先 `git status` + `git diff` 看清改动**再提交，不要假设是上一轮的上下文延续。
+
+### 提交
+- `chore(content): polish four blog posts`（含归档「一百三十二」）
