@@ -5157,3 +5157,51 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 提交
 - `feat(ui): add gradient text to wordmark and list headings`（含归档「一百三十六」）
+
+---
+
+## 一百三十七、Itinerary 详情页画廊改造：视觉对齐参考站 + 灯箱/键盘/全屏（**已上线**）· 2026-10-04
+
+**需求**（Eddy）：
+1. 「读取 https://igagansingh.com/astro-wanderer/travel/kyoto-2026/ 的照片显示效果 + 访问 GitHub 代码，告知能否把 Itinerary 显示页照片改成相同效果？」
+2. 「做 A+C」
+3. 「将箭头移到照片外框线外的空白区域」→「left/right: 16px」→ 选「② 16px 间隙」
+4. 「照片显示尺寸放大 1.2 倍」→「再调倍率 1.1」
+
+### 参考站实现（实测 + 源码，仓库 MIT）
+**架构**：Astro + 单个原生 `<script>`（零框架运行时）；组件 `src/components/Gallery.astro`；样式在 `src/styles/global.css`
+| 部件 | 参考站做法（实测值）|
+|---|---|
+| 舞台 | `.carousel-stage`：`border-radius: var(--radius-lg)`(实测 20px) + 边框 + `--surface-2` 底 + 阴影；`.carousel-track` = **`aspect-ratio: 4/3`** |
+| 图片 | `object-fit: contain` + **`background: #000`**（故有黑边）|
+| 箭头 | **42×42 · `border-radius: 50%`** · `background: color-mix(surface 88%)` · **覆盖在舞台两侧**（`left/right: 0.9rem` · `top:50%` + `translate:0 -50%`）· hover `scale(1.08)` |
+| 缩略图 | **56×42** · `--radius-sm` · **2px 透明边框 → 选中 `border-color: var(--accent)`** |
+| meta | `display:flex; justify-content:space-between`：左计数（`font-mono` 0.85rem，无边框）+ 右缩略图（`gap:0.5rem; max-width:70%`）|
+| 核心增量 | **点击放大灯箱**（`fixed inset-0` · `rgba(6,8,12,0.92)` · `backdrop-filter: blur(6px)`）、**键盘 Esc/←/→**、**全屏**（`.lightbox.is-fullscreen` → `100vw×100vh` + `object-fit:contain`）、弹入动画 `carousel-pop`、视频支持、缩略图懒加载 |
+
+### 本站落地（A + C，保留既有特性）
+| 项 | 参考站 | **本站（A+C）** |
+|---|---|---|
+| 舞台比例 | 固定 4:3（有黑边）| **保留零留白原始比例** ✓（未照搬 ✗）|
+| 内衬 | 无 | **保留 12px** ✓ |
+| 舞台外观 | 圆角 20px + 边框 + 阴影 | **圆角 18px(`rounded-2xl`) + 边框 + `bg-muted` + `shadow-sm`** ✓ |
+| 箭头 | 42px 圆形，覆盖在图上 | **42px 圆形，移到卡片之外** ✓（间距 16px）|
+| 缩略图 | 56×42，选中主题色 | **56×42，选中 `border-[color:var(--color-link)]`(#58B798)** ✓ |
+| 计数 | 左，`font-mono` 无边框 | **同** ✓ |
+| meta | `space-between` | **同** ✓ |
+| 灯箱/键盘/全屏 | 有 | **已实现** ✓（Esc/←/→ · 全屏 · 背景 blur 6px · 底部计数）|
+| 照片宽度 | 满宽 | **`calc(82.5% + 24px)`（= 原始 75% × 1.1）** ✓ |
+
+**照片宽度迭代**：75%（633）→ 90%（759 = 1.2×）→ **82.5%（696 = 1.1×）✓ 定档**
+
+### 关键技术点
+- **箭头移到卡片外**：卡片有 `overflow-hidden`（用于裁照片圆角）会剪掉箭头 → **把卡片的闭合 `</div>` 前移到箭头之前**，让箭头成为外层 `relative` 容器的子元素；偏移用负值 `-left-[58px]`（= 箭头右缘距卡片 16px，因箭头 42px 宽，58 = 42+16）
+- **「16px 偏移」≠「16px 间隙」**：箭头 42px 宽时，`-left-[16px]` 会让箭头骑在边框上（重叠 26px），要「留 16px 空隙」必须写 `-left-[58px]` —— **用户说数值时先算清是偏移还是间隙**（本次出了三档对照图让用户选）
+- **扩照片会挤压卡片外箭头的空间**：放宽照片到 90% 后卡片 785 宽，箭头仍在外且 1056px 视口下距页边 77px、无裁切无横滚；到 1.32×（835）则会顶出内容列
+
+### 验收（本地实测）
+- 1056px 视口：照片 696×522 · 卡片 722 · 箭头 109..151 / 905..947 · **间隙 16/16** · **距页边 109/109** · 无裁切 · 横滚 0
+- 交互：点击 → 灯箱开（bg `rgba(6,8,12,0.92)` + blur 6px + 四按钮）· **键盘 → 计数 1/6→2/6** · 全屏 → `w-screen h-screen bg-black` · **Esc 关闭 ✓** · 舞台箭头 1/6→2/6 ✓
+
+### 提交
+- `feat(travel): rebuild gallery with lightbox, keyboard nav, outside arrows`（含归档「一百三十七」）

@@ -521,3 +521,12 @@ pagefind-modal .pf-summary {
     .dark .intro-wordmark .wm-accent {
         color: #5b8ede;
     }
+
+    /* 图片切换弹入动画（对齐参考站 carousel-pop）*/
+    @keyframes carousel-pop {
+        from { transform: scale(0.96); opacity: 0.65; }
+        to   { transform: scale(1);    opacity: 1; }
+    }
+    .carousel-pop {
+        animation: carousel-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
