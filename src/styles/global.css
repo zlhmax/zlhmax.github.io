@@ -5,6 +5,7 @@
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/geist-mono";
 @import "@fontsource-variable/montserrat";
+@import "@fontsource/alkatra";
 @import "@fontsource-variable/geist";
 /* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
 @import "@fontsource-variable/noto-sans-sc";
@@ -482,8 +483,8 @@ pagefind-modal .pf-summary {
     }
     .intro-wordmark {
         /* 试参考站 multiterm 的字体：JetBrains Mono（站内已装 @fontsource-variable/jetbrains-mono）*/
-        font-family: "JetBrains Mono Variable", var(--font-mono);
-        font-weight: 420; /* Eddy 指定 */
+        font-family: "Alkatra", var(--font-mono); /* 参考站 days.leonh.space 的站名字体 */
+        font-weight: 400; /* 减小到 Alkatra 最轻档 */
         letter-spacing: normal; /* Eddy 指定 */
         display: inline-flex;
         flex-direction: row; /* 一行显示 */
@@ -491,8 +492,8 @@ pagefind-modal .pf-summary {
         line-height: 1;
     }
     .intro-heading {
-        font-family: "Montserrat Variable", var(--font-mono); /* 回滚：Montserrat */
-        font-weight: 450; /* 回滚 */
+        font-family: "Alkatra", var(--font-mono); /* 与站名统一（Eddy 指定）*/
+        font-weight: 400; /* 减小（与站名一致）*/
         letter-spacing: -0.68px; /* 回滚 */
         line-height: 1.15;
     }
