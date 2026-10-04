@@ -5242,3 +5242,57 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 提交
 - `feat(ui): switch wordmark and headings to Montserrat 32px`（含归档「一百三十八」）
+
+---
+
+## 一百三十九、站名改试 JetBrains Mono（420 / normal）· 列表标题回滚 Montserrat（**已上线**）· 2026-10-04
+
+**需求**（Eddy）：
+1. 「读取 https://multiterm.stelclementine.com/posts/ 的 BLOG 文章标题字体，试下应用相同字体到首页简介卡片的 lhZhang」
+2. 「① 字重 → 500 ② 字距 → normal」（先只作用于站名）
+3. 「去掉 lhZhang 前面的下划线」→「回滚」（恢复下划线）
+4. 「① 字重 → 420 ③ 同时将修改后的 lhZhang 的效果应用到 Itinerary/Blog」
+5. 「Itinerary/Blog 的字体修改回滚」
+
+### 参考站字体（实测）
+- 站点 `multiterm.stelclementine.com`（Catppuccin 配色的 Astro 博客）
+- 文章标题：`<h1 class="mb-3 text-2xl text-heading1 font-semibold"><a># Showing Off Blog Features</a></h1>`
+- **字体 = `"JetBrains Mono Variable", monospace`** · 24px · **600** · **字距 normal** · 颜色 `rgb(243,139,168)`（#F38BA8 粉）
+- 整站统一 JetBrains Mono（logo「MultiTerm」亦为 700）
+- **本站无需新增依赖**：已有 `@fontsource-variable/jetbrains-mono`
+
+### 最终状态（三处）
+| 位置 | 字体 | 字重 | 字号 | 字距 | 特殊 |
+|---|---|---|---|---|---|
+| 首页站名 `_lhZhang` | **JetBrains Mono Variable** | **420** | 32px | **normal** | `_` 蓝 `#1a4fa0` · `Zhang` 渐变 |
+| Blog 列表页标题 | **Montserrat Variable**（回滚）| **450** | 32px | **-0.68px** | 整词渐变 |
+| Itinerary 列表页标题 | 同上 | 450 | 32px | -0.68px | 整词渐变 |
+
+尺寸：站名 156×32 · 两个标题 846×49
+
+### CSS 结构（关键：把"共享规则"拆开）
+```css
+.intro-wordmark, .intro-heading {          /* 共享：仅颜色 */
+    color: var(--prose-heading-fg);
+}
+.intro-wordmark {                          /* 站名专属 */
+    font-family: "JetBrains Mono Variable", var(--font-mono);
+    font-weight: 420;
+    letter-spacing: normal;
+    display: inline-flex; flex-direction: row; align-items: baseline; line-height: 1;
+}
+.intro-heading {                           /* 列表标题专属（回滚后）*/
+    font-family: "Montserrat Variable", var(--font-mono);
+    font-weight: 450;
+    letter-spacing: -0.68px;
+    line-height: 1.15;
+}
+```
+> 教训：**「共享规则」在需求分化时是负担** —— 三处字体要分别调时，必须把 font-family/weight/letter-spacing 下放到各自选择器，共享块只留真正共用的属性（此处为颜色）。
+
+### 验收
+- 三处字体加载均为 True ✓；站名用**字形宽度对比法**验证真字体生效（真字体 58px vs 系统回退 53px，宽度不同 ⇒ 非回退）✓
+- 「回滚」两次均**只撤指定项**（先撤下划线、后撤列表标题字体），站名的 JetBrains Mono/420 保留 ✓
+
+### 提交
+- `feat(ui): try JetBrains Mono for wordmark, revert list headings`（含归档「一百三十九」）

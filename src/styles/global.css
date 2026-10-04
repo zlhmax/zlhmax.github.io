@@ -478,28 +478,36 @@ pagefind-modal .pf-summary {
     /* 同款字体效果：站名（.intro-wordmark）与列表页大标题（.intro-heading）共用 */
     .intro-wordmark,
     .intro-heading {
-        font-family: "Montserrat Variable", var(--font-mono); /* Montserrat（Eddy 指定）*/
-        font-weight: 450; /* 变量字重中间档（回滚到上一版）*/
-        letter-spacing: -0.68px; /* 固定值（Eddy 指定）；若按等比 32px 应为 -0.64px */
         color: var(--prose-heading-fg); /* 站内标题色 #4c4551（深色模式随变量自适应）*/
     }
     .intro-wordmark {
+        /* 试参考站 multiterm 的字体：JetBrains Mono（站内已装 @fontsource-variable/jetbrains-mono）*/
+        font-family: "JetBrains Mono Variable", var(--font-mono);
+        font-weight: 420; /* Eddy 指定 */
+        letter-spacing: normal; /* Eddy 指定 */
         display: inline-flex;
         flex-direction: row; /* 一行显示 */
         align-items: baseline;
         line-height: 1;
     }
     .intro-heading {
+        font-family: "Montserrat Variable", var(--font-mono); /* 回滚：Montserrat */
+        font-weight: 450; /* 回滚 */
+        letter-spacing: -0.68px; /* 回滚 */
         line-height: 1.15;
     }
     .intro-wordmark .wm-line {
         display: block;
     }
+    /* 渐变文字（对齐 igagansingh.com/astro-wanderer 的 .accent）：
+       linear-gradient(120deg, #2563eb, #0891b2) + background-clip:text + 文字填充透明 */
     .intro-wordmark .wm-underscore {
         color: #1a4fa0;
     }
-    /* 渐变文字（对齐 igagansingh.com/astro-wanderer 的 .accent）：
-       linear-gradient(120deg, #2563eb, #0891b2) + background-clip:text + 文字填充透明 */
+    /* 下划线与首字母之间留一点空隙（参考站有间隙）*/
+    .intro-wordmark .wm-underscore {
+        margin-right: 0.06em;
+    }
     .intro-wordmark .wm-grad,
     .intro-heading .wm-grad {
         background-image: linear-gradient(120deg, #2563eb, #0891b2);
@@ -508,18 +516,13 @@ pagefind-modal .pf-summary {
         -webkit-text-fill-color: transparent;
         color: #2563eb; /* 降级色：不支持 background-clip:text 时显示蓝 */
     }
+    .dark .intro-wordmark .wm-underscore {
+        color: #5b8ede;
+    }
     .dark .intro-wordmark .wm-grad,
     .dark .intro-heading .wm-grad {
         background-image: linear-gradient(120deg, #60a5fa, #22d3ee); /* 深色模式提亮，保持可读 */
         color: #60a5fa;
-    }
-    /* 下划线与首字母之间留一点空隙（参考站有间隙）*/
-    .intro-wordmark .wm-underscore {
-        margin-right: 0.06em;
-    }
-    .dark .intro-wordmark .wm-underscore,
-    .dark .intro-wordmark .wm-accent {
-        color: #5b8ede;
     }
 
     /* 图片切换弹入动画（对齐参考站 carousel-pop）*/
