@@ -5296,3 +5296,38 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 提交
 - `feat(ui): try JetBrains Mono for wordmark, revert list headings`（含归档「一百三十九」）
+
+---
+
+## 一百四十、去掉 Itinerary 卡片照片的灰色蒙版（首页 + 列表页）（**已上线**）· 2026-10-04
+
+**需求**（Eddy）：
+1. 「去掉首页 Itinerary 列表中的照片的灰色蒙版效果」
+2. 「按同样方式去掉 Itinerary 列表页面的照片的灰色蒙版效果」
+
+### 原因定位
+卡片图片 class 上带了 **`grayscale-100 group-hover:grayscale-0`** —— 默认整张照片转黑白，仅鼠标悬停才恢复彩色。
+
+| 文件 | 用途 |
+|---|---|
+| `src/components/client/FeaturedPortfolioCard.tsx` | **首页** Itinerary 区块（`FeaturedPortfolio.astro` 引用）|
+| `src/components/client/PortfolioCard.tsx` | **列表页** `/portfolio/` |
+
+### 改动
+```diff
+- className="w-full h-full object-cover grayscale-100 group-hover:grayscale-0 animation"
++ className="w-full h-full object-cover"
+```
+两处相同改法（同时移除基础的 `grayscale-100` 与悬停恢复类 `group-hover:grayscale-0`）。
+
+### 验收
+| 位置 | 卡片图片数 | `filter` |
+|---|---|---|
+| 首页 Itinerary 列表 | 3 | **全部 `none`** ✓ |
+| Itinerary 列表页 | 6 | **全部 `none`** ✓ |
+
+**同类排查**：`grep -rn "grayscale" src/` → **无结果** ✓（全站仅这两处，已全部清理）
+
+### 提交
+- `fix(ui): remove grayscale mask from portfolio card images`（含归档「一百四十」）
+- 注：本次**仅提交这两处组件改动**；同时进行的「Alkatra 字体」改动（`global.css` / `package.json` / `pnpm-lock.yaml`）按 Eddy 要求**留在本地未推**。
