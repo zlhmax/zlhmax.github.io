@@ -5026,3 +5026,67 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### 提交
 - `refactor(nav): remove icons before navigation items`（含归档「一百三十四」）
+
+---
+
+## 一百三十五、首页站名与列表页大标题统一为 Montserrat（对齐 chopstack 站名效果）（**已上线**）· 2026-10-04
+
+**需求**（Eddy 逐轮）：
+1. 「请读取这个网站（https://chopstack.com/）的站名的字体和效果，能否将我网站首页简介卡片的 lhZhang 修改为相同的字体与效果？先本地搭建给我确认再推送」
+2. 「lhzhang 修改为一行显示」
+3. 「字体颜色改为附件截图的」（= 站内标题色 #4c4551）
+4. 「能否取消粗体效果？」→「500」→「改 450」
+5. 「同时将 Itinerary 与 Blog 列表页的 Itinerary 与 Blog 的字体效果也修改成一样的」
+
+### 🔑 参考站真相（关键发现）
+chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
+```html
+<a class="wordmark"><span class="wordmark-art">
+  <svg viewBox="0 0 226 160"><title>chop stack</title>
+    <path d="M35 25H21c-8 0-12 5-12 12v3c0 8 4 13 12 13h14…"/>  ← 8 条字母路径（黑）
+    <path d="M9 59h26v9H9z" fill="var(--accent,#1a4fa0)"/>       ← 蓝色短横（下划线）
+```
+- 主色 `#17171A`（近黑）· 强调色 **`#1A4FA0`** · 负字距 `-0.02em` · 全小写 · 两行
+- 蓝色元素 = **左下角短横 `_`** + **第 2 行第 3 个字母 `a`**（视觉确认）
+- 它自己声明的字体是 **Geist Mono**（站内已装 `@fontsource-variable/geist-mono`），但**可见字形是手绘路径**
+- → **「字体完全一致」不可能**；可选路径：① 找最接近的现成字体 ② 按同构造法原创绘制 SVG 字形
+
+### 字体选型（对比 13 款候选后定 Montserrat）
+候选：Geist Mono 500/700 · Geist 900 · **Montserrat 800/900** · Poppins 800/900 · Outfit 800/900 · Plus Jakarta 800 · Figtree 900 · Space Grotesk 700 · Archivo Black
+→ **Montserrat 胜出**：几何感 ✓、笔画厚度可调 ✓、字形圆润 ✓、**双层 a** ✓、字面在粗几何体中**最窄**（最接近参考站的紧凑感）· **OFL 开源可自托管** ✓
+
+### 最终参数（实测）
+| 项 | 站名（首页简介卡）| 列表页大标题（Blog / Itinerary）|
+|---|---|---|
+| 字体 | **Montserrat Variable** | **同款**（共享类）|
+| 字重 | **450**（变量字重中间档）| **450** |
+| 字号 | 36px | 36px |
+| 字距 | **-0.02em（-0.72px）** | 同 |
+| 主色 | **`var(--prose-heading-fg)` = #4c4551**（深色模式随变量自适应）| 同 |
+| 蓝色 | **`#1A4FA0`**：`_` + 字母 `a` | 标题**未加**（无 `_`/强调字母）|
+| 布局 | **一行** `_lhZhang`（`.intro-wordmark`：inline-flex + row + baseline + line-height 1）| 块级（`.intro-heading`：line-height 1.15）|
+| 尺寸 | 167×36 | 846×53（块级满宽，文字左对齐）|
+
+### 实现（仅 3 个文件 + 1 个依赖）
+| 文件 | 改动 |
+|---|---|
+| `src/components/static/Introduction.astro` | h1 改为单行结构；frontmatter 派生 `wmPre/wmAcc/wmPost`（**按配置自动定位字母 `a` 并标蓝**，换名仍可用）|
+| `src/styles/global.css` | `@import "@fontsource-variable/montserrat"` + 共享类 `.intro-wordmark, .intro-heading`（字体/字重/字距/颜色）+ 各自布局差异 |
+| `src/components/static/IndexHeader.astro` | `intro-handwriting` → `intro-heading`（1 行；该组件**仅被 4 个页面引用**：Blog 列表 + 分页、Itinerary 列表 + 分页）|
+| `package.json` / `pnpm-lock.yaml` | 新增 **`@fontsource-variable/montserrat@^5.3.0`** |
+
+### 验收
+- 4 个列表页标题实测：Montserrat Variable / **450** / 36px / `rgb(76,69,81)` / -0.72px / 已加载 ✓
+- 首页站名实测：Montserrat Variable / 450 / 36px / `rgb(76,69,81)` / 167×36 / 蓝色 `_` 与 `a` = `rgb(26,79,160)` ✓
+- 深色模式：`oklch(0.88 …)` 浅灰，清晰 ✓（由 `--prose-heading-fg` 变量驱动，无需硬编码覆盖）
+
+### 关键教训
+- **「参考某站字体」先判定对方是不是字体**：chopstack 用的是**手绘 SVG**，此时正确回答是「字体无法一致，可选最接近字体或原创绘制」，而不是硬套一个字体
+- **变量字体可用中间字重**：用户说「450」时，`font-weight: 450` 在 Variable 字体上**真实生效**（实测尺寸随之变化）
+- **共享组件先查引用范围再改**：`IndexHeader` 仅 4 页引用 → 改 1 行即精准覆盖，无需加 prop
+- **抽共享类而非复制**：站名与标题字体效果相同但布局不同 → 拆成 `.intro-wordmark, .intro-heading {字体四项}` + 各自布局块
+- 用户对「粗体」敏感且会反复：900→400→500→**450**，每次都给多档渲染对照最快收敛
+
+### 提交
+- `feat(ui): match homepage wordmark and list headings to Montserrat`（含归档「一百三十五」）
+- 遗留：`src/components/static/NavLinkIcon.tsx` 已无引用（导航图标已移除），待 Eddy 定夺是否删除

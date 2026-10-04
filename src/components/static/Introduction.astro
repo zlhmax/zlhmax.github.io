@@ -4,7 +4,16 @@ import { RiArrowRightLine } from "@remixicon/react";
 import site_config from "@/site-config.json";
 import type { siteConfig } from "@/lib/types";
 import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
+
+// 站名效果（对齐 chopstack.com 站名）：一行 + 蓝色下划线 + 蓝色强调字母
+// 例：lhZhang → "_" + "lhZ" + 蓝色 "a" + "ng"（强调字母 a 与参考站 stack 的 a 同位）
+const wmHeading = String(site_config.introduction.heading ?? "");
+const wmAIdx = wmHeading.toLowerCase().indexOf("a");
+const wmPre = wmAIdx >= 0 ? wmHeading.slice(0, wmAIdx) : wmHeading.slice(0, 2);
+const wmAcc = wmAIdx >= 0 ? wmHeading.charAt(wmAIdx) : wmHeading.charAt(2);
+const wmPost = wmAIdx >= 0 ? wmHeading.slice(wmAIdx + 1) : wmHeading.slice(3);
 ---
+
 
 <section class="flex flex-col md:flex-row items-center justify-center gap-6 bg-background border border-border px-6 pt-3 pb-3">
     <div class="w-full">
@@ -19,8 +28,8 @@ import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
             }
         </div>
         <div class="flex justify-between items-center select-none">
-            <h1 class="my-3 text-4xl opacity-90 intro-handwriting">
-                {site_config.introduction.heading}
+            <h1 class="my-3 text-4xl opacity-90 intro-wordmark select-none" aria-label={wmHeading}>
+                <span class="wm-line"><span class="wm-underscore">_</span>{wmPre}<span class="wm-accent">{wmAcc}</span>{wmPost}</span>
             </h1>
         </div>
 

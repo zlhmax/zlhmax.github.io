@@ -4,6 +4,7 @@
 /* font */
 @import "@fontsource-variable/jetbrains-mono";
 @import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/montserrat";
 @import "@fontsource-variable/geist";
 /* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
 @import "@fontsource-variable/noto-sans-sc";
@@ -471,3 +472,38 @@ pagefind-modal .pf-summary {
 .filter-icon-btn:focus-visible svg {
     fill: var(--link-hover);
 }
+
+    /* 首页简介卡站名 —— 对齐 chopstack.com 站名效果：
+       几何等宽粗体（Geist Mono，站内已有）+ 负字距 + 单行 + 蓝色下划线 + 蓝色强调字母 */
+    /* 同款字体效果：站名（.intro-wordmark）与列表页大标题（.intro-heading）共用 */
+    .intro-wordmark,
+    .intro-heading {
+        font-family: "Montserrat Variable", var(--font-mono); /* 对齐参考站字形（几何体）*/
+        font-weight: 450; /* 变量字重中间档（400 常规与 500 Medium 之间）*/
+        letter-spacing: -0.02em;
+        color: var(--prose-heading-fg); /* 站内标题色 #4c4551（深色模式随变量自适应）*/
+    }
+    .intro-wordmark {
+        display: inline-flex;
+        flex-direction: row; /* 一行显示 */
+        align-items: baseline;
+        line-height: 1;
+    }
+    .intro-heading {
+        line-height: 1.15;
+    }
+    .intro-wordmark .wm-line {
+        display: block;
+    }
+    .intro-wordmark .wm-underscore,
+    .intro-wordmark .wm-accent {
+        color: #1a4fa0;
+    }
+    /* 下划线与首字母之间留一点空隙（参考站有间隙）*/
+    .intro-wordmark .wm-underscore {
+        margin-right: 0.06em;
+    }
+    .dark .intro-wordmark .wm-underscore,
+    .dark .intro-wordmark .wm-accent {
+        color: #5b8ede;
+    }
