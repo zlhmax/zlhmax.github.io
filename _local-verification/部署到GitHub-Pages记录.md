@@ -5429,3 +5429,31 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 ### 提交
 - `revert(ui): restore JetBrains Mono wordmark and Montserrat headings`
 - 注：同批已上线的「标签样式」(`5610069`) 与「卡片去灰」(`2381b48`) **不受影响，保留**。
+
+---
+
+## 一百四十四、首页站名字号 32px → 28px · 2026-10-04
+
+**需求**（Eddy）：「再将首页的 lhZhang 字体字号修改为 28px」
+
+### 改动（仅一处）
+`src/components/static/Introduction.astro`：
+```diff
+- <h1 class="my-3 text-[32px] opacity-90 intro-wordmark select-none" ...>
++ <h1 class="my-3 text-[28px] opacity-90 intro-wordmark select-none" ...>
+```
+
+**范围**：只改**首页站名**；`Itinerary` / `Blog` 列表标题（`.intro-heading`）**仍为 32px，未动** ✓
+
+**其余属性全部不变**：JetBrains Mono Variable · 420 · `letter-spacing: normal` · 主色 `#4c4551` · `Zhang` 蓝青渐变（`linear-gradient(120deg,#2563eb,#0891b2)`）· 站名蓝色 `_`（`#1a4fa0`）
+
+### 验收（本地 CDP 实测）
+| 项 | 改前 | **改后** |
+|---|---|---|
+| 字号 | 32px | **28px** ✓ |
+| 尺寸 | 130×32 | **136×28** ✓ |
+| 字体 / 字重 / 字距 | JetBrains Mono · 420 · normal | 不变 ✓ |
+| 渐变 / 蓝色 `_` | 有 | 保留 ✓ |
+
+### 提交
+- `fix(ui): reduce homepage wordmark size to 28px`
