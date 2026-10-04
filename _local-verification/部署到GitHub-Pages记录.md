@@ -5395,3 +5395,37 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 备注
 当前 `portfolio-config.json` 中没有条目使用 `capabilities` / `architecture`，故页面实际只渲染 `Introduction` 一个标签；另两个已同步换装以备后续使用。
+
+---
+
+## 一百四十三、站名与列表标题三处字体回滚（撤销 Alkatra）· 2026-10-04
+
+**需求**（Eddy）：「站名与列表标题（lhZhang/Itinerary/Blog）三处的字体回滚」
+
+> 背景：上一轮「一百四十一」把三处字体改为 **Alkatra** 并已推送上线（`3dc2914`）。本轮要求回滚到 Alkatra **之前**的定档状态。
+
+### 改动
+| 位置 | Alkatra 版（撤回）| **回滚后** |
+|---|---|---|
+| 首页站名 `.intro-wordmark` | Alkatra · 400 | **`"JetBrains Mono Variable"` · 420 · letter-spacing normal** |
+| Blog 标题 `.intro-heading` | Alkatra · 400 | **`"Montserrat Variable"` · 450 · -0.68px** |
+| Itinerary 标题 `.intro-heading` | Alkatra · 400 | **`"Montserrat Variable"` · 450 · -0.68px** |
+
+同时清理：
+- 移除 `global.css` 中的 `@import "@fontsource/alkatra";`
+- 卸载依赖 `@fontsource/alkatra@5.3.0`（`package.json` / `pnpm-lock.yaml` 回到原状）
+
+**保留不变**：字号 32px · 主色 `#4c4551` · `Zhang` 线性渐变 · 站名蓝色 `_`
+
+### 验收（本地 CDP 实测）
+| 位置 | 字体 | 字重 | 字距 |
+|---|---|---|---|
+| 首页站名 `_lhZhang` | JetBrains Mono Variable ✓ | 420 | normal |
+| Blog 列表页标题 | Montserrat Variable ✓ | 450 | -0.68px |
+| Itinerary 列表页标题 | Montserrat Variable ✓ | 450 | -0.68px |
+
+**清理核验**：`dist/_astro` 中 alkatra 文件数 = 0，`grep -rl "Alkatra" dist/` 无结果 ✓
+
+### 提交
+- `revert(ui): restore JetBrains Mono wordmark and Montserrat headings`
+- 注：同批已上线的「标签样式」(`5610069`) 与「卡片去灰」(`2381b48`) **不受影响，保留**。
