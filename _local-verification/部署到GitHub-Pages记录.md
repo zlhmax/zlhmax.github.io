@@ -4991,3 +4991,38 @@ font-family: "PingFang SC", Arial, 微软雅黑, 宋体, simsun, sans-serif;
 
 ### 提交
 - `fix(itinerary): scale detail photos to 75% with 12px inset`（含归档「一百三十三」）
+
+---
+
+## 一百三十四、移除导航项前的小图标（**已上线**）· 2026-10-04
+
+**需求**（Eddy）：「我想去掉导航栏 Home/Itinerary/Blog 前的小图标」
+
+### 移除清单（`src/components/static/Navigation.astro`，共 8 处）
+| # | 移除内容 |
+|---|---|
+| 1 | `import { RiHome5Fill, RiArticleFill } from "@remixicon/react"` + `import { NavLinkIcon }` |
+| 2 | `navIcons` 映射（portfolio/blog）+ `iconOf()` 辅助函数（含注释块）|
+| 3 | `ICON_CLS` 图标类常量（`size-3 shrink-0 -translate-y-[1px]`）|
+| 4 | Home 项图标（当前页 `<BreadcrumbPage>` + 链接 `<BreadcrumbLink>`，2 处）|
+| 5 | 动态图标查找 `const Icon = iconOf(item)` + 其余项 2 处 `{Icon && <Icon …/>}` |
+| 6 | `BreadcrumbList` 上**当初专为图标对齐加的** `[&_a]:inline-flex [&_a]:items-center [&_a]:gap-1` 与 `[&_[data-slot=breadcrumb-page]]:` 同款（3 组）|
+
+**做法**：用 Python 脚本按序做 8 次精确 `str.replace`（每处先断言存在，缺一处即中止不写盘），写回时**保持 CRLF** ✓。文件 3688 → 2566 字节。
+**为何不用 `patch`**：`old_string` 跨行时必失败（仓库是 CRLF、传入 `\n` 是 LF）—— 见技能 §43。
+
+### 验收（本地实测）
+| 检查项 | 首页 | Itinerary 列表页 |
+|---|---|---|
+| 导航内 `svg` 数量 | **0** ✓ | **0** ✓ |
+| 导航文本 | `Home • itinerary • Blog` ✓ | 同 ✓ |
+| 各项宽度 | Home 36 / itinerary 66 / Blog 33 px ✓ | 同 ✓ |
+| 大写·字距·悬停下划线 | 保持不变 ✓ | ✓ |
+| 关键词残留检查 | `RiHome5Fill`/`RiArticleFill`/`NavLinkIcon`/`ICON_CLS`/`navIcons`/`iconOf`/`const Icon` **全部 0** ✓ |
+
+### 遗留
+- `src/components/static/NavLinkIcon.tsx`（MingCute link-3-line 复刻组件）**已无引用**，按「删除类操作先列清单经确认」的规矩**未删除**，待 Eddy 定夺。
+- 导航文案当前为 `Home / itinerary / Blog`（中英混排），是否把「Home」改中文待定。
+
+### 提交
+- `refactor(nav): remove icons before navigation items`（含归档「一百三十四」）
