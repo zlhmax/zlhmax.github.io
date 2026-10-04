@@ -478,9 +478,9 @@ pagefind-modal .pf-summary {
     /* 同款字体效果：站名（.intro-wordmark）与列表页大标题（.intro-heading）共用 */
     .intro-wordmark,
     .intro-heading {
-        font-family: "Montserrat Variable", var(--font-mono); /* 对齐参考站字形（几何体）*/
-        font-weight: 450; /* 变量字重中间档（400 常规与 500 Medium 之间）*/
-        letter-spacing: -0.02em;
+        font-family: "Montserrat Variable", var(--font-mono); /* Montserrat（Eddy 指定）*/
+        font-weight: 450; /* 变量字重中间档（回滚到上一版）*/
+        letter-spacing: -0.68px; /* 固定值（Eddy 指定）；若按等比 32px 应为 -0.64px */
         color: var(--prose-heading-fg); /* 站内标题色 #4c4551（深色模式随变量自适应）*/
     }
     .intro-wordmark {

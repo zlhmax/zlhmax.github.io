@@ -5205,3 +5205,40 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 提交
 - `feat(travel): rebuild gallery with lightbox, keyboard nav, outside arrows`（含归档「一百三十七」）
+
+---
+
+## 一百三十八、站名与列表页标题字体定档：Montserrat · 450 · 32px · -0.68px（**已上线**）· 2026-10-04
+
+**需求迭代**（Eddy 连续 7 轮微调，全过程记录）：
+1. 「将 lhZhang / Itinerary / Blog 的字体修改为 Geist Mono」
+2. 「三处字体的字号减小一号」→ 36 → 34px
+3. 「三处字号修改为 32px，字距等比 → 0.68px」
+4. 「三处字体的粗体修改为 400」
+5. 「三处的字体回滚到上一版」→ 400 → 450
+6. 「Montserrat 32px」→ 字体切回 Montserrat（终稿）
+
+### 最终定档（三处统一）
+| 位置 | 字体 | 字重 | 字号 | 字距 | 颜色 | 特殊 |
+|---|---|---|---|---|---|---|
+| 首页站名 `_lhZhang` | **Montserrat Variable** | **450** | **32px** | **-0.68px** | `#4c4551` | `_` 蓝 `#1a4fa0` · `Zhang` 渐变 |
+| Blog 列表页标题 | 同 | 450 | 32px | -0.68px | 同 | 整词渐变 |
+| Itinerary 列表页标题 | 同 | 450 | 32px | -0.68px | 同 | 整词渐变 |
+
+尺寸：站名 **148×32** · 两个标题 **846×49**（块级满宽、文字左对齐）
+
+### 实现
+| 文件 | 改动 |
+|---|---|
+| `src/styles/global.css` | 共享规则 `.intro-wordmark, .intro-heading`：`font-family: "Montserrat Variable", var(--font-mono)` · `font-weight: 450` · `font-size` 由外部类给 · `letter-spacing: -0.68px` |
+| `src/components/static/Introduction.astro` | 站名 `<h1 class="my-3 text-[32px] … intro-wordmark">` |
+| `src/components/static/IndexHeader.astro` | 标题 `<h1 class="pt-3 text-[32px] … intro-heading">`（Blog/Itinerary 列表+分页共 4 页引用）|
+
+### 关键经验
+- **字号/字距「等比」和「用户给的数值」可能冲突**：32px 按 -0.02em 等比应为 **-0.64px**，而用户给的 **0.68px** 是 34px 时的等比值。**做法：按用户给的数值实现，同时在回复中并列「你给的 / 严格等比」两值**，让用户一句话切换。
+- **「回滚到上一版」必须问清粒度**：本轮更早的字体/字号改动**尚未提交**，若用 `git checkout` 整体回退会一路退到上次提交（画廊改造，那时是 Montserrat 36px）。**正解：只撤最后一步（字重 400→450）**，并在回复中列出「可回退的各版本清单」（Geist Mono 36/34/32px、Montserrat 36px 等）让用户指认。
+- **改字体前先看依赖是否已在站内**：Geist Mono 已由 `@fontsource-variable/geist-mono` 提供（`--font-mono`），切过去**无需新增依赖**；Montserrat 亦已在 `package.json`，来回切换零成本。
+- **字号换算惯例**：「小一号」= **−2px**（36→34→32 一路照此）。
+
+### 提交
+- `feat(ui): switch wordmark and headings to Montserrat 32px`（含归档「一百三十八」）
