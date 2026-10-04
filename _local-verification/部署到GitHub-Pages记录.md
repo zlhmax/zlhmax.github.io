@@ -5331,3 +5331,67 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 ### 提交
 - `fix(ui): remove grayscale mask from portfolio card images`（含归档「一百四十」）
 - 注：本次**仅提交这两处组件改动**；同时进行的「Alkatra 字体」改动（`global.css` / `package.json` / `pnpm-lock.yaml`）按 Eddy 要求**留在本地未推**。
+
+---
+
+## 一百四十一、站名与列表标题字体改为 Alkatra（参考 days.leonh.space）· 2026-10-04
+
+**需求**（Eddy）：
+1. 「读取 https://days.leonh.space/ 抬头的站名字体信息，尝试应用到我的网站，注意只修改字体，其它保持不变」
+2. 「Itinerary/Blog 也应用相同的字体」
+3. 「三处的字体字重减小」
+
+### 参考站实测（读取结果）
+| 项 | 值 |
+|---|---|
+| 字体 | **`Alkatra`**（Google Font · OFL 开源可自托管）|
+| 字重 / 字号 / 字距 | 400 / 32px / normal |
+| 字形 | 自带倾斜感（截图上的"斜体"是字体设计特征，非 CSS `font-style: italic`）|
+| 颜色 | `rgb(40,188,163)` = #28BCA3 青绿（**本站未采用**，保留原灰紫 `#4c4551`）|
+
+### 改动（只改字体族，其余属性原封不动）
+- `src/styles/global.css`：`@import "@fontsource/alkatra";`
+- `.intro-wordmark`（首页站名）：`"JetBrains Mono Variable"` → **`"Alkatra"`**
+- `.intro-heading`（Blog/Itinerary 列表标题）：`"Montserrat Variable"` → **`"Alkatra"`**
+- 字重：三处 **420 / 450 → 400**（**Alkatra 仅提供 400–700，400 即最轻档**）
+- 保留：字号 32px · 字距（站名 normal / 标题 -0.68px）· 主色 `#4c4551` · `Zhang` 渐变 · 蓝色 `_`
+- 新增依赖：`@fontsource/alkatra@5.3.0`（`package.json` + `pnpm-lock.yaml`）
+
+### 验收（CDP 实测计算值）
+| 位置 | 字体 | 字重 | 字距 | 尺寸 |
+|---|---|---|---|---|
+| 首页站名 `_lhZhang` | Alkatra ✓ | 400 | normal | 130×32 |
+| Blog 列表页标题 | Alkatra ✓ | 400 | -0.68px | 846×49 |
+| Itinerary 列表页标题 | Alkatra ✓ | 400 | -0.68px | 846×49 |
+
+`document.fonts.check('400 32px "Alkatra")` = True ✓ · 字形宽度法 103 vs 回退 70（证明真字体生效）✓
+
+---
+
+## 一百四十二、详情页 Introduction 标签改为分页按钮同款样式 · 2026-10-04
+
+**需求**（Eddy）：「将 Itinerary 页面显示照片下的 Introduction 图标按钮的显示效果修改成与 Itinerary 列表分页图标按钮一样」
+
+> 过程中先误改了**画廊左右箭头按钮**，经 Eddy 指出「我说的不是修改这个图标按钮」后**已回滚**（`git checkout --`，实测箭头恢复 42×42 `rounded-full`）。后用指认方式确认目标 = **详情页的 `Introduction` 标签**。
+
+### 改动（`src/components/static/PortfolioDetails.astro`）
+三个同级标签 `Introduction` / `Capabilities` / `Architecture` 统一换装（与 `PageLinks.tsx` 的 `baseCls + navBtn + idle` 一致）：
+
+| 项 | 改前 | 改后 |
+|---|---|---|
+| 高度 | `py-2`（约 33px）| **25.6px**（`h-[25.6px]`）|
+| 圆角 | 直角 | **`rounded-[8px]`** |
+| 边框 | `border-transparent` | **1px `border-border`** |
+| 底色 | 无 | **`bg-background`**（白）|
+| 字色 | `text-muted-foreground/80` | **`text-muted-foreground`** |
+| 悬停 | 浅灰底 | **上浮 2px + 边框/文字→主题绿 `#58B798`** |
+| 选中态 | 灰边框 + 次级色字 | **无边框 + `bg-muted` + `text-foreground`**（= 分页「当前页」）|
+| 间距 | 无 | **`gap-2`**（与分页按钮一致）|
+
+**保留**：等宽字体 / 大写 / `tracking-widest`（标签自身排版特征）
+
+### 验收
+`Introduction` 标签实测 **134.8×25.6** · 圆角 **8px** · 选中态 `border-transparent + bg-muted + text-foreground` ✓ · 字体 `Geist Mono Variable` + 字距 1.2px 保留 ✓
+
+### 备注
+当前 `portfolio-config.json` 中没有条目使用 `capabilities` / `architecture`，故页面实际只渲染 `Introduction` 一个标签；另两个已同步换装以备后续使用。
