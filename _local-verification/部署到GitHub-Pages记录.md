@@ -5090,3 +5090,70 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 ### 提交
 - `feat(ui): match homepage wordmark and list headings to Montserrat`（含归档「一百三十五」）
 - 遗留：`src/components/static/NavLinkIcon.tsx` 已无引用（导航图标已移除），待 Eddy 定夺是否删除
+
+---
+
+## 一百三十六、站名与列表页标题加渐变文字（对齐 astro-wanderer 的 .accent）（**已上线**）· 2026-10-04
+
+**需求**（Eddy）：
+1. 「请读取 https://igagansingh.com/astro-wanderer/ 关于 Rowan Hale 的显示效果，特别想了解 Hale 的字体渐变效果是怎么实现的？」
+2. 「给站名加渐变，lh 保持现在的浅黑色，Zhang 改为相同的渐变效果」
+3. 「将 Itinerary 与 Blog 也修改为相同的渐变效果」
+
+### 🔑 参考站渐变实现（CDP 实测）
+```html
+<h1>Rowan <span class="accent">Hale</span></h1>
+```
+```css
+.hero h1 .accent {
+  background-image: linear-gradient(120deg, #2563eb, #0891b2); /* 蓝 → 青 */
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;   /* ★关键 */
+  color: #09090b;                         /* 降级色 */
+}
+```
+- 实测计算值：`background-image = linear-gradient(120deg, rgb(37,99,235), rgb(8,145,178))`、`background-clip = text`、`-webkit-text-fill-color = rgba(0,0,0,0)`、`color = rgb(9,9,11)`
+- 字体 Inter Variable 700 / 57.6px / -1.152px；主题变量 `--accent: #2563eb`、`--accent-strong: #1d4ed8`
+- **只有「Hale」那半个词带渐变**，「Rowan」是普通深色
+
+**原理三句**：① 渐变当背景画 → ② `background-clip: text` 把背景裁进文字形状 → ③ `-webkit-text-fill-color: transparent` 让文字本体透明，透出渐变。
+
+**复刻的 4 个坑**：① 必须同时写 `-webkit-background-clip: text`；② 必须用 `-webkit-text-fill-color: transparent`（只写 `color: transparent` 部分浏览器无效）；③ 保留 `color` 作降级色；④ 深色模式需另配（参考站用固定色）。
+
+### 本站落地
+| 位置 | 渐变范围 | 说明 |
+|---|---|---|
+| 首页站名 `_lhZhang` | **仅 `Zhang`** | `lh` 保持浅黑 `#4c4551`；`_` 仍为蓝 `#1a4fa0` |
+| Blog / Itinerary 列表页标题（含各自第 2 页，共 4 页）| **整词** | 复用同一 `.wm-grad` |
+
+**CSS**（`global.css`）：
+```css
+.intro-wordmark .wm-grad,
+.intro-heading .wm-grad {
+    background-image: linear-gradient(120deg, #2563eb, #0891b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #2563eb;                 /* 降级色 */
+}
+.dark .intro-wordmark .wm-grad,
+.dark .intro-heading .wm-grad {
+    background-image: linear-gradient(120deg, #60a5fa, #22d3ee); /* 深色提亮 */
+    color: #60a5fa;
+}
+```
+**结构**：
+- `Introduction.astro`：`_`（蓝）+ `lh`（浅黑，camelCase 正则拆出小写前缀）+ `<span class="wm-grad">Zhang</span>`
+- `IndexHeader.astro`：`<h1 class="… intro-heading"><span class="wm-grad">{heading}</span></h1>`
+
+### 验收（本地实测）
+- 站名：`lh` = `rgb(76,69,81)`；`Zhang` = `linear-gradient(120deg, rgb(37,99,235), rgb(8,145,178))` + `clip: text` + `fill: rgba(0,0,0,0)` ✓；深色模式 = `linear-gradient(120deg, rgb(96,165,250), rgb(34,211,238))` ✓
+- 4 个列表页标题：渐变与站名**逐字一致**，字体 Montserrat 450 / 36px ✓
+
+### 踩坑记录
+- **在 Python heredoc 里往 JS 字符串塞 `\n` 会生成真实换行 → `Page.evaluate: SyntaxError`** ✗ → 改为**回传数组**（`{sel, decls:[...]}`）在 Python 侧拼接 ✓
+- `getComputedStyle` 对含简写声明的规则，`cssText` 里可能显示 `background-image: ;`（空）→ **以 `getComputedStyle(el).backgroundImage` 的计算值为准** ✓
+
+### 提交
+- `feat(ui): add gradient text to wordmark and list headings`（含归档「一百三十六」）

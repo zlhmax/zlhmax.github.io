@@ -495,9 +495,23 @@ pagefind-modal .pf-summary {
     .intro-wordmark .wm-line {
         display: block;
     }
-    .intro-wordmark .wm-underscore,
-    .intro-wordmark .wm-accent {
+    .intro-wordmark .wm-underscore {
         color: #1a4fa0;
+    }
+    /* 渐变文字（对齐 igagansingh.com/astro-wanderer 的 .accent）：
+       linear-gradient(120deg, #2563eb, #0891b2) + background-clip:text + 文字填充透明 */
+    .intro-wordmark .wm-grad,
+    .intro-heading .wm-grad {
+        background-image: linear-gradient(120deg, #2563eb, #0891b2);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: #2563eb; /* 降级色：不支持 background-clip:text 时显示蓝 */
+    }
+    .dark .intro-wordmark .wm-grad,
+    .dark .intro-heading .wm-grad {
+        background-image: linear-gradient(120deg, #60a5fa, #22d3ee); /* 深色模式提亮，保持可读 */
+        color: #60a5fa;
     }
     /* 下划线与首字母之间留一点空隙（参考站有间隙）*/
     .intro-wordmark .wm-underscore {
