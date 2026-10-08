@@ -5529,3 +5529,63 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 ### 说明
 - 跨平台差异与参考站**行为相同**（Windows → Palatino Linotype，macOS → Iowan Old Style）
 - 参考站字重为 600，本站仍为 **420**（用户只要求改"字体"）
+
+---
+
+## 一百四十六、首页简介卡片照参考站重构 + 羽毛笔头像 · 2026-10-08
+
+**需求**（Eddy，多轮迭代）：
+1. 「读取参考站这段内容，能否按这个修改我网站上的简介卡片的内容？」（参考：`willimt.github.io/astro-theme-ink` 首页卡片）
+2. 「将 'Engineer/Photographer/Blogger' 替换为最下面那行 5 个图标前的位置 'Shenzhen, China'」
+3. 「头像尺寸能否调小一点？」
+4. 「能否将头像替换为 lhZhang 前的羽毛笔图标？」
+5. 「去掉 lhZhang 前面的羽毛笔图标」
+6. 「将 lhZhang 与下行 'Shenzhen, China' 之间的间隙调大一倍」→ 后改「切 8px，并加回蓝色下划线」
+7. 「'Shenzhen, China' 的字体能否修改回之前一版的字体？」
+8. 「那行自我介绍字体能否改为与 Blog 文章列表副标题一致？且与上下行间距调小一点」
+9. 「将这句翻译成英文」→ 选 A 版
+10. 「将该英文的字体修改为与 'Thoughts I've had for a while' 一致」
+
+### 参考站卡片实测参数（照此复刻）
+| 元素 | 参考站 |
+|---|---|
+| 头像 | 72×72 圆形 + 1px 边框 |
+| 站名 | serif 36px / 600 / 行高 40px |
+| 身份标签 | sans 14px / 灰 `rgb(94,105,120)` |
+| 正文 | 16px / 行高 26px / 灰 |
+| 底行 | `flex gap-3`(12px) · 位置 + 图标 + 链接 · 居中 |
+
+### 本站改动（`Introduction.astro`）
+1. **头部改两栏**：圆形头像 + [站名 / 标签行]（`flex items-center gap-4`）
+2. **头像**：由 `<img>` 改为**渐变圆 + 白色羽毛笔**（56×56 圆底 + 29px 羽毛）
+   - 尺寸推导：参考站 72px 头像 / 36px 站名 = **2.0×** → 本站站名 28px → **56px**
+   - 实测**头像高 = 右侧文字块高 = 56px（完全等高）**
+3. **标签行**：由底行移上来 = `Shenzhen, China`（含定位图标，可点），字体 **Cormorant Garamond**（回滚到该站原设定）
+4. **间距**：站名↔标签行 `mt-0.5`(2px) → **`mt-2`(8px)**；该行上间距 `pt-5`(20px) → **`pt-3`(12px)**；底行 `mt-3`(12px) → **`mt-2`(8px)**
+5. **底行**：只留 5 个社交圆钮
+6. **站名前羽毛笔**：加过又按要求**移除**（只留头像那支）；相应专用 CSS 规则一并清理
+
+### 站名字体回滚
+`global.css` 的 `.intro-wordmark` 字体族：参考站系统衬线栈 → **回滚为 `"JetBrains Mono Variable", var(--font-mono)`**
+（CDP 实测渲染 = `JetBrains Mono`，`isCustomFont=true`；字重 420 / 字距 normal / 28px / `Zhang` 渐变 / 蓝色 `_` 全部保留）
+
+### CSS 重构
+羽毛笔遮罩抽成**通用类 `.icon-feather`**（mask + `background-color:currentColor` + `width/height:1.11em`），头像与站名共用同一份定义；站名专用规则（颜色/间隙/悬停旋转）在移除图标后删除。
+
+### 自我介绍行（`site-config.json` 的 `description`）
+- 内容：**A 版英文** —— `Hi, I'm lhZhang — I work in manufacturing quality management and spend my free time on photography, travel, and writing.`（撇号与破折号均按原文保留）
+- 字体：**改为与 Blog 页副标题「Thoughts I've had for a while」六项完全一致**
+  | 项 | 值 |
+  |---|---|
+  | 字体 | Cormorant Garamond Variable |
+  | 字号 / 字重 / 行高 / 字距 | 16px / 400 / 24px / normal |
+  | 颜色 | `oklch(0.552 0.016 285.938)` (muted) |
+
+### 新增文件
+`public/avatar-placeholder.svg`（渐变圆 + 「lh」字标的占位头像，供日后换真实照片）
+
+### 验收（本地 CDP 实测）
+- 头像 **56×56** 圆形 · 羽毛 **29×29** 白色 · 站名 ↔ 标签行 **8px** · 自我介绍行与 Blog 副标题**六项全同 ✓** · 底行 5 个社交圆钮 ✓
+
+### 说明
+- 「标签渐变」(`PortfolioDetails.astro`) 属另一批改动，**本次未推**，由 Eddy 另行决定

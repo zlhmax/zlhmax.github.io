@@ -5,12 +5,14 @@ import site_config from "@/site-config.json";
 import type { siteConfig } from "@/lib/types";
 import { SocialIcon, SubHeadingIcon } from "@/lib/icons";
 
-// 站名效果：一行 + 蓝色下划线 "_"；小写前缀（lh）保持浅黑，大写开头后半段（Zhang）用线性渐变
-// 例：lhZhang → "_" + "lh"（浅黑）+ "Zhang"（渐变）；无大写则整段做渐变
+// 站名效果：一行（lh 保持浅黑，大写开头后半段 Zhang 用线性渐变）
 const wmHeading = String(site_config.introduction.heading ?? "");
 const wmSplit = wmHeading.match(/^([a-z]+)([A-Z][A-Za-z]*)$/);
 const wmPlain = wmSplit ? wmSplit[1] : "";
 const wmGrad = wmSplit ? wmSplit[2] : wmHeading;
+
+// 【占位】头像（参考站为 72px 圆形）—— 待 Eddy 提供照片后替换 /avatar-placeholder.svg
+const wmAvatar = "/avatar-placeholder.svg";
 ---
 
 
@@ -26,25 +28,41 @@ const wmGrad = wmSplit ? wmSplit[2] : wmHeading;
                     ))
             }
         </div>
-        <div class="flex justify-between items-center select-none">
-            <h1 class="my-3 text-[28px] opacity-90 intro-wordmark select-none" aria-label={wmHeading}>
-                <span class="i-feather" aria-hidden="true"></span>
-                  <span class="wm-line">{wmPlain}{wmGrad && <span class="wm-grad">{wmGrad}</span>}</span>
-            </h1>
+
+        {/* 头部：圆形头像 + 站名/身份标签（照参考站的两栏结构）*/}
+        <div class="flex items-center gap-4 select-none">
+            <span
+                class="grid size-[56px] shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#0891b2] text-white"
+                aria-hidden="true"
+            >
+                <span class="icon-feather" style="font-size: 26px;"></span>
+            </span>
+            <div class="flex flex-col min-w-0">
+                <h1 class="text-[28px] opacity-90 intro-wordmark select-none" aria-label={wmHeading}>
+                  <span class="wm-line"><span class="wm-underscore">_</span>{wmPlain}{wmGrad && <span class="wm-grad">{wmGrad}</span>}</span>
+                </h1>
+                <div class="mt-2 flex flex-wrap items-center gap-3">
+                    {
+                        site_config.introduction.subHeadingItems &&
+                            site_config.introduction.subHeadingItems.map((item) => (
+                                <a href={item.url} target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 text-sm text-muted-foreground/90 hover:text-link animation group w-fit">
+                                    <SubHeadingIcon type={item.type as siteConfig["introduction"]["subHeadingItems"][number]["type"]} />
+                                    <p class="cormorant-serif text-sm leading-relaxed">{item.label}</p>
+                                </a>
+                            ))
+                    }
+                </div>
+            </div>
         </div>
 
-        <div class="flex flex-col gap-1 select-none">
-            {
-                site_config.introduction.subHeadingItems &&
-                    site_config.introduction.subHeadingItems.map((item) => (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 opacity-80 hover:opacity-100 active:opacity-100 animation group w-fit">
-                            <SubHeadingIcon type={item.type as siteConfig["introduction"]["subHeadingItems"][number]["type"]} />
-                            <p class="space-y-3 text-base leading-relaxed group-hover:text-link animation group-active:text-foreground cormorant-serif">{item.label}</p>
-                        </a>
-                    ))
-            }
-        </div>
-        <div class="mt-5 flex gap-3">
+        {
+            site_config.introduction.description && (
+                <p class="cormorant-serif text-base text-muted-foreground pt-3 pb-1">{site_config.introduction.description}</p>
+            )
+        }
+
+        {/* 底行：位置 + 社交圆钮（照参考站合并到同一行）*/}
+        <div class="mt-2 flex flex-wrap items-center gap-3">
             {
                 site_config.introduction.socialItems &&
                     site_config.introduction.socialItems.map((item) => (
@@ -67,32 +85,32 @@ const wmGrad = wmSplit ? wmSplit[2] : wmHeading;
                 )
             }
         </div>
+
         {
-                site_config.introduction.description && (
-                    <p class="text-base leading-relaxed text-secondary-foreground/80 pt-6 pb-3">{site_config.introduction.description}</p>
-                )
-            }
-        <div class="flex gap-3">
-            {
-                site_config.introduction.ctaItems &&
-                    site_config.introduction.ctaItems.map((cta) => (
-                        <a href={cta.url} target="_blank" rel="noopener noreferrer" class={`${buttonVariants({ variant: cta.variant as siteConfig["introduction"]["ctaItems"][number]["variant"], size: "default" })} group`}>
-                            <span class="space-y-6 leading-relaxed opacity-90 text-xs translate-x-0.5">{cta.label}</span>
-                            <RiArrowRightLine className="size-0 group-hover:size-3.5 animation" />
-                        </a>
-                    ))
-            }
-            {
-                site_config.introduction.support && (
-                    <a href={site_config.introduction.support.url} target="_blank" rel="noopener noreferrer" class={`${buttonVariants({ variant: site_config.introduction.support.variant as siteConfig["introduction"]["ctaItems"][number]["variant"], size: "default" })} group`}>
-                        <div class="flex flex-col items-center justify-center pr-1 text-xs">
-                            <span class="scale-120 group-hover:scale-0 opacity-100 group-hover:opacity-0 translate-y-2.5 animation">☆</span>
-                            <span class="scale-0 group-hover:scale-120 opacity-0 group-hover:opacity-100 -translate-y-2.5 animation">★</span>
-                        </div>
-                        <span class="space-y-6 leading-relaxed opacity-90 text-xs">{site_config.introduction.support.label}</span>
-                    </a>
-                )
-            }
-        </div>
+            (site_config.introduction.ctaItems || site_config.introduction.support) && (
+                <div class="mt-4 flex gap-3">
+                    {
+                        site_config.introduction.ctaItems &&
+                            site_config.introduction.ctaItems.map((cta) => (
+                                <a href={cta.url} target="_blank" rel="noopener noreferrer" class={`${buttonVariants({ variant: cta.variant as siteConfig["introduction"]["ctaItems"][number]["variant"], size: "default" })} group`}>
+                                    <span class="space-y-6 leading-relaxed opacity-90 text-xs translate-x-0.5">{cta.label}</span>
+                                    <RiArrowRightLine className="size-0 group-hover:size-3.5 animation" />
+                                </a>
+                            ))
+                    }
+                    {
+                        site_config.introduction.support && (
+                            <a href={site_config.introduction.support.url} target="_blank" rel="noopener noreferrer" class={`${buttonVariants({ variant: site_config.introduction.support.variant as siteConfig["introduction"]["ctaItems"][number]["variant"], size: "default" })} group`}>
+                                <div class="flex flex-col items-center justify-center pr-1 text-xs">
+                                    <span class="scale-120 group-hover:scale-0 opacity-100 group-hover:opacity-0 translate-y-2.5 animation">☆</span>
+                                    <span class="scale-0 group-hover:scale-120 opacity-0 group-hover:opacity-100 -translate-y-2.5 animation">★</span>
+                                </div>
+                                <span class="space-y-6 leading-relaxed opacity-90 text-xs">{site_config.introduction.support.label}</span>
+                            </a>
+                        )
+                    }
+                </div>
+            )
+        }
     </div>
 </section>

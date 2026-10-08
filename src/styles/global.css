@@ -481,8 +481,8 @@ pagefind-modal .pf-summary {
         color: var(--prose-heading-fg); /* 站内标题色 #4c4551（深色模式随变量自适应）*/
     }
     .intro-wordmark {
-        /* 参考站 willimt/astro-theme-ink 导航站名的字体：系统衬线栈（该站无自托管字体，实测 Windows 渲染 = Palatino Linotype）*/
-        font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", SimSun, serif;
+        /* 站名字体：JetBrains Mono（参考站 multiterm 的字体，站内已装 @fontsource-variable/jetbrains-mono）*/
+        font-family: "JetBrains Mono Variable", var(--font-mono);
         font-weight: 420;
         letter-spacing: normal; /* Eddy 指定 */
         display: inline-flex;
@@ -496,10 +496,10 @@ pagefind-modal .pf-summary {
         letter-spacing: -0.68px; /* 回滚 */
         line-height: 1.15;
     }
-    /* 站名前羽毛笔图标：照搬 willimt/astro-theme-ink 的手法
+    /* 羽毛笔图标：照搬 willimt/astro-theme-ink 的手法
        （空元素 + mask 遮罩 + background-color:currentColor + width/height:1.11em）
-       参考站实测：图标 19.97px / text-lg(18px) / 悬停旋转 -12° / 间隙 8px */
-    .intro-wordmark .i-feather {
+       通用类 .icon-feather 供多处复用；站名与头像圆底各自在其外层设字号/颜色 */
+    .icon-feather {
         --icon-feather: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14.086 18.412A2 2 0 0 1 12.67 19H5v-7.672a2 2 0 0 1 .586-1.414L11.75 3.75a6 6 0 1 1 8.49 8.49zM16 8L2 22m15.488-7H9'/></svg>");
         -webkit-mask: var(--icon-feather) no-repeat;
         mask: var(--icon-feather) no-repeat;
@@ -509,14 +509,7 @@ pagefind-modal .pf-summary {
         width: 1.11em;
         height: 1.11em;
         display: inline-block;
-        align-self: center;   /* h1 是 baseline 对齐，图标用居中对齐更稳 */
         flex: none;
-        color: #1a4fa0;       /* 与站名 _ 同色（对齐参考站的蓝色羽毛笔）*/
-        margin-right: 0.3em;  /* 间隙随字号缩放 */
-        transition: transform 0.3s ease;
-    }
-    .intro-wordmark:hover .i-feather {
-        transform: rotate(-12deg);
     }
     .intro-wordmark .wm-line {
         display: block;
