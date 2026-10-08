@@ -28,7 +28,8 @@ const wmGrad = wmSplit ? wmSplit[2] : wmHeading;
         </div>
         <div class="flex justify-between items-center select-none">
             <h1 class="my-3 text-[28px] opacity-90 intro-wordmark select-none" aria-label={wmHeading}>
-                <span class="wm-line"><span class="wm-underscore">_</span>{wmPlain}{wmGrad && <span class="wm-grad">{wmGrad}</span>}</span>
+                <span class="i-feather" aria-hidden="true"></span>
+                  <span class="wm-line">{wmPlain}{wmGrad && <span class="wm-grad">{wmGrad}</span>}</span>
             </h1>
         </div>
 

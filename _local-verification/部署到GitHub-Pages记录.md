@@ -5457,3 +5457,75 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 提交
 - `fix(ui): reduce homepage wordmark size to 28px`
+
+---
+
+## 一百四十五、首页站名改造：羽毛笔图标 + 参考站同款字体 + 去掉 `_` · 2026-10-08
+
+**需求**（Eddy，三轮）：
+1. 「读取 https://willimt.github.io/astro-theme-ink/ 的信息，特别是导航站名前的小图标的效果是怎么实现的？」
+2. 「① 放哪里 —— 首页站名 `_lhZhang` 前 ② 哪个图标 —— 羽毛笔」
+3. 「去掉 lhZhang 前的 `_`」
+4. 「把 lhZhang 的字体修改成参考网站导航中的站名 Hansen's ink 相同的字体」
+
+### 参考站图标的实现（读出来的机制）
+**不是图片、不是字体图标、也不是内联 SVG** —— 页面里只有一个**空 `<span>`**，图形全由 CSS 生成：
+```html
+<a class="group flex items-center gap-2">
+  <span class="i-lucide-feather text-lg text-accent transition-transform duration-300 group-hover:-rotate-12"></span>
+  <span class="font-serif text-lg font-semibold tracking-wide">Hansen's ink</span>
+</a>
+```
+```css
+.i-lucide-feather{--un-icon:url("data:image/svg+xml;utf8,<svg…>");-webkit-mask:var(--un-icon) no-repeat;
+  mask:var(--un-icon) no-repeat;background-color:currentColor;width:1.11em;height:1.11em;mask-size:100% 100%}
+```
+即 **UnoCSS preset-icons**：SVG 当 **mask 遮罩** + `background-color: currentColor`（颜色跟文字）+
+`width/height: 1.11em`（尺寸跟字号）。实测：图标 **19.97px**（`text-lg` 18px）· 颜色 `rgb(80,111,149)` ·
+间隙 8px · 悬停 `rotate(-12°)` 0.3s。
+
+### 参考站站名的字体（**重要：不是 web 字体**）
+- `@font-face` **0 条** · 字体文件下载**无** → **纯系统字体栈**
+- 声明：`"Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", SimSun, serif`
+- **CDP `CSS.getPlatformFontsForNode` 实测渲染 = `Palatino Linotype`（`isCustomFont=false`）**
+- 参考站 18px / 600 / 字距 0.45px
+
+### 本站改动
+**`src/styles/global.css`**
+```css
+/* 羽毛笔图标（照搬参考站手法，零依赖）*/
+.intro-wordmark .i-feather {
+    --icon-feather: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24'>
+        <path fill='none' stroke='currentColor' stroke-width='2'
+              d='M14.086 18.412A2 2 0 0 1 12.67 19H5v-7.672a2 2 0 0 1 .586-1.414L11.75 3.75a6 6 0 1 1 8.49 8.49zM16 8L2 22m15.488-7H9'/></svg>");
+    -webkit-mask: var(--icon-feather) no-repeat;  mask: var(--icon-feather) no-repeat;
+    -webkit-mask-size: 100% 100%;                mask-size: 100% 100%;
+    background-color: currentColor;
+    width: 1.11em; height: 1.11em;   /* 尺寸跟字号 */
+    color: #1a4fa0;                  /* 与站名 _ 同色 */
+    margin-right: 0.3em;  align-self: center;  transition: transform .3s;
+}
+.intro-wordmark:hover .i-feather { transform: rotate(-12deg); }
+
+/* 站名字体族 → 参考站同款系统衬线栈 */
+.intro-wordmark { font-family: "Iowan Old Style", "Palatino Linotype", Georgia,
+                  "Times New Roman", "Noto Serif SC", "Songti SC", SimSun, serif; }
+```
+**`src/components/static/Introduction.astro`**：站名前插入 `<span class="i-feather" aria-hidden="true"></span>`；
+移除 `<span class="wm-underscore">_</span>`（**CSS 规则保留，随时可恢复**）。
+
+### 验收（本地 CDP 实测）
+| 项 | 值 |
+|---|---|
+| 站名文本 | **`lhZhang`**（无 `_`）✓ |
+| 羽毛笔尺寸 | **31.08px**（= 1.11em × 28px，精确）✓ |
+| 羽毛笔颜色 | `rgb(26,79,160)` = `#1a4fa0` ✓ |
+| 图标↔文字间隙 | 8.39px（0.3em）✓ |
+| 悬停旋转 | **`matrix(0.978,-0.208,…)` = −12.0°** ✓ |
+| 站名字体 | 栈首 `Iowan Old Style`；**CDP 渲染 = `Palatino Linotype`** ✓（与参考站本机一致）|
+| 字号/字重/字距 | 28px / 420 / normal（**未动**）✓ |
+| 渐变 / 站名整宽 | `Zhang` 渐变保留 ✓ · 157.1 → **144.8px**（衬线体更窄）|
+
+### 说明
+- 跨平台差异与参考站**行为相同**（Windows → Palatino Linotype，macOS → Iowan Old Style）
+- 参考站字重为 600，本站仍为 **420**（用户只要求改"字体"）
