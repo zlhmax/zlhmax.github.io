@@ -499,6 +499,35 @@ pagefind-modal .pf-summary {
     /* 羽毛笔图标：照搬 willimt/astro-theme-ink 的手法
        （空元素 + mask 遮罩 + background-color:currentColor + width/height:1.11em）
        通用类 .icon-feather 供多处复用；站名与头像圆底各自在其外层设字号/颜色 */
+    /* lucide camera（Travel 列表页头）：与羽毛笔同一套 mask 手法
+       （mask 遮罩 + background-color:currentColor + width/height:1.11em）*/
+    .icon-camera {
+        --icon-camera: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><g fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'><path d='M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z'/><circle cx='12' cy='13' r='3'/></g></svg>");
+        -webkit-mask: var(--icon-camera) no-repeat;
+        mask: var(--icon-camera) no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        background-color: currentColor;
+        width: 1.11em;
+        height: 1.11em;
+        display: inline-block;
+        flex: none;
+    }
+
+    /* lucide pen（Blog 列表页头）：与羽毛笔/相机同一套 mask 手法 */
+    .icon-pen {
+        --icon-pen: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z'/></svg>");
+        -webkit-mask: var(--icon-pen) no-repeat;
+        mask: var(--icon-pen) no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        background-color: currentColor;
+        width: 1.11em;
+        height: 1.11em;
+        display: inline-block;
+        flex: none;
+    }
+
     .icon-feather {
         --icon-feather: url("data:image/svg+xml;utf8,<svg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M14.086 18.412A2 2 0 0 1 12.67 19H5v-7.672a2 2 0 0 1 .586-1.414L11.75 3.75a6 6 0 1 1 8.49 8.49zM16 8L2 22m15.488-7H9'/></svg>");
         -webkit-mask: var(--icon-feather) no-repeat;

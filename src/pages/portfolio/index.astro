@@ -42,7 +42,7 @@ const enriched = await Promise.all(
 
 <IndexLayout title="Itinerary - lhZhang" description="精选旅拍与影像记录。Places I've been to and seen." image="/og/default.png">
     <div transition:animate="fade">
-        <IndexHeader url="/" heading="Itinerary" subtitle="Places I've been to and seen" />
+        <IndexHeader url="/" heading="Itinerary" subtitle="Places I've been to and seen"  icon="camera" />
 
         <div class="mt-3">
             <FilterPortfolio client:load items={enriched} pageInfo={{ current: 1, total: totalPages }} />

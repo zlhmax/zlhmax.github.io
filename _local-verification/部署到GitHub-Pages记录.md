@@ -5589,3 +5589,56 @@ chopstack.com 的站名**不是字体，是设计师手绘的 SVG 字形**：
 
 ### 说明
 - 「标签渐变」(`PortfolioDetails.astro`) 属另一批改动，**本次未推**，由 Eddy 另行决定
+
+---
+
+## 一百四十七、列表页头卡片加图标（Travel=相机 · Blog=钢笔）· 2026-10-08
+
+**需求**（Eddy）：
+1. 「在 Travel 列表的简介卡片里的 'Travel' 和副标题前增加一个相机的图标，效果与首页的相同」
+2. 「注意图标要修改为显示在 'Travel' 和副标题这两行字的前面」
+3. 「图标大小修改为跟首页的羽毛笔图标的尺寸一致」
+4. 「按相同方法和实现的效果给 Blog 列表页的简介卡片里的 'Blog' 和副标题前增加一个钢笔的图标」
+
+### 实现（共用组件的 prop 开关，不改共享默认值）
+**`src/components/static/IndexHeader.astro`**（Blog/Travel 共用）新增可选 **`icon` prop**：
+```astro
+const { url, heading, subtitle, icon } = Astro.props;
+...
+<div class="flex items-center gap-3 pt-3">
+    {icon && (
+        <span class="grid size-[56px] shrink-0 place-items-center rounded-full
+                     bg-gradient-to-br from-[#2563eb] to-[#0891b2] text-white" aria-hidden="true">
+            <span class={"icon-" + icon} style="font-size: 26px;"></span>
+        </span>
+    )}
+    {/* 标题与副标题同处一列，整体排在图标右侧 */}
+    <div class="min-w-0">
+        <h1 class="text-[32px] opacity-90 select-none intro-heading"><span class="wm-grad">{heading}</span></h1>
+        {subtitle && <p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">{subtitle}</p>}
+    </div>
+</div>
+```
+**调用方**：`pages/portfolio/index.astro` 传 `icon="camera"`；`pages/blog/index.astro` 传 `icon="pen"`。
+
+**`src/styles/global.css`**：新增 **`.icon-camera`（lucide camera）** 与 **`.icon-pen`（lucide pen）**
+—— 与 `.icon-feather` **同一套 mask 手法**（`mask` 遮罩 + `background-color: currentColor` + `width/height: 1.11em`）。
+
+### 尺寸推导（"跟首页羽毛笔一致"）
+首页头像 = 56px 渐变圆 + `font-size: 26px` → 图标 **28.86px**（26 × 1.11em）。
+页头图标采用**同一组值** → 三处（首页羽毛笔 / Travel 相机 / Blog 钢笔）实测**完全一致**。
+
+### 验收（本地 CDP 实测）
+| 页面 | 图标 | 圆底 | 图形 | 标题左缘 | 副标题左缘 | 图标→文字 |
+|---|---|---|---|---|---|---|
+| 首页头像 | 羽毛笔 | 56×56 | 28.86×28.86 | —— | —— | —— |
+| Travel/Itinerary | **相机** | 56×56 | 28.86×28.86 | 173 | 173 | 12px |
+| Blog | **钢笔** | 56×56 | 28.86×28.86 | 173 | 173 | 12px |
+
+- 两行文字左缘**完全对齐**（差 0px）· 图标与两行等距（12px）· 图标在文字块垂直居中 ✓
+- Blog 页在未传 `icon` 前实测**无图标**，证明 prop 隔离生效 ✓
+
+### 备注
+- 图标集：lucide（ISC 可商用），经 Iconify API 取 SVG 后内联为 data-URI
+- 换图标 = 改一行 prop + 加一个 `.icon-<名>` 类（可选候选：`pen-tool` / `pencil` / RemixIcon `quill-pen`）
+- 「标签渐变」(`PortfolioDetails.astro`) 仍未推，由 Eddy 另行决定
