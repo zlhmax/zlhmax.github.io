@@ -5680,3 +5680,32 @@ const { url, heading, subtitle, icon } = Astro.props;
 ### 提交
 - `fix(content): adjust bio copy and size in the intro card`
 - 注：「标签渐变」(`PortfolioDetails.astro`) 仍未推，由 Eddy 另行决定
+
+---
+
+## 一百四十九、简介卡自我介绍文案再替换（新版句子）· 2026-10-08
+
+**需求**（Eddy）：「将刚才修改字号的那句英文内容修改为
+'Hi, I'm lhZhang. I work in manufacturing, and in my free time I'm into photography, travel, and writing.'」
+
+### 改动（`src/site-config.json`）
+```diff
+- Hi, I'm lhZhang — I work in manufacturing industry and spend my free time on photography, travel, and writing.
++ Hi, I'm lhZhang. I work in manufacturing, and in my free time I'm into photography, travel, and writing.
+```
+- 用破折号 **改为句点分句**；`in manufacturing industry` → **`in manufacturing`**（更简洁）；`spend my free time on` → **`I'm into`**（更口语）
+- **字号/行高/字体全部未动**：15px / 22.5px / Cormorant Garamond Variable
+- 产物校验：`grep -c "in my free time I" dist/index.html` = **1**；`spend my free time` = **0**
+
+### ⚠️ 本次遇到的环境问题（已解决并固化）
+构建报 **`The property 'options.recursive' is no longer supported`**（`emptyDir` → `fs.rmdirSync`）：
+- **真根因 = 本机 Node 版本过新（v26.7.0）** —— Astro 6.x 的 `emptyDir` 依赖新版 Node 已移除的
+  `fs.rmdirSync(path, {recursive:true})`；项目预期 Node 20/22（CI 亦为 22）
+- **绕过（已验证）**：构建前手动 **`rm -rf dist`** → 再 `pnpm build`
+- 已写入技能 `astro-template-local-setup/references/build-and-tooling-pitfalls.md`，
+  并**纠正**了先前「8099 服务占用 dist」的误判（本轮 8099 未运行，同样报错）
+- 影响面：**仅本地**；CI（Node 22）不受影响，线上正常
+
+### 提交
+- `fix(content): update the bio sentence in the intro card`
+- 「标签渐变」(`PortfolioDetails.astro`) 仍未推
