@@ -20,17 +20,17 @@ const hasArchitecture = architecture.length > 0;
     {hasCapabilities && <input type="radio" name="details-tab" id="dt-capabilities" class="hidden peer/cap" />}
     {hasArchitecture && <input type="radio" name="details-tab" id="dt-architecture" class="hidden peer/arch" />}
 
-    <label for="dt-intro" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/intro:border-transparent peer-checked/intro:bg-muted peer-checked/intro:text-foreground">Introduction</label>
+    <label for="dt-intro" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/intro:border-transparent peer-checked/intro:bg-muted peer-checked/intro:text-foreground intro-tab-grad">Introduction</label>
     {
         hasCapabilities && (
-            <label for="dt-capabilities" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/cap:border-transparent peer-checked/cap:bg-muted peer-checked/cap:text-foreground">
+            <label for="dt-capabilities" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/cap:border-transparent peer-checked/cap:bg-muted peer-checked/cap:text-foreground intro-tab-grad">
                 Capabilities
             </label>
         )
     }
     {
         hasArchitecture && (
-            <label for="dt-architecture" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/arch:border-transparent peer-checked/arch:bg-muted peer-checked/arch:text-foreground">
+            <label for="dt-architecture" class="inline-flex h-[25.6px] w-auto items-center justify-center rounded-[8px] border border-border bg-background px-4 text-xs font-mono tracking-widest uppercase leading-none text-muted-foreground cursor-pointer select-none transition-all duration-150 hover:-translate-y-0.5 hover:border-[color:var(--link-hover)] hover:text-[color:var(--link-hover)] peer-checked/arch:border-transparent peer-checked/arch:bg-muted peer-checked/arch:text-foreground intro-tab-grad">
                 Architecture
             </label>
         )
