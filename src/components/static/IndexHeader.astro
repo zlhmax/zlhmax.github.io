@@ -10,8 +10,8 @@ const { url, heading, subtitle, icon } = Astro.props;
     <div class="flex items-center gap-3 pt-3">
         {
             icon && (
-                <span class="grid size-[56px] shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#0891b2] text-white" aria-hidden="true">
-                    <span class={"icon-" + icon} style="font-size: 26px;"></span>
+                <span class="icon-badge grid size-[56px] shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#0891b2] text-white" aria-hidden="true">
+                    <span class={"badge-icon icon-" + icon} style="font-size: 26px;"></span>
                 </span>
             )
         }

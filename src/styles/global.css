@@ -392,6 +392,22 @@ pagefind-modal .pf-summary {
     transform: translateY(-2px);
 }
 
+/* 图标圆底（首页头像羽毛 / Travel 相机 / Blog 钢笔）：
+   圆底本身保持不动不变；悬停时仅其中的图标「变色 + 上移 2px」，
+   与 .social-btn 的悬停语言一致 */
+.badge-icon {
+    display: inline-block;
+    transition: transform 0.28s var(--ease-out), color 0.28s var(--ease-out);
+}
+.icon-badge:hover .badge-icon,
+.icon-badge:focus-visible .badge-icon,
+.badge-icon:hover {
+    /* 悬停变色：取参考站 astro-theme-ink 的悬停色 rgb(80,111,149)=#506F95
+        （其 --accent: 213 30% 45%；该站常态灰 rgb(94,105,120) → 悬停转此静蓝）*/
+    color: #506f95;
+    transform: translateY(-2px);
+}
+
 
 /* ============================================================
    主题风格切换开关（滑动式）—— 版式对齐参考站 chopstack.com

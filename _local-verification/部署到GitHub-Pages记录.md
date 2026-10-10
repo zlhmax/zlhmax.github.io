@@ -5766,3 +5766,72 @@ const { url, heading, subtitle, icon } = Astro.props;
 
 ### 提交
 - `feat(ui): add a Contents title to the article table of contents`
+
+---
+
+## 一百五十一、页头图标悬停效果 + 简介卡中英混排文案 · 2026-10-08
+
+### 一、需求
+1. 「将首页/Travel列表/Blog列表页面的那个图标，增加鼠标悬停的变色并上移2px效果，像其它图标一致」
+2. 澄清：「**圆形图标保持不动不变**，只是将图标内的羽毛笔/相机/钢笔图标增加鼠标悬停效果」
+3. 第一次用网站通用灰 `--muted-foreground` 后 → 「改成灰色有点不搭，请按 astro-theme-ink 的悬停色修改」
+4. 简介卡文案 → 「Something that always stays in your mind will spring up in your life someday - 念念不忘，必有回响」
+
+### 二、图标 hover 的做法
+**关键口径：只动图标本体，圆底完全不变。**
+`global.css` 未分层新增（紧邻 `.social-btn`，与其悬停语言保持同族）：
+```css
+/* 图标圆底（首页头像羽毛 / Travel 相机 / Blog 钢笔）：
+   圆底本身保持不动不变；悬停时仅其中的图标「变色 + 上移 2px」 */
+.badge-icon {
+    display: inline-block;
+    transition: transform 0.28s var(--ease-out), color 0.28s var(--ease-out);
+}
+.icon-badge:hover .badge-icon,
+.icon-badge:focus-visible .badge-icon,
+.badge-icon:hover {
+    /* 取参考站 astro-theme-ink 的悬停色 rgb(80,111,149)=#506F95
+       （其 --accent: 213 30% 45%；该站常态灰 rgb(94,105,120) → 悬停转此静蓝）*/
+    color: #506f95;
+    transform: translateY(-2px);
+}
+```
+结构：`<span class="icon-badge ..."><span class="badge-icon icon-feather"></span></span>`
+（内层图标加 `badge-icon`；`.icon-*` 系列用 mask + `background-color: currentColor`，
+所以改 `color` 即可改图标颜色）
+
+### 三、参考站悬停色实测（astro-theme-ink）
+| 项 | 值 |
+|---|---|
+| 强调色变量 | `--accent: 213 30% 45%` |
+| **悬停色** | **`rgb(80, 111, 149)` = `#506F95`** |
+| 该站规律 | 常态灰 `rgb(94,105,120)` → 悬停转上述静蓝 |
+
+**试错记录**：先按「网站整体用的灰色」用了 `--muted-foreground`
+（浅色 `oklch(0.552 0.016 285.938)` / 深色 `oklch(0.705 …)`），
+Eddy 反馈「有点不搭」→ 改用参考站实测悬停色。
+
+### 四、验收（本地 CDP 实测，三处一致）
+| 页面 | 圆底 | 图标（常态 → 悬停） | 位移 |
+|---|---|---|---|
+| 首页（羽毛）| `transform: none` · 边框 0px · 渐变不变 ✓ **未动** | 白 → **`rgb(80,111,149)`** | **−2.0px** |
+| Travel（相机）| 同上 ✓ | 白 → 同上 | **−2px** |
+| Blog（钢笔）| 同上 ✓ | 白 → 同上 | **−2px** |
+
+### 五、顺手修复的连带问题
+排查同类时发现：**Blog / Travel 的第 2 页起漏传 `icon` 参数** → 翻页后图标消失。
+- `src/pages/blog/page/[page].astro` 补 `icon="pen"`
+- `src/pages/portfolio/page/[page].astro` 补 `icon="camera"`
+→ 现在首页 + Blog 全部页 + Travel 全部页共 4 处都带图标。
+
+### 六、简介卡文案（`src/site-config.json`）
+`Hi, I'm lhZhang. I work in manufacturing, and in my free time I'm into photography, travel, and writing.`
+→ `Something that always stays in your mind will spring up in your life someday - 念念不忘，必有回响`
+- 字体/字号/行高不动（Cormorant Garamond · 15px / 22.5px），一行排完
+- **字体细节**：Cormorant Garamond 无中文字形 → 中文自动回退系统衬线（宋体类）；
+  两边同为衬线故协调，但中文观感略轻（可选：指定站内中文字体 / 中文单独放大）
+
+### 提交
+- `fix(content): update the intro bio to the bilingual sentence`
+- `feat(ui): add a hover effect to the page header icons`
+- `fix(ui): restore the intro tab gradient style`

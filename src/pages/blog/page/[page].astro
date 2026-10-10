@@ -34,7 +34,7 @@ const { items, currentPage, totalPages } = Astro.props;
     image="/og/default.png"
 >
     <div transition:animate="fade">
-        <IndexHeader url="/" heading="Blog" subtitle="Thoughts I've had for a while" />
+        <IndexHeader url="/" heading="Blog" subtitle="Thoughts I've had for a while" icon="pen" />
 
         <div class="mt-3">
             <FilterBlog client:load items={items} pageInfo={{ current: currentPage, total: totalPages }} />
