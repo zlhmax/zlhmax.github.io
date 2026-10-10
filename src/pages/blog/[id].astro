@@ -63,6 +63,7 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         --toc-rail-text: var(--foreground);
         --toc-rail-title: var(--muted-foreground);
         --toc-rail-width: 152px;
+        --toc-rail-title-size: 14px;
         /* 正文容器 max-w-4xl(896px) 居中 → 导轨贴其右缘留 20px */
         --toc-rail-left: calc(50vw + 448px + 1.25rem);
         --toc-rail-top: max(6.5rem, 22vh);
@@ -74,6 +75,16 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
     }
     .dark .toc-rail {
         --toc-rail-accent: #58b798;
+    }
+    /* ④ 导轨标题「Contents」：对齐参考站（原样大小写 + serif + 600 + 字距 1.4px）
+          注意：库默认是 uppercase / 700 / 0.08em，必须显式覆盖，否则会显示成 CONTENTS */
+    .toc-rail__title {
+        text-transform: none;
+        font-family: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1.4px;
+        margin-left: 0; /* 与下方竖线左对齐（库默认有 0.75rem 缩进）*/
     }
     /* ③ 库用原生锚点跳转 → 给正文标题留出固定页头高度，点击后标题落在 y≈80px */
     .prose h2[id],
@@ -102,7 +113,7 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         rail = mountTocRail({
             content: ".prose",
             headings: HEADINGS,
-            title: false,
+            title: "Contents",
             ariaLabel: "文章目录",
             progressMode: "content",
             activeBoundary: "viewport-end",

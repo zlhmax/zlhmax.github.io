@@ -5709,3 +5709,60 @@ const { url, heading, subtitle, icon } = Astro.props;
 ### 提交
 - `fix(content): update the bio sentence in the intro card`
 - 「标签渐变」(`PortfolioDetails.astro`) 仍未推
+
+---
+
+## 一百五十、Blog 文章页右侧导轨加「Contents」标题（对齐参考站）· 2026-10-08
+
+**需求**（Eddy）：
+1. 「读取 astro-theme-ink 的 Blog 页面右边显示的段落导航效果，想在我的站上增加相同的 'Contents' 这个单词，
+   可以进 GitHub 读这个 Astro 模板的源码来查询如何实现」
+2. 「'Contents' 能否靠左与下面竖线对齐，像参考网站那样」
+
+### 参考站的实现（读源码所得）
+`willimt/astro-theme-ink` 的 `src/components/TOC.astro`（桌面端）：
+```astro
+<aside class="toc not-prose sticky top-24 …">
+  <h2 class="font-serif text-sm font-semibold tracking-widest text-ink-soft">Contents</h2>
+  <ul class="mt-3 flex flex-col gap-0.5 border-s border-line ps-4">
+    {toc.map(h => <li style={`padding-inline-start: ${(h.depth-2)*0.85}rem`}>
+      <a href={`#${h.slug}`} class="toc-link block rounded-md py-1 text-[13px] …">{h.text}</a>
+```
+- 桌面标题 = **serif · 14px · 600 · 字距 1.4px · 原样大小写**（无 uppercase）
+- 参考站实测对齐：**标题左缘 x = 列表左缘 x**（1000 = 1000，差 0px）；链接文字内缩 17px（1px 边框 + 16px padding）
+
+### 我站的实现（更简单 —— 库自带该选项）
+我站用的是 **`toc-rail` 库**，其 `TocRailOptions` 里本就有 **`title`**（默认 `"On this page"`），
+而原调用写的是 **`title: false`**（把标题关掉了）。改动共两处（`src/pages/blog/[id].astro`）：
+
+```diff
+-            title: false,
++            title: "Contents",
+```
+```css
+/* <style is:global> 内 */
++        --toc-rail-title-size: 14px;
++    .toc-rail__title {
++        text-transform: none;              /* 库默认 uppercase，会显示成 CONTENTS */
++        font-family: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
++        font-size: 14px;
++        font-weight: 600;                  /* 库默认 700 */
++        letter-spacing: 1.4px;             /* 库默认 0.08em */
++        margin-left: 0;                    /* 库默认 0.75rem 缩进 → 与竖线左对齐 */
++    }
+```
+
+### 验收（本地 CDP 实测）
+| 项 | 我站 | 参考站 | 一致 |
+|---|---|---|---|
+| 标题文本 / 大小写 | `Contents` / none | 同 | ✓ |
+| 字号 / 字重 / 字距 | 14px / 600 / 1.4px | 同 | ✓ |
+| 标题左缘 x vs 竖线 x | **1188 = 1188（差 0px）** | 1000 = 1000（差 0px） | ✓ |
+| 颜色 | `oklch(0.552…)`(muted) | `rgb(94,105,120)` | ✓（同层级灰）|
+
+- 6× 放大截图确认：标题 `C` 与绿色竖线**完全在同一垂直线上**，目录文字在其右侧 12px
+- 线的画法差异（视觉等效）：参考站为列表整体一条连续 `border-s`；我站为每条链接各一段
+  浅灰 `border-left` + 当前项一段绿色（`toc-rail` 的 progress/active 机制）
+
+### 提交
+- `feat(ui): add a Contents title to the article table of contents`
