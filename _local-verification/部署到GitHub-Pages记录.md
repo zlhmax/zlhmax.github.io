@@ -5642,3 +5642,41 @@ const { url, heading, subtitle, icon } = Astro.props;
 - 图标集：lucide（ISC 可商用），经 Iconify API 取 SVG 后内联为 data-URI
 - 换图标 = 改一行 prop + 加一个 `.icon-<名>` 类（可选候选：`pen-tool` / `pencil` / RemixIcon `quill-pen`）
 - 「标签渐变」(`PortfolioDetails.astro`) 仍未推，由 Eddy 另行决定
+
+---
+
+## 一百四十八、简介卡自我介绍：文案替换 + 字号迭代（16 → 14 → 15）· 2026-10-08
+
+**需求**（Eddy）：
+1. 「将 'I work in manufacturing quality management…' 的内容修改为 'I work in manufacturing industry…'」
+2. 「再把整行的字体调小一号」→ 后「字号修改为 15px」
+
+### ① 文案替换（`src/site-config.json`）
+```diff
+- I work in manufacturing quality management and spend my free time on photography, travel, and writing.
++ I work in manufacturing industry and spend my free time on photography, travel, and writing.
+```
+- **只替换 `quality management` → `industry`**，句首 `Hi, I'm lhZhang —` 与句尾部分**一字未动**
+- 产物校验：`grep -c "manufacturing industry" dist/index.html` = **1**；`quality management` = **0**
+
+> 备注：`in manufacturing industry` 更标准的写法是 `in the manufacturing industry`（加冠词）或 `in manufacturing`；
+> 已告知 Eddy 可一键替换，当前**按他给的原文字面保留**。
+
+### ② 字号迭代（`src/components/static/Introduction.astro`）
+| 轮次 | 写法 | 实测 |
+|---|---|---|
+| 对齐 Blog 副标题 | `cormorant-serif text-base` | 16px / 24px |
+| 「调小一号」 | `cormorant-serif text-sm` | 14px / 20px |
+| **定档** | **`cormorant-serif text-[15px]/[1.5]`** | **15px / 22.5px** ✓ |
+
+- 用 v4 简写 **`text-[15px]/[1.5]`** 显式带行高（避免任意字号丢行高导致行距异常 —— 见 §27）
+- 字体与颜色未变：Cormorant Garamond Variable · `text-muted-foreground`
+- 上一行 `Shenzhen, China` 仍为 14px，未受影响 ✓
+
+### ③ 过程中解决的构建问题
+本地构建报 `rmdirSync … emptyDir` 失败 → 根因是**8099 预览服务占用 `dist` 目录**，导致 Astro 无法清空产物目录。
+**正解：构建前先停掉 8099**（`netstat -ano | grep :8099` 取 PID → `taskkill /F /PID <pid>`），构建完再重启服务。
+
+### 提交
+- `fix(content): adjust bio copy and size in the intro card`
+- 注：「标签渐变」(`PortfolioDetails.astro`) 仍未推，由 Eddy 另行决定
