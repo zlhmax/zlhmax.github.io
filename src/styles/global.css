@@ -392,6 +392,26 @@ pagefind-modal .pf-summary {
     transform: translateY(-2px);
 }
 
+/* 顶部导航「浅灰药丸」效果（参考 getartcraft.com：黑底块 + 白字，
+   本站按要求改为浅灰底 + 浅灰字；块 = 文字外包 2px/6px、直角、不位移） */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"],
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
+    /* 内边距 = 参考站 getartcraft.com 的 2px 6px（左右 6px、上下 2px）；圆角 8px */
+    padding: 2px 6px;
+    border-radius: 8px;
+    background-color: transparent;
+    /* 不设 color：保留组件默认字色（列表 text-muted-foreground/80、链接 hover:text-link）*/
+    transition: background-color 0.18s ease;
+}
+/* 悬停任意项 → 出现浅灰块 */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]:hover {
+    background-color: var(--muted);
+}
+/* 当前页 → 常驻浅灰块 */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
+    background-color: var(--muted);
+}
+
 /* 图标圆底（首页头像羽毛 / Travel 相机 / Blog 钢笔）：
    圆底本身保持不动不变；悬停时仅其中的图标「变色 + 上移 2px」，
    与 .social-btn 的悬停语言一致 */
