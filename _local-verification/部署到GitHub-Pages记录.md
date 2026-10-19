@@ -5835,3 +5835,66 @@ Eddy 反馈「有点不搭」→ 改用参考站实测悬停色。
 - `fix(content): update the intro bio to the bilingual sentence`
 - `feat(ui): add a hover effect to the page header icons`
 - `fix(ui): restore the intro tab gradient style`
+
+---
+
+## 一百五十二、顶部导航「浅灰药丸」效果 + 简介卡文案换序 · 2026-10-19
+
+### 一、需求（Eddy）
+1. 「参考 getartcraft.com 顶部导航效果：Home 在访问首页时显示黑底（本站改为浅灰色），鼠标划到其它分类时也出现相同底色；
+   同时把导航 HOME ITINERARY BLOG 的字体改成参考站 HOME IMAGE VIDEO 相同字体；先本地改好看效果，确认后再推送」
+2. 后续迭代（逐轮反馈）：深字→浅灰字 · 字体回滚原版 · 字色回滚原版 · 去掉圆点 · 恢复圆点+回滚间距 ·
+   加内边距（四边一致）· 圆角 · 圆角 8px + 内边距改为参考站大小
+3. 「简介卡那句『念念不忘，必有回响』的位置移至英文的后面」
+
+### 二、参考站实测（getartcraft.com）
+| 项 | 参考站值 |
+|---|---|
+| 导航项字体 | Geist Mono · 11px / 500 · 字距 1.65px · uppercase |
+| 黑底块画法 | 内层 `<span>`：bg 墨色 + 米白字 + **padding 2px 6px** + radius 0（不位移） |
+| 激活态 | `bg-invert-bg text-invert-fg`（常驻） |
+| 悬停态 | `group-hover:bg-invert-bg group-hover:text-invert-fg`（出现同款块） |
+| 未选中字色 | 62% 透明墨色；悬停转 100% |
+
+### 三、最终落地方案（Eddy 逐轮确认后的定档）
+**字体：回滚为本站原定档**（不采用参考站等宽字体）
+- `Manrope Variable · 10.2px / 700 · letter-spacing 0.16em · uppercase`
+- 字色回滚组件默认：列表 `text-muted-foreground/80`；链接悬停 `hover:text-link`（主题绿 `#58B798`）
+
+**浅灰药丸块**（global.css 未分层规则，作用域 `.nav-breadcrumb .nav-items`）：
+```css
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"],
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
+    /* 内边距 = 参考站 2px 6px；圆角 8px */
+    padding: 2px 6px;
+    border-radius: 8px;
+    background-color: transparent;
+    /* 不设 color：保留组件默认字色 */
+    transition: background-color 0.18s ease;
+}
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]:hover { background-color: var(--muted); }
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"]      { background-color: var(--muted); }
+```
+- 浅灰底 = `--muted`（`#F4F4F5`）；当前页常驻、悬停项出现
+- 圆角 8px（参考站为直角，按 Eddy 要求改圆角）
+- 分隔符「•」保留（中间曾去掉，后按要求恢复）
+
+### 四、实测（本地 CDP）
+| 检查 | 结果 |
+|---|---|
+| 激活态（首页/Travel/Blog） | 当前项块 `#F4F4F5` · 字 `oklch(0.552…)/0.8` ✓ |
+| 悬停未选中项 | 透明 → 同款浅灰块 · 字转 `rgb(88,183,152)` ✓ |
+| 块尺寸 | 48.2 × 19.3（参考站 45 × 20.5，字号差异所致，比例一致）|
+| padding / 圆角 | `2px 6px` / `8px` ✓ |
+| 字体 | Manrope Variable · 10.2/700 · 1.632px ✓ |
+| 分隔符 | 2 个 ✓ |
+
+### 五、简介卡文案（`src/site-config.json`）
+`念念不忘，必有回响 - Something that always stays in your mind will spring up in your life someday.`
+→ `Something that always stays in your mind will spring up in your life someday - 念念不忘，必有回响.`
+- 一行排完（846px）· 15px / 22.5px / Cormorant Garamond 未变
+- 注：间曾试做过 GSAP `ScrambledText` 乱码解码悬停效果（radius 60 / duration 2），Eddy 决定放弃并已回滚（代码在 stash）
+
+### 提交
+- `feat(ui): add a light gray pill behind the active nav item`
+- `fix(content): move the Chinese phrase after the English in the bio`
