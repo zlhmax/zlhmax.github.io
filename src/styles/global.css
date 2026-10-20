@@ -392,6 +392,25 @@ pagefind-modal .pf-summary {
     transform: translateY(-2px);
 }
 
+/* 简介卡「打字机 + 闪烁光标」（参考 omarchy.org 的 .typed-caret：
+   光标 2.8×28px = 0.1em 宽 × 1em 高、主题色底、typed-blink 1.06s steps(1) 硬切闪烁）*/
+@keyframes typed-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
+.bio-typed-caret {
+    display: inline-block;
+    width: 0.1em;
+    height: 1em;
+    margin-left: 0.14em;
+    background-color: #58b798;
+    vertical-align: -0.16em;
+    animation: typed-blink 1.06s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .bio-typed-caret { animation: none; opacity: 1; }
+}
+
 /* 顶部导航「浅灰药丸」效果（参考 getartcraft.com：黑底块 + 白字，
    本站按要求改为浅灰底 + 浅灰字；块 = 文字外包 2px/6px、直角、不位移） */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"],

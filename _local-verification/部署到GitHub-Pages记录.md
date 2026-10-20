@@ -5898,3 +5898,75 @@ Eddy 反馈「有点不搭」→ 改用参考站实测悬停色。
 ### 提交
 - `feat(ui): add a light gray pill behind the active nav item`
 - `fix(content): move the Chinese phrase after the English in the bio`
+
+---
+
+## 一百五十三、简介卡「打字机 + 闪烁光标」循环效果 · 2026-10-20
+
+### 一、需求（Eddy）
+1. 「访问 omarchy.org，了解截图里光标闪烁输入效果怎么实现，能否把首页那句中文『念念不忘，必有回响.』也应用这种效果」
+2. 追加：「光标颜色 #58B798 / 循环播放」
+
+### 二、参考站实测（omarchy.org）
+结构（静态前缀 + 空壳 + 光标）：
+```html
+<h2>
+  <span class="sr-only">We can fix everything.</span>
+  <span aria-hidden="true">We can fix every
+    <span data-typing="0"><span></span><span class="typed-caret" aria-hidden="true"></span></span>
+  </span>
+</h2>
+```
+| 光标规格 | 参考站值 |
+|---|---|
+| 尺寸 | 2.8 × 28px（= 0.1em 宽 × 1em 高）|
+| 颜色 | 主题蓝 rgb(50,100,235) |
+| 闪烁 | `@keyframes typed-blink { 0%,50% {opacity:1} 50.01%,100% {opacity:0} }` · **1.06s steps(1) infinite** |
+| 其它 | margin-left ≈ 0.1em · vertical-align −4.48px |
+
+### 三、落地实现
+**CSS（global.css，未分层）**
+```css
+@keyframes typed-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
+.bio-typed-caret {
+    display: inline-block;
+    width: 0.1em; height: 1em;
+    margin-left: 0.14em;
+    background-color: #58b798;      /* 主题绿（参考站为蓝，按 Eddy 要求改绿）*/
+    vertical-align: -0.16em;
+    animation: typed-blink 1.06s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .bio-typed-caret { animation: none; opacity: 1; } }
+```
+
+**Astro（Introduction.astro）**
+- frontmatter 按最后一个「 - 」把文案拆成 `bioPrefix` / `bioTail`，输出到 `data-prefix` / `data-tail`
+- `<p>` 加 `.bio-type`，**服务端渲染仍是完整文案**（无 JS / SEO 安全）
+- 内联 `<script>` 把尾段改为「逐字打出 → 停留 → 退格 → 再打」循环
+
+### 四、循环节奏（实测）
+| 阶段 | 参数 |
+|---|---|
+| 打字 | TYPE = 110ms/字 |
+| 打完停留 | HOLD = 2200ms |
+| 退格 | DEL = 45ms/字 |
+| 清空停顿 | GAP = 450ms |
+| 一轮周期 | ≈ 4.2s |
+
+采样序列（每 250ms）：`0,0,3,6,8,10,10,10,10,10,10,10,10,8,2,0,0,3,5,7,9,10,…` → 打字 / 停留 / 退格 / 重打全部成立 ✓
+
+### 五、验收（本地 CDP）
+| 检查 | 结果 |
+|---|---|
+| 光标颜色 | `rgb(88,183,152)` = #58B798 ✓ |
+| 光标尺寸 | 1.5 × 15px（同 0.1em × 1em 比例）✓ |
+| 闪烁 | `typed-blink 1.06s steps(1) infinite`，实测 opacity 1↔0 ✓ |
+| 循环 | 打字 0→10 · 停留 2.2s · 退格 10→0 · 重打 ✓ |
+| 降级 | 无 JS 时 HTML 含完整文案；reduced-motion 时直接显示完整尾段 ✓ |
+| 排版 | 仍一行、无换行错位 ✓ |
+
+### 提交
+- `feat(ui): add a looping typewriter caret to the intro bio`

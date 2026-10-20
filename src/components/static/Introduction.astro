@@ -13,6 +13,12 @@ const wmGrad = wmSplit ? wmSplit[2] : wmHeading;
 
 // 【占位】头像（参考站为 72px 圆形）—— 待 Eddy 提供照片后替换 /avatar-placeholder.svg
 const wmAvatar = "/avatar-placeholder.svg";
+// 打字机效果：把简介文案按最后一个「 - 」拆成「静态前缀」+「逐字打出的尾段」
+const bioFull = site_config.introduction.description ?? "";
+const _sepHit = bioFull.lastIndexOf(" - ");
+const bioPrefix = _sepHit > 0 ? bioFull.slice(0, _sepHit + 3) : bioFull;
+const bioTail = _sepHit > 0 ? bioFull.slice(_sepHit + 3) : "";
+
 ---
 
 
@@ -57,7 +63,9 @@ const wmAvatar = "/avatar-placeholder.svg";
 
         {
             site_config.introduction.description && (
-                <p class="cormorant-serif text-[15px]/[1.5] text-muted-foreground pt-3 pb-1">{site_config.introduction.description}</p>
+                <p class="bio-type cormorant-serif text-[15px]/[1.5] text-muted-foreground pt-3 pb-1"
+                    data-prefix={bioPrefix}
+                    data-tail={bioTail}>{site_config.introduction.description}</p>
             )
         }
 
@@ -114,3 +122,62 @@ const wmAvatar = "/avatar-placeholder.svg";
         }
     </div>
 </section>
+
+<script>
+    // 简介卡打字机：中文尾段逐字打出 + 光标闪烁，循环播放（打字 → 停留 → 退格 → 再打）
+    // 无 JS 时保留完整文案；prefers-reduced-motion 时直接显示完整尾段、不做动画
+    (() => {
+        const p = document.querySelector(".bio-type") as HTMLElement | null;
+        if (!p) return;
+        const full = (p.textContent || "").trim();
+        const prefix = p.dataset.prefix ?? "";
+        const tail = p.dataset.tail ?? "";
+        if (!prefix || !tail || !full.startsWith(prefix)) return;
+
+        const typed = document.createElement("span");
+        typed.className = "bio-typed";
+        const caret = document.createElement("span");
+        caret.className = "bio-typed-caret";
+        caret.setAttribute("aria-hidden", "true");
+
+        p.textContent = prefix;
+        p.append(typed, caret);
+
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduce) {
+            typed.textContent = tail;
+            return;
+        }
+
+        const TYPE = 110;     // 每字 110ms
+        const DEL = 45;       // 退格每字 45ms
+        const HOLD = 2200;    // 打完后停留
+        const GAP = 450;      // 清空后停顿再重打
+        let i = 0;
+        let dir = 1;
+
+        const step = () => {
+            if (dir === 1) {
+                i += 1;
+                typed.textContent = tail.slice(0, i);
+                if (i >= tail.length) {
+                    dir = -1;
+                    window.setTimeout(step, HOLD);
+                } else {
+                    window.setTimeout(step, TYPE);
+                }
+                return;
+            }
+            i -= 1;
+            typed.textContent = tail.slice(0, Math.max(i, 0));
+            if (i <= 0) {
+                dir = 1;
+                window.setTimeout(step, GAP);
+            } else {
+                window.setTimeout(step, DEL);
+            }
+        };
+
+        window.setTimeout(step, 350);
+    })();
+</script>
