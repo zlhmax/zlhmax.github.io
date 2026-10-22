@@ -5970,3 +5970,70 @@ Eddy 反馈「有点不搭」→ 改用参考站实测悬停色。
 
 ### 提交
 - `feat(ui): add a looping typewriter caret to the intro bio`
+
+---
+
+## 一百五十四、链接悬停色统一 + 打字机光标微调 + 主题切换圆形扩散 · 2026-10-22
+
+### 一、需求（Eddy，逐条）
+1. 「读取 monograph.xocoweb.workers.dev 超链接悬停色」→ 实测 `#1a4fa0`；Eddy 选 **C：全站 `--link-hover` 统一改成该色**
+2. 「浅色主题的 `--link-hover` 也改为 `#7aa2dd`；首页三个圆底图标（羽毛/相机/钢笔）的悬停色由硬编码 `#506f95` 改成 `var(--link-hover)`」
+3. 「读取 astro-tone 的超链接悬停色」→ 实测 `#197ca8`；Eddy 决定 **浅色用 `#197ca8`**
+4. 「首页简介卡光标闪烁效果的颜色也修改为 `#197ca8`」
+5. 「能否修改闪烁光标的宽度?」→ 选 2px
+6. 「读取 aneejian.com/chirping-astro 左下角主题切换图标实现，移植到我的站」
+
+### 二、链接悬停色最终定档
+| 主题 | `--link-hover` | 对白/深底对比度 |
+|---|---|---|
+| 浅色 | **`#197ca8`**（青蓝，来自 astro-tone）| **4.68:1** ✓ 过 AA |
+| 深色 | **`#7aa2dd`**（同色相提亮）| **7.17:1** ✓ |
+
+- 试错记录：先按 monograph 的 `#1a4fa0`（7.87:1）→ 再按 Eddy 要求两主题都 `#7aa2dd`（浅色仅 2.61:1 过淡）→ 最终浅色改 `#197ca8`
+- 圆底图标悬停：`color: #506f95` → **`var(--link-hover)`**（全站联动）
+- 联动触点：导航项、分页按钮（文字+边框）、社交圆钮（文字+45% 描边）、正文 `text-link`
+
+### 三、打字机光标微调
+```css
+.bio-typed-caret {
+    width: 0.133em;                      /* 2px @15px，原 0.1em=1.5px */
+    background-color: var(--link-hover); /* 浅 #197ca8 / 深 #7aa2dd */
+}
+```
+- 闪烁 `typed-blink 1.06s steps(1)`、循环节奏均未变
+
+### 四、主题切换：圆形扩散（移植 kannansuresh/chirping-astro）
+**参考站机制**：`document.startViewTransition()` + `clip-path: circle()` 从光标位置扩散
+```js
+root.style.setProperty('--theme-x', x);  root.style.setProperty('--theme-y', y);
+root.style.setProperty('--theme-radius', hypot(dx,dy) + 100);
+root.dataset.themeAnim = 'to-dark' | 'to-light';
+```
+```css
+@keyframes theme-reveal  { from { clip-path: circle(0 at var(--theme-x) var(--theme-y)); }
+                           to   { clip-path: circle(var(--theme-radius) at var(--theme-x) var(--theme-y)); } }
+@keyframes theme-conceal { /* 反向 */ }
+html[data-theme-anim='to-dark']::view-transition-new(root) { animation: theme-reveal 520ms ...!important }
+html[data-theme-anim='to-light']::view-transition-old(root) { animation: theme-conceal 520ms ...!important }
+```
+
+**两处必要适配（本站特有）**：
+1. 本站有 **Astro ClientRouter**，页面跳转也用 root 视图过渡 → 所有规则限定 `html[data-theme-anim]` 作用域，跳转淡入不受影响
+2. ClientRouter 自带 `astroFadeIn/Out` 会盖掉旧快照 → 重置与动画声明加 **`!important`**
+
+**保留原设计**：滑动开关（44×24 + 圆钮 + 太阳/月亮）外形不变，只加动画。
+（此前曾试做 astro-tone 的「圆环+月相」按钮，Eddy 要求回滚，代码存 scratch）
+
+### 五、实测（本地 CDP）
+| 检查 | 结果 |
+|---|---|
+| `--theme-x/y/radius` | 941px / 21px / 1387.68px ✓ |
+| `data-theme-anim` | 点击后 `to-dark` ✓，动画结束自动移除 ✓ |
+| 圆形扩散 | 慢放 4s，+1400ms 边界半径 ≈532px（理论 485px）✓ |
+| 主题切换 | `.dark` + `data-theme` + `localStorage` 同步 ✓ |
+| 减少动画 | `prefers-reduced-motion` 时瞬时切换 ✓ |
+| 光标 | 浅 `rgb(25,124,168)` / 深 `rgb(122,162,221)`，宽 1.98px ✓ |
+| 链接悬停 | 导航/分页/社交/图标全部跟随 `--link-hover` ✓ |
+
+### 提交
+- `feat(ui): add circular theme reveal and unify link hover colors`
