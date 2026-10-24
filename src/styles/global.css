@@ -714,4 +714,5 @@ pagefind-modal .pf-summary {
 }
 .medium-zoom-image--opened {
     z-index: 9999 !important;
+    border-radius: 12px;
 }
