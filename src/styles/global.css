@@ -707,3 +707,11 @@ pagefind-modal .pf-summary {
     outline: 2px solid var(--link-hover);
     outline-offset: 3px;
 }
+
+/* === 图片放大层级（medium-zoom 1.1 自体不带 z-index，会被页头/遮罩盖住） == */
+.medium-zoom-overlay {
+    z-index: 9998 !important;
+}
+.medium-zoom-image--opened {
+    z-index: 9999 !important;
+}
