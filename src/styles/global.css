@@ -136,7 +136,7 @@
 
 :root {
     /* 超链接 hover：取自用户参考图 lhZhang's 手写体的薄荷绿 #58B798 */
-    --link-hover: #197ca8;
+    --link-hover: #3f63e0;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --foregrounds: #00000;
@@ -183,7 +183,7 @@
 .dark {
     /*--background: oklch(0.141 0.005 285.823);*/
     /* 深色底上 #58B798 对比度 7.71:1，直接用原色 */
-    --link-hover: #7aa2dd;
+    --link-hover: #5e7eff;
     --background: oklch(0.182 0 0);
     --foreground: oklch(0.985 0 0);
     --foregrounds: #fffff;
@@ -438,7 +438,7 @@ pagefind-modal .pf-summary {
     width: 0.133em;   /* 15px 字号下 = 2px（原 0.1em=1.5px）*/
     height: 1em;
     margin-left: 0.14em;
-    background-color: var(--link-hover);   /* 浅色 #197ca8 / 深色 #7aa2dd */
+    background-color: var(--link-hover);   /* 浅色 #3f63e0 / 深色 #5e7eff */
     vertical-align: -0.16em;
     animation: typed-blink 1.06s steps(1) infinite;
 }
@@ -680,3 +680,30 @@ pagefind-modal .pf-summary {
     .carousel-pop {
         animation: carousel-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+
+/* === 防剧透：||模糊|| / |||黑条||| =============================== */
+.blur-wrapper {
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.blur-content {
+    border-radius: 6px;
+    transition: filter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        background-color 0.35s var(--ease-out), color 0.35s var(--ease-out);
+}
+.blur-wrapper[data-mode="blur"][data-hidden="true"] .blur-content {
+    filter: blur(7px);
+}
+.blur-wrapper[data-mode="blackout"] .blur-content {
+    padding: 0 0.12em;
+}
+.blur-wrapper[data-mode="blackout"][data-hidden="true"] .blur-content {
+    background-color: var(--foreground);
+    color: var(--foreground);
+    user-select: none;
+}
+.blur-wrapper:focus-visible {
+    outline: 2px solid var(--link-hover);
+    outline-offset: 3px;
+}

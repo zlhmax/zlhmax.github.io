@@ -27,22 +27,14 @@ export default function ThemeToggle() {
     const initial = saved || (prefersDark ? "dark" : "light");
     setThemeState(initial);
     document.documentElement.classList.toggle("dark", initial === "dark");
-    if (initial === "dark") {
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.removeAttribute("data-theme");
-    }
+    document.documentElement.setAttribute("data-theme", initial);
   }, []);
 
   /** 同步写入 DOM（必须在 startViewTransition 的回调里同步执行，否则快照抓不到） */
   const commitTheme = (newTheme: string) => {
     const root = document.documentElement;
     root.classList.toggle("dark", newTheme === "dark");
-    if (newTheme === "dark") {
-      root.setAttribute("data-theme", "dark");
-    } else {
-      root.removeAttribute("data-theme");
-    }
+    root.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
     setThemeState(newTheme);
   };

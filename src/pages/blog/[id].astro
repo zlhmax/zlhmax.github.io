@@ -56,7 +56,7 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
 <style is:global>
     .toc-rail {
         /* ① 主色：浅色深薄荷 #258062（白底 4.84:1 达 AA）；深色在下方 .dark 覆盖为亮薄荷 */
-        --toc-rail-accent: #258062;
+        --toc-rail-accent: var(--link-hover);   /* 跟随全站：浅 #3f63e0 / 深 #5e7eff */
         --toc-rail-line: var(--border);
         --toc-rail-muted: var(--muted-foreground);
         --toc-rail-faint: var(--muted-foreground);
@@ -67,14 +67,11 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         /* 正文容器 max-w-4xl(896px) 居中 → 导轨贴其右缘留 20px */
         --toc-rail-left: calc(50vw + 448px + 1.25rem);
         --toc-rail-top: max(6.5rem, 22vh);
-        --toc-rail-link-size: 0.5625rem;
+        --toc-rail-link-size: 0.6875rem;   /* 11px（原 9px，大一号 +2px）*/
         --toc-rail-link-weight: 500;
         --toc-rail-link-line-height: 1.45;
         --toc-rail-font-family: inherit;
         --toc-rail-z-index: 10;
-    }
-    .dark .toc-rail {
-        --toc-rail-accent: #58b798;
     }
     /* ④ 导轨标题「Contents」：对齐参考站（原样大小写 + serif + 600 + 字距 1.4px）
           注意：库默认是 uppercase / 700 / 0.08em，必须显式覆盖，否则会显示成 CONTENTS */
@@ -95,6 +92,7 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
 
 <script>
     import { mountTocRail, type TocRailInstance } from "toc-rail";
+    import mediumZoom from "medium-zoom";
 
     const HEADINGS = ".prose h2[id], .prose h3[id]";
     // 标题太少（1–2 个）不显示，避免只剩一条目的“目录”
@@ -138,5 +136,44 @@ const pubDate = parse(item.data.date, "dd-MM-yyyy", new Date());
         }
         rail = null;
         tryMount();
+    });
+
+    // === 防剧透：点击 / Enter / 空格 展开收起 ===
+    function toggleSpoiler(wrapper: HTMLElement) {
+        const hidden = wrapper.dataset.hidden === "true";
+        wrapper.dataset.hidden = String(!hidden);
+        wrapper.setAttribute("aria-expanded", String(hidden));
+    }
+    document.addEventListener("click", (event) => {
+        const target = event.target as Element | null;
+        const wrapper = target?.closest<HTMLElement>(".prose .blur-wrapper");
+        if (wrapper) toggleSpoiler(wrapper);
+    });
+    document.addEventListener("keydown", (event) => {
+        const target = event.target as Element | null;
+        const wrapper = target?.closest<HTMLElement>(".prose .blur-wrapper");
+        if (wrapper && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            toggleSpoiler(wrapper);
+        }
+    });
+
+    // === 图片点击放大（medium-zoom），背景跟随深浅色 ===
+    const zoomBg = () =>
+        document.documentElement.getAttribute("data-theme") === "dark" ? "#121212" : "#ffffff";
+    const zoom = mediumZoom({ margin: 24, background: zoomBg() });
+    function initZoom() {
+        zoom.detach();
+        zoom.attach(".prose img");
+        zoom.update({ background: zoomBg() });
+    }
+    initZoom();
+    document.addEventListener("astro:page-load", initZoom);
+    new MutationObserver(() => zoom.update({ background: zoomBg() })).observe(
+        document.documentElement,
+        { attributes: true, attributeFilter: ["data-theme"] },
+    );
+    document.addEventListener("astro:before-swap", () => {
+        void zoom.close().then(() => zoom.detach());
     });
 </script>
