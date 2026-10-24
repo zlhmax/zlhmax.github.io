@@ -476,9 +476,9 @@ pagefind-modal .pf-summary {
 .icon-badge:hover .badge-icon,
 .icon-badge:focus-visible .badge-icon,
 .badge-icon:hover {
-    /* 悬停变色：取参考站 astro-theme-ink 的悬停色 rgb(80,111,149)=#506F95
-        （其 --accent: 213 30% 45%；该站常态灰 rgb(94,105,120) → 悬停转此静蓝）*/
-    color: var(--link-hover);
+    /* 悬停保持白色：圆底是蓝色渐变，变色反而看不清符号；
+       只保留上移 2px 作为反馈 */
+    color: #ffffff;
     transform: translateY(-2px);
 }
 
