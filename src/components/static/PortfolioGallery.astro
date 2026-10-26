@@ -24,6 +24,6 @@ const galleryImages = images.map((img, i) => ({
 }));
 ---
 
-<div class="border border-border p-6">
+<div class="border border-border rounded-[8px] p-6">
     {(images.length > 0 || videoId) && <PortfolioGallery images={galleryImages} videoId={videoId} title={item.data.title} client:load />}
 </div>

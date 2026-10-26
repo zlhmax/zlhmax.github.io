@@ -51,7 +51,7 @@
         }
 
         blockquote {
-            @apply border border-border border-l-3 bg-muted border-l-secondary-foreground/80 py-3 px-5 my-6 not-italic;
+            @apply border border-border border-l-3 rounded-[8px] bg-muted border-l-secondary-foreground/80 py-3 px-5 my-6 not-italic;
         }
         blockquote p {
             @apply my-0 text-muted-foreground text-[14px];

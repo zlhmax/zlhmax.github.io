@@ -40,11 +40,11 @@ export default function FilterBlog({
       <FilterControls filter={filter} />
 
       {filteredAndSortedItems.length === 0 ? (
-        <div className="flex items-center justify-center border border-border p-6">
+        <div className="flex items-center justify-center border border-border rounded-[8px] p-6">
           <p className="paragraph">No blogs found.</p>
         </div>
       ) : (
-        <div className="space-y-0 border border-border p-6">
+        <div className="space-y-0 border border-border rounded-[8px] p-6">
           {pageItems.map((item) => (
             <BlogCard key={item.id} item={item as blogConfig} />
           ))}
