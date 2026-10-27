@@ -21,11 +21,11 @@ export default function FilterPortfolio({
       <FilterControls filter={filter} />
 
       {filteredAndSortedItems.length === 0 ? (
-        <div className="flex items-center justify-center border border-border rounded-[8px] p-6">
+        <div className="flex items-center justify-center border border-border p-6">
           <p className="paragraph">No projects found.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border border-border rounded-[8px] p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border border-border p-6">
           {filteredAndSortedItems.map((item) => (
             <PortfolioCard key={item.id} item={item as portfolioConfig} />
           ))}
