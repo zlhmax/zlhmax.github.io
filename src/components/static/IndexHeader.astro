@@ -2,23 +2,17 @@
 import BackButton from "./BackButton.astro";
 
 // subtitle 为可选：只有传了的页面（当前仅 Travel）才会在标题下方多渲染一行小字
-const { url, heading, subtitle, icon } = Astro.props;
+// 2026-11：圆形图标已移除；站名前加双色下划线、副标题改手写体（与首页简介卡对齐）
+const { url, heading, subtitle } = Astro.props;
 ---
 
 <div class="border border-border px-6 py-3 mt-5 bg-background">
     <BackButton url={url} />
     <div class="flex items-center gap-3 pt-3">
-        {
-            icon && (
-                <span class="icon-badge grid size-[56px] shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563eb] to-[#0891b2] text-white" aria-hidden="true">
-                    <span class={"badge-icon icon-" + icon} style="font-size: 26px;"></span>
-                </span>
-            )
-        }
-        {/* 标题与副标题同处一列，整体排在图标右侧 */}
+        {/* 标题与副标题同处一列（原圆形图标已移除）*/}
         <div class="min-w-0">
-            <h1 class="text-[32px] opacity-90 select-none intro-heading"><span class="wm-grad">{heading}</span></h1>
-            {subtitle && <p class="mt-1 text-base text-muted-foreground select-none cormorant-serif">{subtitle}</p>}
+            <h1 class="text-[32px] opacity-90 select-none intro-heading"><span class="wm-line"><svg class="wm-mark" viewBox="0 0 30 24" aria-hidden="true"><path class="wm-mark-track" d="M3 12h24" stroke="currentColor" stroke-opacity=".25" stroke-width="3" stroke-linecap="round" /><path class="wm-mark-accent" d="M3 12h15" stroke="var(--link-hover)" stroke-width="3" stroke-linecap="round" /></svg><span class="wm-grad">{heading}</span></span></h1>
+            {subtitle && <p class="mt-1 hand-note select-none"><span class="hand-arrow" aria-hidden="true">↳ </span>{subtitle}</p>}
         </div>
     </div>
 </div>

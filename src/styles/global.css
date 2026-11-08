@@ -6,6 +6,8 @@
 @import "@fontsource-variable/geist-mono";
 @import "@fontsource-variable/montserrat";
 @import "@fontsource-variable/geist";
+/* 手写体（移植自 Gloss：Caveat，latin 子集） */
+@import "@fontsource-variable/caveat";
 /* 中文字体：思源黑体 Noto Sans SC（自托管 woff2，全平台统一，免费商用） */
 @import "@fontsource-variable/noto-sans-sc";
 /* 中文字体（圆黑体）：寒蝉圆黑体 ChillRoundGothic（自托管 unicode-range 分块，SIL OFL-1.1）
@@ -427,25 +429,6 @@ pagefind-modal .pf-summary {
     html[data-theme-anim]::view-transition-new(root) { animation: none !important; }
 }
 
-/* 简介卡「打字机 + 闪烁光标」（参考 omarchy.org 的 .typed-caret：
-   光标 2.8×28px = 0.1em 宽 × 1em 高、主题色底、typed-blink 1.06s steps(1) 硬切闪烁）*/
-@keyframes typed-blink {
-    0%, 50% { opacity: 1; }
-    50.01%, 100% { opacity: 0; }
-}
-.bio-typed-caret {
-    display: inline-block;
-    width: 0.133em;   /* 15px 字号下 = 2px（原 0.1em=1.5px）*/
-    height: 1em;
-    margin-left: 0.14em;
-    background-color: var(--link-hover);   /* 浅色 #3f63e0 / 深色 #5e7eff */
-    vertical-align: -0.16em;
-    animation: typed-blink 1.06s steps(1) infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-    .bio-typed-caret { animation: none; opacity: 1; }
-}
-
 /* 顶部导航「浅灰药丸」效果（参考 getartcraft.com：黑底块 + 白字，
    本站按要求改为浅灰底 + 浅灰字；块 = 文字外包 2px/6px、直角、不位移） */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"],
@@ -630,18 +613,27 @@ pagefind-modal .pf-summary {
         display: inline-block;
         flex: none;
     }
-    .intro-wordmark .wm-line {
+    .intro-wordmark .wm-line,
+    .intro-heading .wm-line {
         display: block;
     }
     /* 渐变文字（对齐 igagansingh.com/astro-wanderer 的 .accent）：
        linear-gradient(120deg, #2563eb, #0891b2) + background-clip:text + 文字填充透明 */
-    .intro-wordmark .wm-underscore {
-        color: #1a4fa0;
+    /* 双色下划线标记（移植自 kokitree/Inkline 的 .mark）：
+       灰色轨道 24 单位 + 强调色覆盖 15 单位（62.5%），圆头 */
+    .intro-wordmark .wm-mark,
+    .intro-heading .wm-mark {
+        display: inline-block;
+        width: 1.3em;
+        height: 0.85em;
+        margin-right: 0.28em;
+        /* 靠下显示：用 transform 位移而非 vertical-align，避免撑高行盒影响卡片高度 */
+        vertical-align: -0.05em;
+        transform: translateY(0.22em);
+        flex: none;
+        overflow: visible;
     }
-    /* 下划线与首字母之间留一点空隙（参考站有间隙）*/
-    .intro-wordmark .wm-underscore {
-        margin-right: 0.06em;
-    }
+
     .intro-wordmark .wm-grad,
     .intro-heading .wm-grad,
     .intro-tab-grad {
@@ -660,10 +652,6 @@ pagefind-modal .pf-summary {
         background-clip: border-box;
         -webkit-text-fill-color: currentColor;
         color: var(--foreground); /* 选中态回到深色字（覆盖渐变规则的降级蓝）*/
-    }
-
-    .dark .intro-wordmark .wm-underscore {
-        color: #5b8ede;
     }
     .dark .intro-wordmark .wm-grad,
     .dark .intro-heading .wm-grad,
@@ -741,4 +729,28 @@ pagefind-modal .pf-summary {
     display: block;
     width: 15px;
     height: 15px;
+}
+
+/* === 手写注（移植自 ondelva/astro-theme-gloss 的 .hand）===
+   Caveat 500 · 铅笔蓝 · 行高 1.15 · 轻微左倾，模拟写在纸边的手迹 */
+.hand-note {
+    font-family: "Caveat Variable", "Caveat", cursive;
+    font-weight: 500;
+    font-size: 18px;   /* 18px 时含 ↳ 前缀仍单行；19px 会折行 */
+    line-height: 1.725;   /* 现值的 75%：2.3 × 0.75 */
+    letter-spacing: 0.005em;
+    color: #9aa0a6;   /* 浅灰（原铅笔蓝 #2a55a0） */
+    transform: rotate(-1.2deg);
+    transform-origin: left center;
+    font-size-adjust: 0.4;
+}
+.dark .hand-note {
+    color: #9aa0a6;
+}
+
+/* ↳ 前缀：手写体里通常缺该字形，单独用更宽的字体栈保证稳定显示 */
+.hand-arrow {
+    font-family: "Caveat Variable", "Segoe UI Symbol", "Apple Symbols", "Noto Sans Symbols", sans-serif;
+    font-weight: 500;
+    margin-right: 0.06em;
 }
