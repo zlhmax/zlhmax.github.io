@@ -716,3 +716,29 @@ pagefind-modal .pf-summary {
     z-index: 9999 !important;
     border-radius: 12px;
 }
+
+/* === 主题切换：参考 grimorio 的纯图标按钮（浅色太阳 / 深色月亮）===
+   24×24 与搜索按钮同高 · 圆角 6px · 悬停仅描边与字色变化，无底块 */
+.theme-icon-btn {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: color 0.18s var(--ease-out), border-color 0.18s var(--ease-out);
+}
+.theme-icon-btn:hover,
+.theme-icon-btn:focus-visible {
+    color: var(--foreground);
+    border-color: var(--border);
+    outline: none;
+}
+.theme-icon-btn svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+}

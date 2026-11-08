@@ -76,10 +76,9 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
-      role="switch"
-      aria-checked={isDark}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? "切换到浅色模式" : "切换到深色模式"}
+      title={isDark ? "切换到浅色模式" : "切换到深色模式"}
+      aria-pressed={isDark}
       onClick={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const origin = {
@@ -88,28 +87,30 @@ export default function ThemeToggle() {
         };
         applyTheme(isDark ? "light" : "dark", origin);
       }}
-      className="theme-switch"
+      className="theme-icon-btn"
       data-theme-duration={DURATION}
     >
-      <span className="theme-switch__knob" aria-hidden="true">
-        <svg className="theme-icon-sun" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5 5 3.5 3.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19"
-            stroke="currentColor"
-            strokeWidth="2.25"
-            strokeLinecap="round"
-          />
-          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2.25" />
-        </svg>
-        <svg className="theme-icon-moon" viewBox="0 0 24 24" fill="none">
+      {/* 参考 grimorio：浅色显示太阳、深色显示月亮（lucide 图标线稿） */}
+      {isDark ? (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
             d="M20 14.2A7.4 7.4 0 0 1 9.8 4a8.6 8.6 0 1 0 10.2 10.2Z"
             stroke="currentColor"
-            strokeWidth="2.25"
+            strokeWidth="2"
             strokeLinejoin="round"
           />
         </svg>
-      </span>
+      ) : (
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M12 4V2M12 22v-2M4 12H2M22 12h-2M5 5 3.5 3.5M20.5 20.5 19 19M19 5l1.5-1.5M3.5 20.5 5 19"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      )}
     </button>
   );
 }
