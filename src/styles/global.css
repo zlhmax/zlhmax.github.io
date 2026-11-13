@@ -429,24 +429,59 @@ pagefind-modal .pf-summary {
     html[data-theme-anim]::view-transition-new(root) { animation: none !important; }
 }
 
-/* 顶部导航「浅灰药丸」效果（参考 getartcraft.com：黑底块 + 白字，
-   本站按要求改为浅灰底 + 浅灰字；块 = 文字外包 2px/6px、直角、不位移） */
+/* 顶部导航下划线（移植自 jtfox.dev 的 .hover-underline）：
+   悬停时下划线从左侧生长（scaleX 0→1，origin left，2px 高，150ms cubic-bezier(.4,0,.2,1)），
+   当前页常驻下划线。原「浅灰药丸」底块已移除。 */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"],
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
-    /* 内边距 = 参考站 getartcraft.com 的 2px 6px（左右 6px、上下 2px）；圆角 8px */
+    position: relative;
+    /* 内边距保留（左右 6px、上下 2px），下划线按文字宽度内缩 6px */
     padding: 2px 6px;
-    border-radius: 8px;
+    border-radius: 0;
     background-color: transparent;
-    /* 不设 color：保留组件默认字色（列表 text-muted-foreground/80、链接 hover:text-link）*/
-    transition: background-color 0.18s ease;
+    transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
-/* 悬停任意项 → 出现浅灰块 */
+
+/* 下划线本体 */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]::after,
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"]::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    bottom: -1.5px;
+    height: 2px;
+    background-color: var(--border);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 悬停：文字变深 + 下划线从左生长 */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]:hover {
-    background-color: var(--muted);
+    color: var(--foreground);
 }
-/* 当前页 → 常驻浅灰块 */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]:hover::after {
+    transform: scaleX(1);
+}
+
+/* 当前页：常驻下划线（强调色），文字加深 */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
-    background-color: var(--muted);
+    color: var(--foreground);
+}
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-page"]::after {
+    transform: scaleX(1);
+    background-color: var(--foreground);   /* 当前页：深色下划线（同 jtfox 当前页效果） */
+}
+
+/* 深色模式：--border 只有 10% 白，悬停下划线偏淡 → 单独提亮 */
+.dark .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]::after {
+    background-color: rgb(255 255 255 / 0.28);
+}
+
+/* 键盘可达性：焦点态同样显示下划线 */
+.nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]:focus-visible::after {
+    transform: scaleX(1);
 }
 
 /* 图标圆底（首页头像羽毛 / Travel 相机 / Blog 钢笔）：
