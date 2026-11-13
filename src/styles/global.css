@@ -465,13 +465,12 @@ pagefind-modal .pf-summary {
     transform: scaleX(1);
 }
 
-/* 当前页：常驻下划线（强调色），文字加深 */
+/* 当前页：不再常驻下划线（按要求改为「仅悬停出现」），文字加深以示区分 */
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-page"] {
     color: var(--foreground);
 }
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-page"]::after {
-    transform: scaleX(1);
-    background-color: var(--foreground);   /* 当前页：深色下划线（同 jtfox 当前页效果） */
+    transform: scaleX(0);
 }
 
 /* 深色模式：--border 只有 10% 白，悬停下划线偏淡 → 单独提亮 */
