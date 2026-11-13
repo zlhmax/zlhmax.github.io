@@ -31,8 +31,11 @@
         }
 
         a {
-            @apply text-secondary-foreground font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-muted-foreground decoration-1 text-[14px];
+            @apply font-medium underline underline-offset-6 hover:underline-offset-3 active:bg-secondary-foreground active:text-background transition-all duration-150 decoration-1 text-[14px];
             font-family: var(--article-text-font);
+            /* 正文超链接：薄荷绿（--link-hover = #58B798），下划线用同色 60% 以免过重 */
+            color: var(--link-hover);
+            text-decoration-color: color-mix(in srgb, var(--link-hover) 60%, transparent);
         }
 
         ul {

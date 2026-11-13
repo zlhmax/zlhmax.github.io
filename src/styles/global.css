@@ -92,7 +92,7 @@
     --font-sans: "ChillRoundGothic", "Noto Sans SC Variable", "Source Han Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
 
     /* color */
-    /* 全站超链接 hover 色：浅色 #2467FF / 深色 #6EA8FF，由 --link-hover 切换 */
+    /* 全站超链接色：薄荷绿 #58B798（浅色 / 深色同色），由 --link-hover 切换 */
     --color-link: var(--link-hover);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -137,8 +137,10 @@
 }
 
 :root {
-    /* 超链接 hover：取自用户参考图 lhZhang's 手写体的薄荷绿 #58B798 */
-    --link-hover: #3f63e0;
+    /* 全站超链接：薄荷绿 #58B798（取自用户参考截图，实测主色 rgb(88,183,152)） */
+    --link-hover: #58b798;
+    /* 站名前双色短线的强调段：保持原来的蓝（与链接的青绿分开控制） */
+    --mark-accent: #3f63e0;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --foregrounds: #00000;
@@ -184,8 +186,9 @@
 
 .dark {
     /*--background: oklch(0.141 0.005 285.823);*/
-    /* 深色底上 #58B798 对比度 7.71:1，直接用原色 */
-    --link-hover: #5e7eff;
+    /* 深色底上 #58B798 对比度 7.25:1，直接用原色 */
+    --link-hover: #58b798;
+    --mark-accent: #5e7eff;
     --background: oklch(0.182 0 0);
     --foreground: oklch(0.985 0 0);
     --foregrounds: #fffff;
@@ -451,7 +454,7 @@ pagefind-modal .pf-summary {
     right: 6px;
     bottom: -1.5px;
     height: 2px;
-    background-color: var(--border);
+    background-color: var(--link-hover);   /* 青绿 #58B798（与全站链接同色） */
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -471,11 +474,6 @@ pagefind-modal .pf-summary {
 }
 .nav-breadcrumb .nav-items [data-slot="breadcrumb-page"]::after {
     transform: scaleX(0);
-}
-
-/* 深色模式：--border 只有 10% 白，悬停下划线偏淡 → 单独提亮 */
-.dark .nav-breadcrumb .nav-items [data-slot="breadcrumb-link"]::after {
-    background-color: rgb(255 255 255 / 0.28);
 }
 
 /* 键盘可达性：焦点态同样显示下划线 */
