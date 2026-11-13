@@ -786,3 +786,25 @@ pagefind-modal .pf-summary {
     font-weight: 500;
     margin-right: 0.06em;
 }
+
+/* 手写行句末光标（恢复先前的打字光标观感）：
+   0.11em 宽 × 0.9em 高、青绿底色、1.06s steps(1) 硬切闪烁；减少动效时静态显示 */
+@keyframes hand-caret-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+}
+.hand-typed:empty::before {
+    content: "\200b";   /* 零宽空格：清空时保持行高，卡片不抖 */
+}
+.hand-caret {
+    display: inline-block;
+    width: 0.11em;
+    height: 0.9em;
+    margin-left: 0.12em;
+    background-color: var(--link-hover);
+    vertical-align: -0.10em;
+    animation: hand-caret-blink 1.06s steps(1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+    .hand-caret { animation: none; opacity: 1; }
+}

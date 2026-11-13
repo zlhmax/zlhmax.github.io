@@ -54,7 +54,7 @@ const wmAvatar = "/avatar-placeholder.svg";
 
         {
             site_config.introduction.description && (
-                <p class="bio-type hand-note pt-1.5 pb-0"><span class="hand-arrow" aria-hidden="true">↳ </span>{site_config.introduction.description}</p>
+                <p class="bio-type hand-note pt-1.5 pb-0"><span class="hand-arrow" aria-hidden="true">↳ </span><span class="hand-typed" data-text={site_config.introduction.description}>{site_config.introduction.description}</span><span class="hand-caret" aria-hidden="true"></span></p>
             )
         }
 
@@ -128,3 +128,42 @@ const wmAvatar = "/avatar-placeholder.svg";
     </div>
 </section>
 
+<script is:inline>
+    // 手写行逐字打字（节奏参考 igagansingh.com/astro-wanderer）：
+    // 打字 60ms/字 → 停留 1.6s → 退格 30ms/字 → 停顿 0.4s → 循环
+    // prefers-reduced-motion 时保留静态全文，不做动画
+    (() => {
+        const TYPE = 60, DEL = 30, HOLD = 1600, GAP = 400, START = 400;
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        function start() {
+            const el = document.querySelector(".hand-typed");
+            if (!el || reduce) return;
+            if (el.dataset.typing === "1") return;      // 防止重复启动
+            const text = el.dataset.text || el.textContent || "";
+            if (!text.trim()) return;
+            el.dataset.typing = "1";
+
+            let i = 0, dir = 1;
+            const step = () => {
+                if (dir === 1) {
+                    i += 1;
+                    el.textContent = text.slice(0, i);
+                    if (i >= text.length) { dir = -1; window.setTimeout(step, HOLD); return; }
+                    window.setTimeout(step, TYPE);
+                } else {
+                    i -= 1;
+                    el.textContent = text.slice(0, Math.max(i, 0));
+                    if (i <= 0) { dir = 1; window.setTimeout(step, GAP); return; }
+                    window.setTimeout(step, DEL);
+                }
+            };
+            el.textContent = "";
+            window.setTimeout(step, START);
+        }
+
+        document.addEventListener("astro:page-load", start);
+        if (document.readyState !== "loading") start();
+        else document.addEventListener("DOMContentLoaded", start);
+    })();
+</script>
