@@ -18,7 +18,7 @@ const wmAvatar = "/avatar-placeholder.svg";
 ---
 
 
-<section class="grid grid-cols-1 md:grid-cols-[61.8%_1fr] items-stretch bg-background border border-border overflow-hidden">
+<section class="grid grid-cols-1 bg-background border border-border overflow-hidden">
     {/* 左栏：黄金比 61.8%（文字与图标） */}
     <div class="min-w-0 px-6 pt-2 pb-2 flex flex-col justify-center">
         <div class="flex cursor-default gap-3 select-none">
@@ -111,22 +111,7 @@ const wmAvatar = "/avatar-placeholder.svg";
         }
     </div>
 
-    {/* 右栏：黄金比 38.2%（图片四周留 6px、四角 6px 圆角） */}
-    <div class="relative min-h-[120px] overflow-hidden">
-        {/* 绝对定位：图片不再用固有比例撑高整行，卡高由左栏内容决定 */}
-        <div class="absolute inset-0 p-1.5">
-            <img
-                src="/images/home/intro-welcome.webp"
-                alt=""
-                width="1200"
-                height="600"
-                loading="eager"
-                decoding="async"
-                class="h-full w-full rounded-[6px] object-cover"
-            />
-        </div>
-    </div>
-</section>
+    </section>
 
 <script is:inline>
     // 手写行逐字打字（节奏参考 igagansingh.com/astro-wanderer）：
